@@ -5,6 +5,8 @@
   <title>Chcete být milionářem – školní verze</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
+  <!-- defer zajistí, že se JS spustí až po načtení DOMu -->
+  <script src="app.js" defer></script>
 </head>
 <body>
   <div class="app">
@@ -29,7 +31,8 @@
             <span class="grade-card__badge">(připravujeme)</span>
           </button>
 
-          <button class="grade-card grade-card--active" data-grade="8">
+          <!-- AKTIVNÍ TLAČÍTKO PRO 8. TŘÍDU -->
+          <button class="grade-card grade-card--active" data-grade="8" type="button">
             <span class="grade-card__title">8. třída</span>
             <span class="grade-card__badge grade-card__badge--active">spustit hru</span>
           </button>
@@ -67,7 +70,6 @@
         <aside class="game-sidebar game-sidebar--left">
           <h2>Žebříček výher</h2>
           <ol class="ladder">
-            <!-- jen ukázka, později můžeš vygenerovat v JS -->
             <li class="ladder__item ladder__item--current">15 · 1 000 000 Kč</li>
             <li class="ladder__item">14 · 500 000 Kč</li>
             <li class="ladder__item">13 · 250 000 Kč</li>
@@ -95,19 +97,19 @@
           </div>
 
           <div class="answers-grid">
-            <button class="answer-btn" data-answer="0">
+            <button class="answer-btn" data-answer="0" type="button">
               <span class="answer-btn__label">A</span>
               <span class="answer-btn__text">Možnost A</span>
             </button>
-            <button class="answer-btn" data-answer="1">
+            <button class="answer-btn" data-answer="1" type="button">
               <span class="answer-btn__label">B</span>
               <span class="answer-btn__text">Možnost B</span>
             </button>
-            <button class="answer-btn" data-answer="2">
+            <button class="answer-btn" data-answer="2" type="button">
               <span class="answer-btn__label">C</span>
               <span class="answer-btn__text">Možnost C</span>
             </button>
-            <button class="answer-btn" data-answer="3">
+            <button class="answer-btn" data-answer="3" type="button">
               <span class="answer-btn__label">D</span>
               <span class="answer-btn__text">Možnost D</span>
             </button>
@@ -118,10 +120,10 @@
         <aside class="game-sidebar game-sidebar--right">
           <h2>Nápovědy</h2>
           <div class="lifelines">
-            <button class="lifeline-btn" data-lifeline="5050">50 : 50</button>
-            <button class="lifeline-btn" data-lifeline="call">Zavolej učiteli</button>
-            <button class="lifeline-btn" data-lifeline="class-help">Pomoc třídy</button>
-            <button class="lifeline-btn lifeline-btn--disabled" disabled>Změnit otázku</button>
+            <button class="lifeline-btn" data-lifeline="5050" type="button">50 : 50</button>
+            <button class="lifeline-btn" data-lifeline="call" type="button">Zavolej učiteli</button>
+            <button class="lifeline-btn" data-lifeline="class-help" type="button">Pomoc třídy</button>
+            <button class="lifeline-btn lifeline-btn--disabled" disabled type="button">Změnit otázku</button>
           </div>
 
           <div class="game-info">
@@ -140,14 +142,12 @@
       <footer class="game-footer">
         <button id="btn-exit-game" class="secondary-btn" type="button">Ukončit hru</button>
         <p id="game-status-message">Vyberte odpověď…</p>
-        <button id="btn-next-question" class="primary-btn primary-btn--disabled" disabled>
+        <button id="btn-next-question" class="primary-btn primary-btn--disabled" disabled type="button">
           Další otázka
         </button>
       </footer>
     </section>
 
   </div>
-
-  <script src="app.js"></script>
 </body>
 </html>
