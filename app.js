@@ -78,14 +78,21 @@ function getPrizeForLevel(level) {
 }
 
 // vybere 15 otázek podle obtížnosti z LADDER_CONFIG
-function generateGameQuestions() {
+function generateGameQuestions(activeTopics) {
   if (typeof QUESTIONS_8 === "undefined" || !Array.isArray(QUESTIONS_8)) {
     console.error("QUESTIONS_8 není načteno – zkontroluj data-questions-8.js");
     return [];
   }
 
-  const pool = [...QUESTIONS_8];
+  // 1) filtr podle vybraných témat z config-topics-8.js
+  let pool = QUESTIONS_8.filter(q => activeTopics.includes(q.topic));
 
+  if (pool.length === 0) {
+    console.warn("Žádné otázky pro vybraná témata:", activeTopics);
+    return [];
+  }
+
+  // 2) rozdělení podle obtížnosti
   const byDiff = {
     1: pool.filter(q => q.difficulty === 1),
     2: pool.filter(q => q.difficulty === 2),
@@ -101,25 +108,33 @@ function generateGameQuestions() {
   LADDER_CONFIG.forEach(cfg => {
     const list = byDiff[cfg.difficulty];
     if (!list || list.length === 0) {
-      console.warn("Nedostatek otázek pro obtížnost", cfg.difficulty);
+      console.warn(
+        "Nedostatek otázek pro obtížnost",
+        cfg.difficulty,
+        "v tématech",
+        activeTopics
+      );
       return;
     }
-let q = list.pop();
 
-// zamícháme odpovědi
-q = withShuffledAnswers(q);
+    let q = list.pop();
 
-selected.push({
-  ...q,
-  level: cfg.level,
-  prize: cfg.prize
-});
+    // Pokud používáš míchání odpovědí:
+    if (typeof withShuffledAnswers === "function") {
+      q = withShuffledAnswers(q);
+    }
 
+    selected.push({
+      ...q,
+      level: cfg.level,
+      prize: cfg.prize
+    });
   });
 
   console.log("Vygenerované otázky:", selected);
   return selected;
 }
+
 
 // zvýrazní správný řádek v žebříčku
 function updateLadderHighlight(level) {
