@@ -45,3 +45,70 @@ document.addEventListener("DOMContentLoaded", () => {
     console.warn("Nenalezeno tlačítko Ukončit hru");
   }
 });
+
+// konfigurace žebříčku – výhry + požadovaná obtížnost
+const LADDER_CONFIG = [
+  { level: 1,  prize: "100 Kč",   difficulty: 1 },
+  { level: 2,  prize: "200 Kč",   difficulty: 1 },
+  { level: 3,  prize: "300 Kč",   difficulty: 1 },
+  { level: 4,  prize: "500 Kč",   difficulty: 1 },
+  { level: 5,  prize: "1 000 Kč", difficulty: 1 },
+
+  { level: 6,  prize: "2 000 Kč", difficulty: 2 },
+  { level: 7,  prize: "4 000 Kč", difficulty: 2 },
+  { level: 8,  prize: "8 000 Kč", difficulty: 2 },
+  { level: 9,  prize: "16 000 Kč", difficulty: 2 },
+  { level:10,  prize: "32 000 Kč", difficulty: 2 },
+
+  { level:11,  prize: "64 000 Kč",  difficulty: 3 },
+  { level:12,  prize: "125 000 Kč", difficulty: 3 },
+  { level:13,  prize: "250 000 Kč", difficulty: 3 },
+  { level:14,  prize: "500 000 Kč", difficulty: 3 },
+  { level:15,  prize: "1 000 000 Kč", difficulty: 3 }
+];
+
+// jednoduché zamíchání pole (Fisher–Yates)
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+// vygeneruje sadu 15 otázek pro hru podle obtížnosti
+function generateGameQuestions() {
+  // zkopírujeme si pole, ať nepřepisujeme původní
+  const pool = [...QUESTIONS_8];
+
+  // rozdělit podle obtížnosti
+  const byDiff = {
+    1: pool.filter(q => q.difficulty === 1),
+    2: pool.filter(q => q.difficulty === 2),
+    3: pool.filter(q => q.difficulty === 3)
+  };
+
+  shuffle(byDiff[1]);
+  shuffle(byDiff[2]);
+  shuffle(byDiff[3]);
+
+  const selected = [];
+
+  LADDER_CONFIG.forEach(cfg => {
+    const list = byDiff[cfg.difficulty];
+    if (list.length === 0) {
+      console.warn("Nedostatek otázek pro obtížnost", cfg.difficulty);
+      return;
+    }
+    // vezmeme poslední otázku ze zamíchaného seznamu
+    const q = list.pop();
+    selected.push({
+      ...q,
+      level: cfg.level,
+      prize: cfg.prize
+    });
+  });
+
+  return selected;
+}
+
