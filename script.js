@@ -1,6 +1,10 @@
 // app.js
 
+console.log("app.js načten");
+
 document.addEventListener("DOMContentLoaded", () => {
+  console.log("DOM ready");
+
   const screenLanding = document.getElementById("screen-landing");
   const screenGame = document.getElementById("screen-game");
 
@@ -25,15 +29,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (grade8Btn) {
     grade8Btn.addEventListener("click", () => {
-      // sem později napojíš načtení otázek pro 8. třídu
+      console.log("Klik na 8. třídu");
       showScreen("game");
     });
+  } else {
+    console.warn("Nenalezeno tlačítko pro 8. třídu");
   }
 
   if (exitGameBtn) {
     exitGameBtn.addEventListener("click", () => {
-      // případně potvrzení "opravdu ukončit?"
+      console.log("Klik na Ukončit hru");
       showScreen("landing");
     });
+  } else {
+    console.warn("Nenalezeno tlačítko Ukončit hru");
   }
 });
