@@ -1,4 +1,7 @@
 // app.js
+let gameQuestions = [];
+let currentQuestionIndex = 0;
+
 
 console.log("app.js načten");
 
@@ -30,11 +33,15 @@ document.addEventListener("DOMContentLoaded", () => {
   let gameQuestions = [];
 
 grade8Btn.addEventListener("click", () => {
-  gameQuestions = generateGameQuestions(); // sada 15 otázek
+  console.log("Klik na 8. třídu");
+
+  gameQuestions = generateGameQuestions();   // vytvoří sadu 15 otázek
   currentQuestionIndex = 0;
+
   showCurrentQuestion();
   showScreen("game");
 });
+
 
 
   if (exitGameBtn) {
@@ -111,5 +118,39 @@ function generateGameQuestions() {
   });
 
   return selected;
+}
+
+function showCurrentQuestion() {
+  const q = gameQuestions[currentQuestionIndex];
+
+  if (!q) {
+    console.error("Žádná otázka pro index:", currentQuestionIndex);
+    return;
+  }
+
+  // text otázky
+  const questionText = document.getElementById("question-text");
+  questionText.textContent = q.question;
+
+  // odpovědi
+  const answerButtons = document.querySelectorAll(".answer-btn");
+  answerButtons.forEach((btn, idx) => {
+    btn.querySelector(".answer-btn__text").textContent = q.answers[idx];
+    btn.classList.remove("correct", "incorrect", "locked"); // reset stylů na začátku
+    btn.disabled = false;
+  });
+
+  // horní info
+  document.getElementById("game-question-progress").textContent =
+    `Otázka ${q.level} / 15`;
+
+  document.getElementById("game-current-prize").textContent = q.prize;
+
+  // status message reset
+  document.getElementById("game-status-message").textContent = "Vyberte odpověď…";
+
+  // disable next question button
+  document.getElementById("btn-next-question").disabled = true;
+  document.getElementById("btn-next-question").classList.add("primary-btn--disabled");
 }
 
