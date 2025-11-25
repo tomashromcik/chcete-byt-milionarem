@@ -34,13 +34,14 @@ function shuffle(array) {
 }
 
 // vybere 15 otázek podle obtížností z LADDER_CONFIG
+
 function generateGameQuestions() {
-  if (!Array.isArray(window.QUESTIONS_8)) {
+  if (typeof QUESTIONS_8 === "undefined" || !Array.isArray(QUESTIONS_8)) {
     console.error("QUESTIONS_8 není načteno – zkontroluj data-questions-8.js");
     return [];
   }
 
-  const pool = [...window.QUESTIONS_8];
+  const pool = [...QUESTIONS_8];
 
   const byDiff = {
     1: pool.filter(q => q.difficulty === 1),
@@ -71,6 +72,7 @@ function generateGameQuestions() {
   console.log("Vygenerované otázky:", selected);
   return selected;
 }
+
 
 // zvýrazní správný řádek v žebříčku
 function updateLadderHighlight(level) {
