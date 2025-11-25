@@ -57,6 +57,21 @@ function shuffle(array) {
   return array;
 }
 
+function withShuffledAnswers(q) {
+  const indexOrder = [0, 1, 2, 3];
+  shuffle(indexOrder); // použijeme tvoji funkci shuffle()
+
+  const newAnswers = indexOrder.map(i => q.answers[i]);
+  const newCorrectIndex = indexOrder.indexOf(q.correctIndex);
+
+  return {
+    ...q,
+    answers: newAnswers,
+    correctIndex: newCorrectIndex
+  };
+}
+
+
 function getPrizeForLevel(level) {
   const cfg = LADDER_CONFIG.find(c => c.level === level);
   return cfg ? cfg.prize : "0 Kč";
@@ -89,12 +104,17 @@ function generateGameQuestions() {
       console.warn("Nedostatek otázek pro obtížnost", cfg.difficulty);
       return;
     }
-    const q = list.pop();
-    selected.push({
-      ...q,
-      level: cfg.level,
-      prize: cfg.prize
-    });
+let q = list.pop();
+
+// zamícháme odpovědi
+q = withShuffledAnswers(q);
+
+selected.push({
+  ...q,
+  level: cfg.level,
+  prize: cfg.prize
+});
+
   });
 
   console.log("Vygenerované otázky:", selected);
