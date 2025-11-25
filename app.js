@@ -183,6 +183,68 @@ document.addEventListener("DOMContentLoaded", () => {
       currentQuestionIndex = 0;
       showCurrentQuestion();
       showScreen("game");
+  // --- Ošetření kliknutí na odpovědi ---
+  const answerButtons = document.querySelectorAll(".answer-btn");
+  const statusMsg = document.getElementById("game-status-message");
+  const nextBtn = document.getElementById("btn-next-question");
+
+  answerButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      if (questionLocked) return; // už bylo odpovězeno
+
+      const q = gameQuestions[currentQuestionIndex];
+      if (!q) return;
+
+      const chosenIndex = Number(btn.dataset.answer);
+      const correctIndex = q.correctIndex;
+
+      questionLocked = true;
+      lastAnswerCorrect = (chosenIndex === correctIndex);
+
+      // zamknout tlačítka + obarvit
+      answerButtons.forEach((b, idx) => {
+        b.disabled = true;
+        b.classList.add("locked");
+
+        if (idx === correctIndex) {
+          b.classList.add("correct");
+        }
+
+        if (idx === chosenIndex && chosenIndex !== correctIndex) {
+          b.classList.add("incorrect");
+        }
+      });
+
+      if (lastAnswerCorrect) {
+        statusMsg.textContent = `Správně! Získáváš ${q.prize}.`;
+      } else {
+        const labels = ["A", "B", "C", "D"];
+        statusMsg.textContent =
+          `Špatně. Správná odpověď byla ${labels[correctIndex]}.`;
+      }
+
+      // povolit tlačítko "Další otázka"
+      nextBtn.disabled = false;
+      nextBtn.classList.remove("primary-btn--disabled");
+    });
+  });
+
+  // --- Další otázka ---
+  if (nextBtn) {
+    nextBtn.addEventListener("click", () => {
+      if (currentQuestionIndex < gameQuestions.length - 1) {
+        currentQuestionIndex++;
+        showCurrentQuestion();
+      } else {
+        // konec hry
+        statusMsg.textContent = "Konec hry! To byla poslední otázka.";
+        nextBtn.disabled = true;
+        nextBtn.classList.add("primary-btn--disabled");
+      }
+    });
+  }
+
+      
     });
   }
 
