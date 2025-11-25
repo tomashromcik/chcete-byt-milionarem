@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <title>Chcete být milionářem – školní verze</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+
+    <!-- ÚVODNÍ OBRAZOVKA -->
+    <section id="screen-landing" class="screen screen--active">
+      <header class="landing-header">
+        <h1>Chcete být milionářem</h1>
+        <p>Školní verze · 6.–9. třída</p>
+      </header>
+
+      <main class="landing-main">
+        <h2>Vyberte ročník</h2>
+        <div class="grade-grid">
+          <button class="grade-card grade-card--disabled" disabled>
+            <span class="grade-card__title">6. třída</span>
+            <span class="grade-card__badge">(připravujeme)</span>
+          </button>
+
+          <button class="grade-card grade-card--disabled" disabled>
+            <span class="grade-card__title">7. třída</span>
+            <span class="grade-card__badge">(připravujeme)</span>
+          </button>
+
+          <button class="grade-card grade-card--active" data-grade="8">
+            <span class="grade-card__title">8. třída</span>
+            <span class="grade-card__badge grade-card__badge--active">spustit hru</span>
+          </button>
+
+          <button class="grade-card grade-card--disabled" disabled>
+            <span class="grade-card__title">9. třída</span>
+            <span class="grade-card__badge">(připravujeme)</span>
+          </button>
+        </div>
+      </main>
+
+      <footer class="landing-footer">
+        <button class="secondary-btn" type="button">O aplikaci</button>
+        <button class="secondary-btn" type="button">Nastavení</button>
+      </footer>
+    </section>
+
+    <!-- HERNÍ OBRAZOVKA PRO 8. TŘÍDU -->
+    <section id="screen-game" class="screen screen--hidden">
+      <header class="game-header">
+        <div class="game-header__left">
+          <h1>Chcete být milionářem</h1>
+          <p id="game-grade-label">8. třída</p>
+        </div>
+        <div class="game-header__center">
+          <p id="game-question-progress">Otázka 1 / 15</p>
+        </div>
+        <div class="game-header__right">
+          <p>Výhra: <span id="game-current-prize">0 Kč</span></p>
+        </div>
+      </header>
+
+      <main class="game-layout">
+        <!-- Levý panel – žebříček výher -->
+        <aside class="game-sidebar game-sidebar--left">
+          <h2>Žebříček výher</h2>
+          <ol class="ladder">
+            <!-- jen ukázka, později můžeš vygenerovat v JS -->
+            <li class="ladder__item ladder__item--current">15 · 1 000 000 Kč</li>
+            <li class="ladder__item">14 · 500 000 Kč</li>
+            <li class="ladder__item">13 · 250 000 Kč</li>
+            <li class="ladder__item ladder__item--safe">12 · 125 000 Kč</li>
+            <li class="ladder__item">11 · 64 000 Kč</li>
+            <li class="ladder__item">10 · 32 000 Kč</li>
+            <li class="ladder__item ladder__item--safe">9 · 16 000 Kč</li>
+            <li class="ladder__item">8 · 8 000 Kč</li>
+            <li class="ladder__item">7 · 4 000 Kč</li>
+            <li class="ladder__item">6 · 2 000 Kč</li>
+            <li class="ladder__item">5 · 1 000 Kč</li>
+            <li class="ladder__item">4 · 500 Kč</li>
+            <li class="ladder__item">3 · 300 Kč</li>
+            <li class="ladder__item">2 · 200 Kč</li>
+            <li class="ladder__item">1 · 100 Kč</li>
+          </ol>
+        </aside>
+
+        <!-- Střední panel – otázka a odpovědi -->
+        <section class="game-main">
+          <div class="question-box">
+            <p id="question-text">
+              Tady bude text otázky pro 8. třídu.
+            </p>
+          </div>
+
+          <div class="answers-grid">
+            <button class="answer-btn" data-answer="0">
+              <span class="answer-btn__label">A</span>
+              <span class="answer-btn__text">Možnost A</span>
+            </button>
+            <button class="answer-btn" data-answer="1">
+              <span class="answer-btn__label">B</span>
+              <span class="answer-btn__text">Možnost B</span>
+            </button>
+            <button class="answer-btn" data-answer="2">
+              <span class="answer-btn__label">C</span>
+              <span class="answer-btn__text">Možnost C</span>
+            </button>
+            <button class="answer-btn" data-answer="3">
+              <span class="answer-btn__label">D</span>
+              <span class="answer-btn__text">Možnost D</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- Pravý panel – nápovědy + info -->
+        <aside class="game-sidebar game-sidebar--right">
+          <h2>Nápovědy</h2>
+          <div class="lifelines">
+            <button class="lifeline-btn" data-lifeline="5050">50 : 50</button>
+            <button class="lifeline-btn" data-lifeline="call">Zavolej učiteli</button>
+            <button class="lifeline-btn" data-lifeline="class-help">Pomoc třídy</button>
+            <button class="lifeline-btn lifeline-btn--disabled" disabled>Změnit otázku</button>
+          </div>
+
+          <div class="game-info">
+            <div class="game-info__row">
+              <span>Čas:</span>
+              <span id="game-timer">– : ––</span>
+            </div>
+            <div class="game-info__row">
+              <span>Zbývá otázek:</span>
+              <span id="game-questions-left">14</span>
+            </div>
+          </div>
+        </aside>
+      </main>
+
+      <footer class="game-footer">
+        <button id="btn-exit-game" class="secondary-btn" type="button">Ukončit hru</button>
+        <p id="game-status-message">Vyberte odpověď…</p>
+        <button id="btn-next-question" class="primary-btn primary-btn--disabled" disabled>
+          Další otázka
+        </button>
+      </footer>
+    </section>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
