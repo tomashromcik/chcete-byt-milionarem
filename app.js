@@ -22,6 +22,9 @@ const LADDER_CONFIG = [
 
 let gameQuestions = [];
 let currentQuestionIndex = 0;
+let questionLocked = false;       // jestli už je otázka zodpovězená
+let lastAnswerCorrect = false;    // jestli byla naposledy odpověď správně
+
 
 // --- Pomocné funkce ---
 
@@ -99,6 +102,9 @@ function showCurrentQuestion() {
     return;
   }
 
+  questionLocked = false;
+  lastAnswerCorrect = false;
+
   // text otázky
   const questionText = document.getElementById("question-text");
   questionText.textContent = q.question;
@@ -122,6 +128,10 @@ function showCurrentQuestion() {
   // žebříček
   updateLadderHighlight(q.level);
 
+  // zbývající otázky
+  const left = gameQuestions.length - currentQuestionIndex - 1;
+  document.getElementById("game-questions-left").textContent = left;
+
   // status message
   document.getElementById("game-status-message").textContent = "Vyberte odpověď…";
 
@@ -130,6 +140,7 @@ function showCurrentQuestion() {
   nextBtn.disabled = true;
   nextBtn.classList.add("primary-btn--disabled");
 }
+
 
 // --- Přepínání obrazovek & start hry ---
 
