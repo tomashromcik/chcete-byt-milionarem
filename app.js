@@ -415,31 +415,42 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // start hry pro 8. třídu
-  if (grade8Btn) {
-    grade8Btn.addEventListener("click", () => {
-      console.log("Klik na 8. třídu");
+if (grade8Btn) {
+  grade8Btn.addEventListener("click", () => {
+    console.log("Klik na 8. třídu");
 
-      highestSafeLevelReached = 0;
-      gameOver = false;
-      lifeline5050Used = false;
+    highestSafeLevelReached = 0;
+    gameOver = false;
+    lifeline5050Used = false;
 
-      // reset 50:50 tlačítka
-      if (lifeline5050Btn) {
-        lifeline5050Btn.disabled = false;
-        lifeline5050Btn.classList.remove("lifeline-btn--disabled");
-      }
+    if (lifeline5050Btn) {
+      lifeline5050Btn.disabled = false;
+      lifeline5050Btn.classList.remove("lifeline-btn--disabled");
+    }
 
-      gameQuestions = generateGameQuestions();
-      if (!gameQuestions || gameQuestions.length === 0) {
-        alert("Nepodařilo se načíst otázky pro 8. třídu.");
-        return;
-      }
+    // 🔹 načteme seznam povolených témat z config-topics-8.js
+    let activeTopics;
+    if (typeof getEnabledTopicsFor8 === "function") {
+      activeTopics = getEnabledTopicsFor8();
+    } else {
+      // nouzový fallback, kdyby se config nenačetl
+      activeTopics = ["prace", "kladky", "vykon", "ucinnost", "Ep", "Ek"];
+    }
 
-      currentQuestionIndex = 0;
-      showCurrentQuestion();
-      showScreen("game");
-    });
-  }
+    console.log("Aktivní témata pro 8. třídu:", activeTopics);
+
+    gameQuestions = generateGameQuestions(activeTopics);
+    if (!gameQuestions || gameQuestions.length === 0) {
+      alert("Nepodařilo se načíst otázky pro vybraná témata.");
+      return;
+    }
+
+    currentQuestionIndex = 0;
+    showCurrentQuestion();
+    showScreen("game");
+  });
+}
+
 
   if (exitGameBtn) {
     exitGameBtn.addEventListener("click", () => {
