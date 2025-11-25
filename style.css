@@ -1,0 +1,380 @@
+/* Reset & základ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: radial-gradient(circle at top, #1e293b 0, #020617 50%, #000 100%);
+  color: #e5e7eb;
+  min-height: 100vh;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.screen {
+  display: none;
+  padding: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.screen--active {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.screen--hidden {
+  display: none;
+}
+
+/* Úvodní obrazovka */
+.landing-header {
+  text-align: center;
+}
+
+.landing-header h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.landing-header p {
+  margin-top: 0.25rem;
+  color: #9ca3af;
+}
+
+.landing-main {
+  text-align: center;
+}
+
+.landing-main h2 {
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.grade-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.grade-card {
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid #1d4ed8;
+  border-radius: 1rem;
+  padding: 1rem 1.25rem;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+}
+
+.grade-card__title {
+  display: block;
+  font-size: 1.1rem;
+}
+
+.grade-card__badge {
+  display: block;
+  font-size: 0.85rem;
+  color: #9ca3af;
+  margin-top: 0.25rem;
+}
+
+.grade-card__badge--active {
+  color: #22c55e;
+}
+
+.grade-card--active:hover {
+  transform: translateY(-3px);
+  border-color: #60a5fa;
+  box-shadow: 0 0 20px rgba(37, 99, 235, 0.6);
+}
+
+.grade-card--disabled {
+  border-color: #4b5563;
+  cursor: default;
+  opacity: 0.6;
+}
+
+.landing-footer {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.secondary-btn,
+.primary-btn {
+  border-radius: 999px;
+  padding: 0.5rem 1.2rem;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #e5e7eb;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.secondary-btn {
+  border-color: #4b5563;
+}
+
+.secondary-btn:hover {
+  border-color: #9ca3af;
+}
+
+.primary-btn {
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+.primary-btn--disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* Herní obrazovka */
+
+.game-header {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: center;
+  gap: 1rem;
+  background: rgba(15, 23, 42, 0.9);
+  border-radius: 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid #1d4ed8;
+  font-size: 0.95rem;
+}
+
+.game-header__left h1 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.game-header__left p {
+  margin: 0.25rem 0 0;
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
+
+.game-header__center {
+  text-align: center;
+  font-weight: 500;
+}
+
+.game-header__right {
+  text-align: right;
+  font-size: 0.95rem;
+}
+
+/* Rozložení tří sloupců */
+.game-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr) minmax(0, 0.9fr);
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+/* Sidebar (žebříček / nápovědy) */
+.game-sidebar {
+  background: rgba(15, 23, 42, 0.9);
+  border-radius: 1rem;
+  padding: 1rem;
+  border: 1px solid #1f2937;
+}
+
+.game-sidebar h2 {
+  margin-top: 0;
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Žebříček výher */
+.ladder {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.ladder__item {
+  padding: 0.25rem 0.35rem;
+  border-radius: 0.4rem;
+  margin-bottom: 0.15rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.ladder__item--current {
+  background: rgba(37, 99, 235, 0.2);
+  border: 1px solid #3b82f6;
+}
+
+.ladder__item--safe {
+  color: #facc15;
+}
+
+/* Střed – otázka + odpovědi */
+.game-main {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.question-box {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.35), rgba(15, 23, 42, 0.95));
+  border-radius: 1rem;
+  border: 1px solid #1d4ed8;
+  padding: 1rem;
+  text-align: center;
+  font-size: 1rem;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.answers-grid {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.answer-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid #1d4ed8;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+  transition: transform 0.1s ease, box-shadow 0.1s ease, border-color 0.1s ease, background 0.1s ease;
+}
+
+.answer-btn__label {
+  font-weight: 600;
+  min-width: 1.5rem;
+  text-align: center;
+}
+
+.answer-btn__text {
+  flex: 1;
+}
+
+.answer-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 14px rgba(37, 99, 235, 0.6);
+  border-color: #60a5fa;
+}
+
+/* Pravý panel – nápovědy */
+.lifelines {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.lifeline-btn {
+  border-radius: 999px;
+  padding: 0.45rem 0.8rem;
+  border: 1px solid #334155;
+  background: rgba(15, 23, 42, 0.9);
+  color: inherit;
+  cursor: pointer;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.lifeline-btn:hover {
+  border-color: #60a5fa;
+}
+
+.lifeline-btn--disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.game-info {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  border-top: 1px solid #1f2937;
+  padding-top: 0.75rem;
+}
+
+.game-info__row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.35rem;
+}
+
+/* Spodní lišta hry */
+.game-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  background: rgba(15, 23, 42, 0.9);
+  border-radius: 1rem;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #1f2937;
+  font-size: 0.9rem;
+}
+
+#game-status-message {
+  flex: 1;
+  text-align: center;
+  color: #9ca3af;
+}
+
+/* Responzivita */
+@media (max-width: 900px) {
+  .game-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .game-header {
+    grid-template-columns: minmax(0, 1fr);
+    text-align: center;
+  }
+
+  .game-header__right {
+    text-align: center;
+  }
+
+  .game-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+@media (max-width: 600px) {
+  .screen {
+    padding: 1rem;
+  }
+
+  .landing-header h1 {
+    font-size: 1.6rem;
+  }
+
+  .grade-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .answer-btn {
+    font-size: 0.9rem;
+  }
+}
