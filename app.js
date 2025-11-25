@@ -27,14 +27,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  if (grade8Btn) {
-    grade8Btn.addEventListener("click", () => {
-      console.log("Klik na 8. třídu");
-      showScreen("game");
-    });
-  } else {
-    console.warn("Nenalezeno tlačítko pro 8. třídu");
-  }
+  let gameQuestions = [];
+
+grade8Btn.addEventListener("click", () => {
+  gameQuestions = generateGameQuestions(); // sada 15 otázek
+  currentQuestionIndex = 0;
+  showCurrentQuestion();
+  showScreen("game");
+});
+
 
   if (exitGameBtn) {
     exitGameBtn.addEventListener("click", () => {
