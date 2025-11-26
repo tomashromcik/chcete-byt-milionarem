@@ -359,55 +359,169 @@ const QUESTIONS_8 = [
 },
 
 
-  // -------------------------------------------------------
-  // VÝKON
-  // -------------------------------------------------------
+ // -------------------------------------------------------
+// VÝKON – původní + NOVÉ otázky
+// -------------------------------------------------------
 
-  {
-    id: "vykon-1",
-    topic: "vykon",
-    difficulty: 1,
-    question: "Jaká je základní jednotka výkonu v soustavě SI?",
-    answers: ["Watt (W)", "Joul (J)", "Newton (N)", "Volt (V)"],
-    correctIndex: 0
-  },
-  {
-    id: "vykon-2",
-    topic: "vykon",
-    difficulty: 1,
-    question: "Který vztah správně vyjadřuje výkon?",
-    answers: ["P = W / t", "P = F · s", "P = m · g", "P = U · I"],
-    correctIndex: 0
-  },
-  {
-    id: "vykon-3",
-    topic: "vykon",
-    difficulty: 1,
-    question: "Co označuje užitečná práce vykonaná za 1 sekundu?",
-    answers: [
-      "Užitečný výkon stroje",
-      "Účinnost stroje",
-      "Polohovou energii stroje",
-      "Třenou sílu ve stroji"
-    ],
-    correctIndex: 0
-  },
-  {
-    id: "vykon-4",
-    topic: "vykon",
-    difficulty: 2,
-    question: "Motor vykoná práci 6 000 J za 30 s. Jaký má výkon?",
-    answers: ["200 W", "180 W", "20 W", "5 000 W"],
-    correctIndex: 0
-  },
-  {
-    id: "vykon-5",
-    topic: "vykon",
-    difficulty: 3,
-    question: "Žák o hmotnosti 60 kg vyběhne do výšky 12 m za 10 s. Jaký je jeho průměrný výkon? (g =̇ 10 m/s²)",
-    answers: ["720 W", "600 W", "72 W", "7,2 kW"],
-    correctIndex: 0
-  },
+{
+  id: "vykon-1",
+  topic: "vykon",
+  difficulty: 1,
+  question: "Jaká je základní jednotka výkonu v soustavě SI?",
+  answers: ["Watt (W)", "Joul (J)", "Newton (N)", "Volt (V)"],
+  correctIndex: 0
+},
+{
+  id: "vykon-2",
+  topic: "vykon",
+  difficulty: 1,
+  question: "Který vztah správně vyjadřuje výkon?",
+  answers: ["P = W / t", "P = F · s", "P = m · g", "P = U · I"],
+  correctIndex: 0
+},
+{
+  id: "vykon-3",
+  topic: "vykon",
+  difficulty: 1,
+  question: "Co označuje užitečná práce vykonaná za 1 sekundu?",
+  answers: [
+    "Užitečný výkon stroje",
+    "Účinnost stroje",
+    "Polohovou energii stroje",
+    "Třenou sílu ve stroji"
+  ],
+  correctIndex: 0
+},
+
+// --- NOVÉ OBTÍŽNOST 1 ---
+{
+  id: "vykon-new-1",
+  topic: "vykon",
+  difficulty: 1,
+  question: "Které tvrzení nejlépe vystihuje výkon?",
+  answers: [
+    "Kolik práce se vykoná za 1 sekundu.",
+    "Jak velkou silou působí těleso.",
+    "Kolik energie má těleso v určité výšce.",
+    "Jak dlouho trvá pohyb."
+  ],
+  correctIndex: 0
+},
+{
+  id: "vykon-new-2",
+  topic: "vykon",
+  difficulty: 1,
+  question: "Jak se změní výkon, pokud vykonáme stejnou práci za kratší čas?",
+  answers: [
+    "Výkon je větší",
+    "Výkon se zmenší",
+    "Výkon je stejný",
+    "Výkon je nulový"
+  ],
+  correctIndex: 0
+},
+{
+  id: "vykon-new-3",
+  topic: "vykon",
+  difficulty: 1,
+  question: "Které zařízení má obvykle největší výkon?",
+  answers: [
+    "Motor osobního auta",
+    "Stolní lampa",
+    "Kalkulačka",
+    "Baterka do kapsy"
+  ],
+  correctIndex: 0
+},
+
+// -------------------------------------------------------
+//  OBTÍŽNOST 2
+// -------------------------------------------------------
+
+{
+  id: "vykon-4",
+  topic: "vykon",
+  difficulty: 2,
+  question: "Motor vykoná práci 6 000 J za 30 s. Jaký má výkon?",
+  answers: ["200 W", "180 W", "20 W", "5 000 W"],
+  correctIndex: 0
+},
+
+// --- NOVÉ OBTÍŽNOST 2 ---
+{
+  id: "vykon-new-4",
+  topic: "vykon",
+  difficulty: 2,
+  question: "Žák vykoná práci 900 J za 3 sekundy. Jaký je jeho výkon?",
+  answers: ["300 W", "90 W", "3 000 W", "30 W"],
+  correctIndex: 0
+},
+{
+  id: "vykon-new-5",
+  topic: "vykon",
+  difficulty: 2,
+  question: "Kdy je výkon větší?",
+  answers: [
+    "Když uděláme stejnou práci za kratší čas",
+    "Když uděláme stejnou práci za delší čas",
+    "Když práci vůbec nekonáme",
+    "Když práci konáme bez použití síly"
+  ],
+  correctIndex: 0
+},
+{
+  id: "vykon-new-6",
+  topic: "vykon",
+  difficulty: 2,
+  question: "Motor zvedne břemeno o práci 5 000 J za 20 sekund. Jaký je výkon motoru?",
+  answers: ["250 W", "100 W", "5 000 W", "2 500 W"],
+  correctIndex: 0
+},
+
+// -------------------------------------------------------
+//  OBTÍŽNOST 3
+// -------------------------------------------------------
+
+{
+  id: "vykon-5",
+  topic: "vykon",
+  difficulty: 3,
+  question: "Žák o hmotnosti 60 kg vyběhne do výšky 12 m za 10 s. Jaký je jeho průměrný výkon? (g =̇ 10 m/s²)",
+  answers: ["720 W", "600 W", "72 W", "7,2 kW"],
+  correctIndex: 0
+},
+
+// --- NOVÉ OBTÍŽNOST 3 ---
+{
+  id: "vykon-new-7",
+  topic: "vykon",
+  difficulty: 3,
+  question: "Žák o hmotnosti 50 kg vyběhne do výšky 8 m za 5 s. Jaký je jeho přibližný výkon? (g =̇ 10 m/s²)",
+  answers: ["800 W", "500 W", "80 W", "50 W"],
+  correctIndex: 0
+},
+{
+  id: "vykon-new-8",
+  topic: "vykon",
+  difficulty: 3,
+  question: "Dva žáci vykonají stejnou práci 1 200 J, ale první za 4 s a druhý za 6 s. Které tvrzení je správné?",
+  answers: [
+    "První má větší výkon",
+    "Druhý má větší výkon",
+    "Mají stejný výkon",
+    "Nelze určit"
+  ],
+  correctIndex: 0
+},
+{
+  id: "vykon-new-9",
+  topic: "vykon",
+  difficulty: 3,
+  question: "Motor má výkon 500 W. Kolik práce vykoná za 10 sekund?",
+  answers: ["5 000 J", "500 J", "50 J", "50 000 J"],
+  correctIndex: 0
+},
+
 
   // -------------------------------------------------------
   // ÚČINNOST
