@@ -349,8 +349,24 @@ function use5050() {
 }
 
 // --- DOM ready ---
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("DOM ready");
 
-  // 🔹 TEACHER PANEL – DOM prvky
+  const screenLanding = document.getElementById("screen-landing");
+  const screenGame = document.getElementById("screen-game");
+
+  const grade8Btn = document.querySelector('.grade-card[data-grade="8"]');
+  const exitGameBtn = document.getElementById("btn-exit-game");
+
+  statusMsgEl = document.getElementById("game-status-message");
+  nextBtnEl = document.getElementById("btn-next-question");
+  timerEl = document.getElementById("game-timer");
+  questionsLeftEl = document.getElementById("game-questions-left");
+  lifeline5050Btn = document.querySelector('.lifeline-btn[data-lifeline="5050"]');
+
+  const answerButtons = document.querySelectorAll(".answer-btn");
+
+  // ---------- TEACHER PANEL – DOM prvky ----------
   const teacherPanel = document.getElementById("teacher-panel");
   const teacherTopicList = document.getElementById("teacher-topic-list");
   const teacherGenerateBtn = document.getElementById("teacher-generate");
@@ -358,16 +374,13 @@ function use5050() {
   const teacherOutputWrapper = document.getElementById("teacher-output-wrapper");
   const teacherOutput = document.getElementById("teacher-output");
 
+  // otevře modál a naplní checkboxy
   function openTeacherPanel() {
     if (!teacherPanel || !teacherTopicList) return;
 
     teacherTopicList.innerHTML = "";
-    if (teacherOutputWrapper) {
-      teacherOutputWrapper.classList.add("hidden");
-    }
-    if (teacherOutput) {
-      teacherOutput.value = "";
-    }
+    if (teacherOutputWrapper) teacherOutputWrapper.classList.add("hidden");
+    if (teacherOutput) teacherOutput.value = "";
 
     TOPIC_CONFIG_8.topics.forEach(t => {
       const row = document.createElement("label");
@@ -381,7 +394,7 @@ function use5050() {
     teacherPanel.classList.remove("hidden");
   }
 
-  // otevření panelu – Ctrl+U
+  // Ctrl+U otevře učitelský panel
   document.addEventListener("keydown", (e) => {
     if (e.ctrlKey && e.key.toLowerCase() === "u") {
       e.preventDefault();
@@ -396,7 +409,7 @@ function use5050() {
     });
   }
 
-  // 🔹 Vygenerovat kód pro config-topics-8.js
+  // vygenerovat kód pro config-topics-8.js
   if (teacherGenerateBtn) {
     teacherGenerateBtn.addEventListener("click", () => {
       if (!teacherTopicList || !teacherOutput || !teacherOutputWrapper) return;
@@ -412,7 +425,7 @@ function use5050() {
         }
       });
 
-      // poskládáme kód pro config-topics-8.js
+      // poskládáme JS kód pro config-topics-8.js
       const lines = [];
       lines.push('const TOPIC_CONFIG_8 = {');
       lines.push('  schoolYear: "2024/2025",');
@@ -437,11 +450,24 @@ function use5050() {
     });
   }
 
+  // ---------- přepínání obrazovek ----------
+  function showScreen(screen) {
+    if (screen === "landing") {
+      screenLanding.classList.add("screen--active");
+      screenLanding.classList.remove("screen--hidden");
 
-  // --- dál už necháš svůj původní kód: showScreen, answerButtons, nextBtn, 50:50, grade8Btn, exitGameBtn ---
+      screenGame.classList.remove("screen--active");
+      screenGame.classList.add("screen--hidden");
+    } else if (screen === "game") {
+      screenGame.classList.add("screen--active");
+      screenGame.classList.remove("screen--hidden");
 
+      screenLanding.classList.remove("screen--active");
+      screenLanding.classList.add("screen--hidden");
+    }
+  }
 
-  // --- Klik na odpověď ---
+  // ---------- Klik na odpověď ----------
   answerButtons.forEach(btn => {
     btn.addEventListener("click", () => {
       const idx = Number(btn.dataset.answer);
@@ -449,7 +475,7 @@ function use5050() {
     });
   });
 
-  // --- Další otázka ---
+  // ---------- Další otázka ----------
   if (nextBtnEl) {
     nextBtnEl.addEventListener("click", () => {
       if (gameOver) return;
@@ -465,14 +491,14 @@ function use5050() {
     });
   }
 
-  // --- 50 : 50 ---
+  // ---------- 50 : 50 ----------
   if (lifeline5050Btn) {
     lifeline5050Btn.addEventListener("click", () => {
       use5050();
     });
   }
 
-  // --- start hry pro 8. třídu ---
+  // ---------- start hry pro 8. třídu ----------
   if (grade8Btn) {
     grade8Btn.addEventListener("click", () => {
       console.log("Klik na 8. třídu");
@@ -491,7 +517,6 @@ function use5050() {
       if (typeof getEnabledTopicsFor8 === "function") {
         activeTopics = getEnabledTopicsFor8();
       } else {
-        // nouzový fallback, kdyby se config nenačetl
         activeTopics = ["prace", "kladky", "vykon", "ucinnost", "Ep", "Ek"];
       }
 
