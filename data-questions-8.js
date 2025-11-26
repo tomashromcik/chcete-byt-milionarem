@@ -580,7 +580,7 @@ const QUESTIONS_8 = [
     "Účinnost se nemění"
   ],
   correctIndex: 0
-}
+},
 
 
 // ---------- Obtížnost 1 ----------
