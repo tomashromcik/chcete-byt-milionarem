@@ -382,6 +382,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const teacherCloseBtn = document.getElementById("teacher-close");
   const teacherOutputWrapper = document.getElementById("teacher-output-wrapper");
   const teacherOutput = document.getElementById("teacher-output");
+  const teacherSaveLocalBtn = document.getElementById("teacher-save-local");
+
 
   function openTeacherPanel() {
     if (!teacherPanel || !teacherTopicList) return;
