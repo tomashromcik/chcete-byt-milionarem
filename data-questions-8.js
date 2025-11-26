@@ -524,64 +524,107 @@ const QUESTIONS_8 = [
 
 
   // -------------------------------------------------------
-  // ÚČINNOST
-  // -------------------------------------------------------
+// ÚČINNOST — NOVÉ OTÁZKY
+// -------------------------------------------------------
 
-  {
-    id: "ucinnost-1",
-    topic: "ucinnost",
-    difficulty: 1,
-    question: "Jak označujeme účinnost stroje?",
-    answers: ["η (éta)", "μ (mí)", "λ (lambda)", "α (alfa)"],
-    correctIndex: 0
-  },
-  {
-    id: "ucinnost-2",
-    topic: "ucinnost",
-    difficulty: 1,
-    question: "Který vztah vyjadřuje účinnost stroje?",
-    answers: [
-      "η = P / P₀",
-      "η = P₀ / P",
-      "η = P · t",
-      "η = m · g · h"
-    ],
-    correctIndex: 0
-  },
-  {
-    id: "ucinnost-3",
-    topic: "ucinnost",
-    difficulty: 2,
-    question: "Stroj má účinnost 80 %. Co to znamená?",
-    answers: [
-      "80 % dodané energie se přemění na užitečnou",
-      "Stroj spotřebuje o 80 % méně energie",
-      "Ztrátová energie je 80 % dodané energie",
-      "Stroj pracuje jen 80 % času"
-    ],
-    correctIndex: 0
-  },
-  {
-    id: "ucinnost-4",
-    topic: "ucinnost",
-    difficulty: 2,
-    question: "Stroji dodáme energii 1 000 J, užitečná práce je 600 J. Jaká je účinnost stroje?",
-    answers: ["60 %", "40 %", "166 %", "6 %"],
-    correctIndex: 0
-  },
-  {
-    id: "ucinnost-5",
-    topic: "ucinnost",
-    difficulty: 3,
-    question: "Které tvrzení o účinnosti je správné?",
-    answers: [
-      "Účinnost reálného stroje je vždy menší než 100 %",
-      "Účinnost může být větší než 100 %",
-      "Účinnost nezávisí na ztrátách",
-      "Účinnost se nemění"
-    ],
-    correctIndex: 0
-  },
+// ---------- Obtížnost 1 ----------
+{
+  id: "ucinnost-n1",
+  topic: "ucinnost",
+  difficulty: 1,
+  question: "Co vyjadřuje účinnost stroje?",
+  answers: [
+    "Kolik procent dodané energie se přemění na užitečnou",
+    "Jak velký výkon má stroj",
+    "Jak rychle stroj pracuje",
+    "Jak velkou silou stroj působí"
+  ],
+  correctIndex: 0
+},
+{
+  id: "ucinnost-n2",
+  topic: "ucinnost",
+  difficulty: 1,
+  question: "Jak se značí účinnost ve fyzice?",
+  answers: ["η", "α", "λ", "ω"],
+  correctIndex: 0
+},
+{
+  id: "ucinnost-n3",
+  topic: "ucinnost",
+  difficulty: 1,
+  question: "Jakou hodnotu může mít účinnost reálného stroje?",
+  answers: [
+    "Méně než 100 %",
+    "Přesně 100 %",
+    "Více než 200 %",
+    "Jakoukoli hodnotu"
+  ],
+  correctIndex: 0
+},
+
+// ---------- Obtížnost 2 ----------
+{
+  id: "ucinnost-n4",
+  topic: "ucinnost",
+  difficulty: 2,
+  question: "Stroj má užitečný výkon 400 W a celkový výkon dodaný P₀ je 500 W. Jaká je účinnost stroje?",
+  answers: ["80 %", "50 %", "125 %", "8 %"],
+  correctIndex: 0
+},
+{
+  id: "ucinnost-n5",
+  topic: "ucinnost",
+  difficulty: 2,
+  question: "Co znamená účinnost 50 %?",
+  answers: [
+    "Polovina dodané energie se přemění na užitečnou",
+    "Stroj pracuje na poloviční otáčky",
+    "Stroj spotřebuje polovinu elektrické energie",
+    "Vzniká poloviční tření"
+  ],
+  correctIndex: 0
+},
+{
+  id: "ucinnost-n6",
+  topic: "ucinnost",
+  difficulty: 2,
+  question: "Dodaná energie je 800 J, užitečná práce 600 J. Jaká je účinnost?",
+  answers: ["75 %", "60 %", "25 %", "133 %"],
+  correctIndex: 0
+},
+
+// ---------- Obtížnost 3 ----------
+{
+  id: "ucinnost-n7",
+  topic: "ucinnost",
+  difficulty: 3,
+  question: "Stroj má účinnost 70 %. Dodali jsme mu 2 000 J energie. Kolik užitečné práce vykoná?",
+  answers: ["1 400 J", "700 J", "2 700 J", "600 J"],
+  correctIndex: 0
+},
+{
+  id: "ucinnost-n8",
+  topic: "ucinnost",
+  difficulty: 3,
+  question: "Motor má výkon 900 W, ale jeho užitečný výkon je pouze 600 W. Jaká je účinnost motoru?",
+  answers: ["67 %", "150 %", "33 %", "6,7 %"],
+  correctIndex: 0
+},
+{
+  id: "ucinnost-n9",
+  topic: "ucinnost",
+  difficulty: 3,
+  question: "Dva stroje mají stejnou užitečnou práci, ale první má menší účinnost. Co to znamená?",
+  answers: [
+    "Potřebuje více dodané energie",
+    "Má větší tření",
+    "Pracuje rychleji",
+    "Pracuje pomaleji"
+  ],
+  correctIndex: 0
+},
+
 
   // -------------------------------------------------------
   // POLOHOVÁ ENERGIE (Ep)
