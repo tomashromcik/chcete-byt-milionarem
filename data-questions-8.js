@@ -524,8 +524,64 @@ const QUESTIONS_8 = [
 
 
   // -------------------------------------------------------
-// ÚČINNOST — NOVÉ OTÁZKY
+// ÚČINNOST — NOVÉ OTÁZKY + staré
 // -------------------------------------------------------
+ {
+  id: "ucinnost-1",
+  topic: "ucinnost",
+  difficulty: 1,
+  question: "Jak označujeme účinnost stroje?",
+  answers: ["η (éta)", "μ (mí)", "λ (lambda)", "α (alfa)"],
+  correctIndex: 0
+},
+{
+  id: "ucinnost-2",
+  topic: "ucinnost",
+  difficulty: 1,
+  question: "Který vztah vyjadřuje účinnost stroje?",
+  answers: [
+    "η = P / P₀",
+    "η = P₀ / P",
+    "η = P · t",
+    "η = m · g · h"
+  ],
+  correctIndex: 0
+},
+{
+  id: "ucinnost-3",
+  topic: "ucinnost",
+  difficulty: 2,
+  question: "Stroj má účinnost 80 %. Co to znamená?",
+  answers: [
+    "80 % dodané energie se přemění na užitečnou",
+    "Stroj spotřebuje o 80 % méně energie",
+    "Ztrátová energie je 80 % dodané energie",
+    "Stroj pracuje jen 80 % času"
+  ],
+  correctIndex: 0
+},
+{
+  id: "ucinnost-4",
+  topic: "ucinnost",
+  difficulty: 2,
+  question: "Stroji dodáme energii 1 000 J, užitečná práce je 600 J. Jaká je účinnost stroje?",
+  answers: ["60 %", "40 %", "166 %", "6 %"],
+  correctIndex: 0
+},
+{
+  id: "ucinnost-5",
+  topic: "ucinnost",
+  difficulty: 3,
+  question: "Které tvrzení o účinnosti je správné?",
+  answers: [
+    "Účinnost reálného stroje je vždy menší než 100 %",
+    "Účinnost může být větší než 100 %",
+    "Účinnost nezávisí na ztrátách",
+    "Účinnost se nemění"
+  ],
+  correctIndex: 0
+}
+
 
 // ---------- Obtížnost 1 ----------
 {
