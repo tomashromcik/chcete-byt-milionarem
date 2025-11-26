@@ -439,8 +439,7 @@ function use5050() {
 
 
   // --- dál už necháš svůj původní kód: showScreen, answerButtons, nextBtn, 50:50, grade8Btn, exitGameBtn ---
-  // ...
-});
+
 
   // --- Klik na odpověď ---
   answerButtons.forEach(btn => {
