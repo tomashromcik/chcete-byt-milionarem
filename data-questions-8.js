@@ -1,80 +1,182 @@
 const QUESTIONS_8 = [
 
-  // -------------------------------------------------------
-  // PRÁCE
-  // -------------------------------------------------------
+ // -------------------------------------------------------
+// PRÁCE
+// -------------------------------------------------------
 
-  {
-    id: "prace-1",
-    topic: "prace",
-    difficulty: 1,
-    question: "Jaká je základní jednotka práce v soustavě SI?",
-    answers: ["Joul (J)", "Watt (W)", "Newton (N)", "Pascal (Pa)"],
-    correctIndex: 0
-  },
-  {
-    id: "prace-2",
-    topic: "prace",
-    difficulty: 1,
-    question: "Který vztah správně vyjadřuje práci stálou silou?",
-    answers: ["W = F · s", "W = m · g", "W = F / s", "W = m · v"],
-    correctIndex: 0
-  },
-  {
-    id: "prace-3",
-    topic: "prace",
-    difficulty: 1,
-    question: "Rozhodni, ve kterém případě se koná mechanická práce.",
-    answers: [
-      "Žák tlačí na nehybnou zeď a zeď se nepohybuje",
-      "Žák drží činku v klidu nad hlavou",
-      "Kniha leží v klidu na lavici",
-      "Jeřáb zvedá břemeno stálou silou do výšky 5 m"
-    ],
-    correctIndex: 3
-  },
-  {
-    id: "prace-4",
-    topic: "prace",
-    difficulty: 2,
-    question: "Ve kterém z uvedených případů se mechanická práce nekoná?",
-    answers: [
-      "Chodec táhne sáně po cestě",
-      "Žák zvedá činku nad hlavu",
-      "Žák drží těžkou tašku v natažené ruce bez pohybu",
-      "Motor táhne auto do kopce"
-    ],
-    correctIndex: 2
-  },
-  {
-    id: "prace-5",
-    topic: "prace",
-    difficulty: 2,
-    question: "Síla 50 N posune těleso o 4 metry. Jakou práci vykoná?",
-    answers: ["200 J", "12,5 J", "54 J", "2 000 J"],
-    correctIndex: 0
-  },
-  {
-    id: "prace-6",
-    topic: "prace",
-    difficulty: 2,
-    question: "V kterém případě je vykonána větší práce?",
-    answers: [
-      "Zvedáme stejnou bednu do výšky 2 m místo 1 m",
-      "Zvedáme stejnou bednu do stejné výšky dvěma různě velkými silami",
-      "Držíme bednu v klidu nad hlavou",
-      "Posouváme bednu po vodorovné podlaze bez tření"
-    ],
-    correctIndex: 0
-  },
-  {
-    id: "prace-7",
-    topic: "prace",
-    difficulty: 3,
-    question: "Těleso se posouvá po vodorovné rovině třením s třecí silou 20 N na dráze 15 m. Jakou práci vykoná tření?",
-    answers: ["–300 J", "0 J", "+300 J", "–1 300 J"],
-    correctIndex: 0
-  },
+{
+  id: "prace-1",
+  topic: "prace",
+  difficulty: 1,
+  question: "Jaká je základní jednotka práce v soustavě SI?",
+  answers: ["Joul (J)", "Watt (W)", "Newton (N)", "Pascal (Pa)"],
+  correctIndex: 0
+},
+{
+  id: "prace-2",
+  topic: "prace",
+  difficulty: 1,
+  question: "Který vztah správně vyjadřuje práci stálou silou?",
+  answers: ["W = F · s", "W = m · g", "W = F / s", "W = m · v"],
+  correctIndex: 0
+},
+{
+  id: "prace-3",
+  topic: "prace",
+  difficulty: 1,
+  question: "Rozhodni, ve kterém případě se koná mechanická práce.",
+  answers: [
+    "Žák tlačí na nehybnou zeď a zeď se nepohybuje",
+    "Žák drží činku v klidu nad hlavou",
+    "Kniha leží v klidu na lavici",
+    "Jeřáb zvedá břemeno stálou silou do výšky 5 m"
+  ],
+  correctIndex: 3
+},
+
+// nové otázky – obtížnost 1
+{
+  id: "prace-1-new-1",
+  topic: "prace",
+  difficulty: 1,
+  question: "Která veličina popisuje, jak velká síla působí po určitou dráhu?",
+  answers: ["Práce", "Energie", "Výkon", "Tlak"],
+  correctIndex: 0
+},
+{
+  id: "prace-1-new-2",
+  topic: "prace",
+  difficulty: 1,
+  question: "Jakou práci vykonáme, pokud nepůsobí žádná síla?",
+  answers: ["0 J", "1 J", "Záleží na dráze", "Záleží na hmotnosti"],
+  correctIndex: 0
+},
+{
+  id: "prace-1-new-3",
+  topic: "prace",
+  difficulty: 1,
+  question: "Kdy se koná práce?",
+  answers: [
+    "Když působí síla a těleso se pohybuje",
+    "Když jen působí síla",
+    "Když se těleso pohybuje bez síly",
+    "Když těleso stojí"
+  ],
+  correctIndex: 0
+},
+
+// původní obtížnost 2
+{
+  id: "prace-4",
+  topic: "prace",
+  difficulty: 2,
+  question: "Ve kterém z uvedených případů se mechanická práce nekoná?",
+  answers: [
+    "Chodec táhne sáně po cestě",
+    "Žák zvedá činku nad hlavu",
+    "Žák drží těžkou tašku v natažené ruce bez pohybu",
+    "Motor táhne auto do kopce"
+  ],
+  correctIndex: 2
+},
+{
+  id: "prace-5",
+  topic: "prace",
+  difficulty: 2,
+  question: "Síla 50 N posune těleso o 4 metry. Jakou práci vykoná?",
+  answers: ["200 J", "12,5 J", "54 J", "2 000 J"],
+  correctIndex: 0
+},
+{
+  id: "prace-6",
+  topic: "prace",
+  difficulty: 2,
+  question: "V kterém případě je vykonána větší práce?",
+  answers: [
+    "Zvedáme stejnou bednu do výšky 2 m místo 1 m",
+    "Zvedáme stejnou bednu do stejné výšky dvěma různě velkými silami",
+    "Držíme bednu v klidu nad hlavou",
+    "Posouváme bednu po vodorovné podlaze bez tření"
+  ],
+  correctIndex: 0
+},
+
+// nové otázky – obtížnost 2
+{
+  id: "prace-2-new-1",
+  topic: "prace",
+  difficulty: 2,
+  question: "Síla 30 N působí na těleso a posune jej o 3 m. Jaká práce se vykoná?",
+  answers: ["90 J", "33 J", "10 J", "300 J"],
+  correctIndex: 0
+},
+{
+  id: "prace-2-new-2",
+  topic: "prace",
+  difficulty: 2,
+  question: "Ve kterém případě vykonáme větší práci?",
+  answers: [
+    "Zvedneme těžší bednu do stejné výšky",
+    "Zvedneme lehčí bednu do stejné výšky",
+    "Držíme bednu v klidu nad hlavou",
+    "Tlačíme bednu silou, ale nepohne se"
+  ],
+  correctIndex: 0
+},
+{
+  id: "prace-2-new-3",
+  topic: "prace",
+  difficulty: 2,
+  question: "Jak se změní práce, pokud se dráha působení síly zdvojnásobí a síla se nemění?",
+  answers: [
+    "Práce se zdvojnásobí",
+    "Práce zůstane stejná",
+    "Práce se zmenší na polovinu",
+    "Práce se ztrojnásobí"
+  ],
+  correctIndex: 0
+},
+
+// původní obtížnost 3
+{
+  id: "prace-7",
+  topic: "prace",
+  difficulty: 3,
+  question: "Těleso se posouvá po vodorovné rovině třením s třecí silou 20 N na dráze 15 m. Jakou práci vykoná tření?",
+  answers: ["–300 J", "0 J", "+300 J", "–1 300 J"],
+  correctIndex: 0
+},
+
+// nové otázky – obtížnost 3
+{
+  id: "prace-3-new-1",
+  topic: "prace",
+  difficulty: 3,
+  question: "Síla 30 N působí na těleso, ale pouze složka 20 N je ve směru pohybu. Těleso se posune o 5 m. Jaká práce se vykoná?",
+  answers: ["100 J", "150 J", "600 J", "30 J"],
+  correctIndex: 0
+},
+{
+  id: "prace-3-new-2",
+  topic: "prace",
+  difficulty: 3,
+  question: "Jak se změní práce, pokud působíme stejnou silou na dvojnásobnou dráhu?",
+  answers: [
+    "Práce se zdvojnásobí",
+    "Práce se nezmění",
+    "Práce bude poloviční",
+    "Práce klesne na nulu"
+  ],
+  correctIndex: 0
+},
+{
+  id: "prace-3-new-3",
+  topic: "prace",
+  difficulty: 3,
+  question: "Na těleso působí síla 40 N pod úhlem tak, že ve směru pohybu působí složka 25 N. Dráha pohybu je 6 m. Jaká práce se vykoná?",
+  answers: ["150 J", "240 J", "100 J", "65 J"],
+  correctIndex: 0
+},
 
   // -------------------------------------------------------
   // KLADKY A KLADKOSTROJ
