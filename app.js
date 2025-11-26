@@ -59,7 +59,7 @@ function shuffle(array) {
 
 function withShuffledAnswers(q) {
   const indexOrder = [0, 1, 2, 3];
-  shuffle(indexOrder); // použijeme tvoji funkci shuffle()
+  shuffle(indexOrder);
 
   const newAnswers = indexOrder.map(i => q.answers[i]);
   const newCorrectIndex = indexOrder.indexOf(q.correctIndex);
@@ -70,7 +70,6 @@ function withShuffledAnswers(q) {
     correctIndex: newCorrectIndex
   };
 }
-
 
 function getPrizeForLevel(level) {
   const cfg = LADDER_CONFIG.find(c => c.level === level);
@@ -84,7 +83,7 @@ function generateGameQuestions(activeTopics) {
     return [];
   }
 
-  // 1) filtr podle vybraných témat z config-topics-8.js
+  // filtr podle vybraných témat z config-topics-8.js
   let pool = QUESTIONS_8.filter(q => activeTopics.includes(q.topic));
 
   if (pool.length === 0) {
@@ -92,7 +91,7 @@ function generateGameQuestions(activeTopics) {
     return [];
   }
 
-  // 2) rozdělení podle obtížnosti
+  // rozdělení podle obtížnosti
   const byDiff = {
     1: pool.filter(q => q.difficulty === 1),
     2: pool.filter(q => q.difficulty === 2),
@@ -119,7 +118,6 @@ function generateGameQuestions(activeTopics) {
 
     let q = list.pop();
 
-    // Pokud používáš míchání odpovědí:
     if (typeof withShuffledAnswers === "function") {
       q = withShuffledAnswers(q);
     }
@@ -134,7 +132,6 @@ function generateGameQuestions(activeTopics) {
   console.log("Vygenerované otázky:", selected);
   return selected;
 }
-
 
 // zvýrazní správný řádek v žebříčku
 function updateLadderHighlight(level) {
@@ -197,11 +194,9 @@ function showCurrentQuestion() {
 
   questionLocked = false;
 
-  // text otázky
   const questionText = document.getElementById("question-text");
   questionText.textContent = q.question;
 
-  // odpovědi
   const answerButtons = document.querySelectorAll(".answer-btn");
   answerButtons.forEach((btn, idx) => {
     const textSpan = btn.querySelector(".answer-btn__text");
@@ -210,39 +205,33 @@ function showCurrentQuestion() {
     }
     btn.disabled = false;
     btn.classList.remove("correct", "incorrect", "locked");
-    btn.style.opacity = ""; // reset pro 50:50
+    btn.style.opacity = "";
   });
 
-  // horní info
   document.getElementById("game-question-progress").textContent =
     `Otázka ${q.level} / 15`;
   document.getElementById("game-current-prize").textContent = q.prize;
 
-  // žebříček
   updateLadderHighlight(q.level);
 
-  // zbývající otázky
   const left = gameQuestions.length - currentQuestionIndex - 1;
   if (questionsLeftEl) {
     questionsLeftEl.textContent = left;
   }
 
-  // status message
   if (statusMsgEl) {
     statusMsgEl.textContent = "Vyberte odpověď…";
   }
 
-  // tlačítko další otázka zakázat
   if (nextBtnEl) {
     nextBtnEl.disabled = true;
     nextBtnEl.classList.add("primary-btn--disabled");
   }
 
-  // časovač
   startTimer();
 }
 
-// --- Vyhodnocení odpovědi (klik i timeout) ---
+// --- Vyhodnocení odpovědi ---
 
 function handleAnswer(chosenIndexOrNull) {
   if (questionLocked || gameOver) return;
@@ -275,9 +264,7 @@ function handleAnswer(chosenIndexOrNull) {
 
   if (!statusMsgEl || !nextBtnEl) return;
 
-  // Správná odpověď
   if (chosenIndex === correctIndex) {
-    // aktualizovat jisté částky
     if (SAFE_LEVELS.includes(q.level) && q.level > highestSafeLevelReached) {
       highestSafeLevelReached = q.level;
     }
@@ -296,12 +283,9 @@ function handleAnswer(chosenIndexOrNull) {
     return;
   }
 
-  // Špatná odpověď / vypršel čas
-  let baseMsg =
-    chosenIndex === null ? "Vypršel čas." : "Špatně.";
+  let baseMsg = chosenIndex === null ? "Vypršel čas." : "Špatně.";
   statusMsgEl.textContent = `${baseMsg} Správná odpověď byla ${labels[correctIndex]}. `;
 
-  // zjistit jistou částku
   let guaranteedPrize = "0 Kč";
   if (highestSafeLevelReached > 0) {
     guaranteedPrize = getPrizeForLevel(highestSafeLevelReached);
@@ -325,7 +309,6 @@ function use5050() {
   const correctIndex = q.correctIndex;
   const answerButtons = document.querySelectorAll(".answer-btn");
 
-  // seber indexy špatných odpovědí
   const incorrectIndices = [];
   answerButtons.forEach((btn, idx) => {
     if (idx !== correctIndex && !btn.disabled) incorrectIndices.push(idx);
@@ -349,6 +332,7 @@ function use5050() {
 }
 
 // --- DOM ready ---
+
 document.addEventListener("DOMContentLoaded", () => {
   console.log("DOM ready");
 
@@ -374,7 +358,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const teacherOutputWrapper = document.getElementById("teacher-output-wrapper");
   const teacherOutput = document.getElementById("teacher-output");
 
-  // otevře modál a naplní checkboxy
   function openTeacherPanel() {
     if (!teacherPanel || !teacherTopicList) return;
 
@@ -394,7 +377,6 @@ document.addEventListener("DOMContentLoaded", () => {
     teacherPanel.classList.remove("hidden");
   }
 
-  // Ctrl+U otevře učitelský panel
   document.addEventListener("keydown", (e) => {
     if (e.ctrlKey && e.key.toLowerCase() === "u") {
       e.preventDefault();
@@ -402,21 +384,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // zavřít panel
   if (teacherCloseBtn) {
     teacherCloseBtn.addEventListener("click", () => {
       teacherPanel.classList.add("hidden");
     });
   }
 
-  // vygenerovat kód pro config-topics-8.js
   if (teacherGenerateBtn) {
     teacherGenerateBtn.addEventListener("click", () => {
       if (!teacherTopicList || !teacherOutput || !teacherOutputWrapper) return;
 
       const checkboxes = teacherTopicList.querySelectorAll("input[type=checkbox]");
 
-      // aktualizujeme TOPIC_CONFIG_8.topics v paměti
       checkboxes.forEach(cb => {
         const id = cb.dataset.id;
         const topic = TOPIC_CONFIG_8.topics.find(t => t.id === id);
@@ -425,7 +404,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       });
 
-      // poskládáme JS kód pro config-topics-8.js
       const lines = [];
       lines.push('const TOPIC_CONFIG_8 = {');
       lines.push('  schoolYear: "2024/2025",');
@@ -512,7 +490,6 @@ document.addEventListener("DOMContentLoaded", () => {
         lifeline5050Btn.classList.remove("lifeline-btn--disabled");
       }
 
-      // načteme seznam povolených témat z config-topics-8.js
       let activeTopics;
       if (typeof getEnabledTopicsFor8 === "function") {
         activeTopics = getEnabledTopicsFor8();
@@ -542,4 +519,3 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
-
