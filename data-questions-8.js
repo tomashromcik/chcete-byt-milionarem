@@ -686,6 +686,114 @@ const QUESTIONS_8 = [
     correctIndex: 0
   },
 
+ // -------------------------------------------------------
+// POLOHOVÁ ENERGIE (Ep) — NOVÉ OTÁZKY
+// -------------------------------------------------------
+
+// ---------- Obtížnost 1 ----------
+{
+  id: "Ep-n1",
+  topic: "Ep",
+  difficulty: 1,
+  question: "Který z následujících předmětů má největší polohovou energii?",
+  answers: [
+    "Kniha položená na polici 2 m nad zemí",
+    "Kniha položená na stole 1 m nad zemí",
+    "Kniha položená na podlaze",
+    "Kniha položená 50 cm nad zemí"
+  ],
+  correctIndex: 0
+},
+{
+  id: "Ep-n2",
+  topic: "Ep",
+  difficulty: 1,
+  question: "Jak se změní polohová energie, když těleso spustíme níže k zemi?",
+  answers: [
+    "Polohová energie klesne",
+    "Polohová energie stoupne",
+    "Polohová energie zůstane stejná",
+    "Polohová energie se změní na zvukovou energii"
+  ],
+  correctIndex: 0
+},
+{
+  id: "Ep-n3",
+  topic: "Ep",
+  difficulty: 1,
+  question: "Co potřebujeme znát k výpočtu polohové energie?",
+  answers: [
+    "Hmotnost, výšku a tíhové zrychlení g",
+    "Objem a hustotu tělesa",
+    "Elektrické napětí a proud",
+    "Rychlost tělesa"
+  ],
+  correctIndex: 0
+},
+
+// ---------- Obtížnost 2 ----------
+{
+  id: "Ep-n4",
+  topic: "Ep",
+  difficulty: 2,
+  question: "Těleso o hmotnosti 3 kg je ve výšce 4 m. Jaká je jeho polohová energie? (g =̇ 10 m/s²)",
+  answers: ["120 J", "40 J", "300 J", "12 J"],
+  correctIndex: 0
+},
+{
+  id: "Ep-n5",
+  topic: "Ep",
+  difficulty: 2,
+  question: "Dvě tělesa mají stejnou hmotnost. Které má větší polohovou energii?",
+  answers: [
+    "Těleso položené ve výšce 5 m",
+    "Těleso položené ve výšce 2 m",
+    "Těleso položené na zemi",
+    "Těleso položené 10 cm nad zemí"
+  ],
+  correctIndex: 0
+},
+{
+  id: "Ep-n6",
+  topic: "Ep",
+  difficulty: 2,
+  question: "Polohová energie tělesa je 150 J, výška je 5 m. Jaká je hmotnost tělesa? (g =̇ 10 m/s²)",
+  answers: ["3 kg", "15 kg", "30 kg", "0,3 kg"],
+  correctIndex: 0
+},
+
+// ---------- Obtížnost 3 ----------
+{
+  id: "Ep-n7",
+  topic: "Ep",
+  difficulty: 3,
+  question: "Dvě tělesa mají různé hmotnosti i výšky. Které má největší polohovou energii?",
+  answers: [
+    "Těleso 4 kg ve výšce 12 m",
+    "Těleso 8 kg ve výšce 5 m",
+    "Těleso 2 kg ve výšce 20 m",
+    "Těleso 1 kg ve výšce 25 m"
+  ],
+  correctIndex: 0
+},
+{
+  id: "Ep-n8",
+  topic: "Ep",
+  difficulty: 3,
+  question: "Věž má výšku 30 m. Jakou polohovou energii má turista o hmotnosti 70 kg na jejím vrcholu? (g =̇ 10 m/s²)",
+  answers: ["21 000 J", "2 100 J", "210 J", "7 000 J"],
+  correctIndex: 0
+},
+{
+  id: "Ep-n9",
+  topic: "Ep",
+  difficulty: 3,
+  question: "Těleso má polohovou energii 600 J ve výšce 15 m. Jaká je jeho hmotnost? (g =̇ 10 m/s²)",
+  answers: ["4 kg", "40 kg", "0,4 kg", "6 kg"],
+  correctIndex: 0
+},
+
+
   // -------------------------------------------------------
   // POHYBOVÁ ENERGIE (Ek)
   // -------------------------------------------------------
