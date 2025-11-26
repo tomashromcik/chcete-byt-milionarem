@@ -333,7 +333,6 @@ function use5050() {
 
 // vrátí aktuálně používaná témata pro 8. ročník
 function getActiveTopicsFor8Runtime() {
-  // 1) zkus localStorage override
   const raw = localStorage.getItem("topics_8_override");
   if (raw) {
     try {
@@ -346,15 +345,33 @@ function getActiveTopicsFor8Runtime() {
     }
   }
 
-  // 2) fallback: config-topics-8.js
   if (typeof getEnabledTopicsFor8 === "function") {
     return getEnabledTopicsFor8();
   }
 
-  // 3) nouzový fallback
   return ["prace", "kladky", "vykon", "ucinnost", "Ep", "Ek"];
 }
 
+// vrátí témata pro zobrazení v UI (config + případný local override)
+function getTopicsForUI() {
+  const base = TOPIC_CONFIG_8.topics.map(t => ({ ...t }));
+
+  const raw = localStorage.getItem("topics_8_override");
+  if (!raw) return base;
+
+  try {
+    const ids = JSON.parse(raw);
+    if (!Array.isArray(ids)) return base;
+
+    return base.map(t => ({
+      ...t,
+      enabled: ids.includes(t.id)
+    }));
+  } catch (e) {
+    console.warn("Chyba při čtení topics_8_override:", e);
+    return base;
+  }
+}
 
 // --- DOM ready ---
 
@@ -384,7 +401,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const teacherOutput = document.getElementById("teacher-output");
   const teacherSaveLocalBtn = document.getElementById("teacher-save-local");
 
-
   function openTeacherPanel() {
     if (!teacherPanel || !teacherTopicList) return;
 
@@ -392,7 +408,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (teacherOutputWrapper) teacherOutputWrapper.classList.add("hidden");
     if (teacherOutput) teacherOutput.value = "";
 
-    TOPIC_CONFIG_8.topics.forEach(t => {
+    const topicsForUI = getTopicsForUI();
+
+    topicsForUI.forEach(t => {
       const row = document.createElement("label");
       row.innerHTML = `
         <input type="checkbox" data-id="${t.id}" ${t.enabled ? "checked" : ""}>
@@ -404,10 +422,16 @@ document.addEventListener("DOMContentLoaded", () => {
     teacherPanel.classList.remove("hidden");
   }
 
+  // Ctrl+U → heslo → otevřít panel
   document.addEventListener("keydown", (e) => {
     if (e.ctrlKey && e.key.toLowerCase() === "u") {
       e.preventDefault();
-      openTeacherPanel();
+      const pw = prompt("Zadejte heslo pro učitele:");
+      if (pw === "ZSBoh74719") {
+        openTeacherPanel();
+      } else if (pw !== null) {
+        alert("Nesprávné heslo.");
+      }
     }
   });
 
@@ -417,6 +441,30 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // uložit nastavení jen pro toto zařízení (localStorage)
+  if (teacherSaveLocalBtn) {
+    teacherSaveLocalBtn.addEventListener("click", () => {
+      if (!teacherTopicList) return;
+
+      const checkboxes = teacherTopicList.querySelectorAll("input[type=checkbox]");
+      const selectedIds = [];
+
+      checkboxes.forEach(cb => {
+        if (cb.checked) selectedIds.push(cb.dataset.id);
+      });
+
+      localStorage.setItem("topics_8_override", JSON.stringify(selectedIds));
+
+      TOPIC_CONFIG_8.topics.forEach(t => {
+        t.enabled = selectedIds.includes(t.id);
+      });
+
+      alert("Témata byla uložena pro toto zařízení. Znovu spusť hru pro 8. třídu.");
+      teacherPanel.classList.add("hidden");
+    });
+  }
+
+  // vygenerovat kód pro config-topics-8.js
   if (teacherGenerateBtn) {
     teacherGenerateBtn.addEventListener("click", () => {
       if (!teacherTopicList || !teacherOutput || !teacherOutputWrapper) return;
@@ -504,34 +552,33 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ---------- start hry pro 8. třídu ----------
- if (grade8Btn) {
-  grade8Btn.addEventListener("click", () => {
-    console.log("Klik na 8. třídu");
+  if (grade8Btn) {
+    grade8Btn.addEventListener("click", () => {
+      console.log("Klik na 8. třídu");
 
-    highestSafeLevelReached = 0;
-    gameOver = false;
-    lifeline5050Used = false;
+      highestSafeLevelReached = 0;
+      gameOver = false;
+      lifeline5050Used = false;
 
-    if (lifeline5050Btn) {
-      lifeline5050Btn.disabled = false;
-      lifeline5050Btn.classList.remove("lifeline-btn--disabled");
-    }
+      if (lifeline5050Btn) {
+        lifeline5050Btn.disabled = false;
+        lifeline5050Btn.classList.remove("lifeline-btn--disabled");
+      }
 
-    const activeTopics = getActiveTopicsFor8Runtime();
-    console.log("Aktivní témata pro 8. třídu:", activeTopics);
+      const activeTopics = getActiveTopicsFor8Runtime();
+      console.log("Aktivní témata pro 8. třídu:", activeTopics);
 
-    gameQuestions = generateGameQuestions(activeTopics);
-    if (!gameQuestions || gameQuestions.length === 0) {
-      alert("Nepodařilo se načíst otázky pro vybraná témata.");
-      return;
-    }
+      gameQuestions = generateGameQuestions(activeTopics);
+      if (!gameQuestions || gameQuestions.length === 0) {
+        alert("Nepodařilo se načíst otázky pro vybraná témata.");
+        return;
+      }
 
-    currentQuestionIndex = 0;
-    showCurrentQuestion();
-    showScreen("game");
-  });
-}
-
+      currentQuestionIndex = 0;
+      showCurrentQuestion();
+      showScreen("game");
+    });
+  }
 
   if (exitGameBtn) {
     exitGameBtn.addEventListener("click", () => {
