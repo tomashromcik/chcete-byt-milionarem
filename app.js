@@ -331,6 +331,31 @@ function use5050() {
   }
 }
 
+// vrátí aktuálně používaná témata pro 8. ročník
+function getActiveTopicsFor8Runtime() {
+  // 1) zkus localStorage override
+  const raw = localStorage.getItem("topics_8_override");
+  if (raw) {
+    try {
+      const ids = JSON.parse(raw);
+      if (Array.isArray(ids) && ids.length > 0) {
+        return ids;
+      }
+    } catch (e) {
+      console.warn("Chyba při čtení topics_8_override:", e);
+    }
+  }
+
+  // 2) fallback: config-topics-8.js
+  if (typeof getEnabledTopicsFor8 === "function") {
+    return getEnabledTopicsFor8();
+  }
+
+  // 3) nouzový fallback
+  return ["prace", "kladky", "vykon", "ucinnost", "Ep", "Ek"];
+}
+
+
 // --- DOM ready ---
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -477,39 +502,34 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ---------- start hry pro 8. třídu ----------
-  if (grade8Btn) {
-    grade8Btn.addEventListener("click", () => {
-      console.log("Klik na 8. třídu");
+ if (grade8Btn) {
+  grade8Btn.addEventListener("click", () => {
+    console.log("Klik na 8. třídu");
 
-      highestSafeLevelReached = 0;
-      gameOver = false;
-      lifeline5050Used = false;
+    highestSafeLevelReached = 0;
+    gameOver = false;
+    lifeline5050Used = false;
 
-      if (lifeline5050Btn) {
-        lifeline5050Btn.disabled = false;
-        lifeline5050Btn.classList.remove("lifeline-btn--disabled");
-      }
+    if (lifeline5050Btn) {
+      lifeline5050Btn.disabled = false;
+      lifeline5050Btn.classList.remove("lifeline-btn--disabled");
+    }
 
-      let activeTopics;
-      if (typeof getEnabledTopicsFor8 === "function") {
-        activeTopics = getEnabledTopicsFor8();
-      } else {
-        activeTopics = ["prace", "kladky", "vykon", "ucinnost", "Ep", "Ek"];
-      }
+    const activeTopics = getActiveTopicsFor8Runtime();
+    console.log("Aktivní témata pro 8. třídu:", activeTopics);
 
-      console.log("Aktivní témata pro 8. třídu:", activeTopics);
+    gameQuestions = generateGameQuestions(activeTopics);
+    if (!gameQuestions || gameQuestions.length === 0) {
+      alert("Nepodařilo se načíst otázky pro vybraná témata.");
+      return;
+    }
 
-      gameQuestions = generateGameQuestions(activeTopics);
-      if (!gameQuestions || gameQuestions.length === 0) {
-        alert("Nepodařilo se načíst otázky pro vybraná témata.");
-        return;
-      }
+    currentQuestionIndex = 0;
+    showCurrentQuestion();
+    showScreen("game");
+  });
+}
 
-      currentQuestionIndex = 0;
-      showCurrentQuestion();
-      showScreen("game");
-    });
-  }
 
   if (exitGameBtn) {
     exitGameBtn.addEventListener("click", () => {
