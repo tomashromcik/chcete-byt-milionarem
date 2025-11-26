@@ -153,17 +153,29 @@
     </section>
 
   </div>
-  <!-- Teacher Panel (skrytý modal) -->
+ <!-- Teacher Panel (skrytý modal) -->
 <div id="teacher-panel" class="teacher-panel hidden">
   <div class="teacher-panel-content">
     <h2>Nastavení témat pro 8. ročník</h2>
 
+    <p>Zaškrtni témata, která chceš mít v tomto školním roce aktivní. Pak klikni na „Vygenerovat kód“ a výsledek vlož do souboru <strong>config-topics-8.js</strong>.</p>
+
     <div id="teacher-topic-list"></div>
 
-    <button id="teacher-save" class="primary-btn">Uložit</button>
-    <button id="teacher-close" class="secondary-btn">Zavřít</button>
+    <div style="margin-top: 12px; display: flex; gap: 8px;">
+      <button id="teacher-generate" class="primary-btn">Vygenerovat kód</button>
+      <button id="teacher-close" class="secondary-btn">Zavřít</button>
+    </div>
+
+    <div id="teacher-output-wrapper" class="teacher-panel-output hidden">
+      <p style="margin-top:16px; font-size: 0.9rem;">
+        Zkopíruj následující kód a nahraď jím obsah souboru <code>config-topics-8.js</code>:
+      </p>
+      <textarea id="teacher-output" readonly></textarea>
+    </div>
   </div>
 </div>
+
 
 </body>
 </html>
