@@ -350,6 +350,7 @@ function use5050() {
 
 // --- DOM ready ---
 
+// --- DOM ready ---
 document.addEventListener("DOMContentLoaded", () => {
   console.log("DOM ready");
 
@@ -367,6 +368,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const answerButtons = document.querySelectorAll(".answer-btn");
 
+  // 🔹 TEACHER PANEL – načtení DOM prvků
+  const teacherPanel = document.getElementById("teacher-panel");
+  const teacherTopicList = document.getElementById("teacher-topic-list");
+  const teacherSaveBtn = document.getElementById("teacher-save");
+  const teacherCloseBtn = document.getElementById("teacher-close");
+
+  // 🔹 Při startu aplikace načíst uložené hodnoty témat z localStorage
+  const savedTopics = localStorage.getItem("topics_8");
+  if (savedTopics) {
+    try {
+      const parsed = JSON.parse(savedTopics);
+      parsed.forEach(saved => {
+        const topic = TOPIC_CONFIG_8.topics.find(t => t.id === saved.id);
+        if (topic) {
+          topic.enabled = saved.enabled;
+        }
+      });
+      console.log("Načtena uložená témata:", TOPIC_CONFIG_8.topics);
+    } catch (e) {
+      console.warn("Chyba při načítání topics_8 z localStorage:", e);
+    }
+  }
+
   function showScreen(screen) {
     if (screen === "landing") {
       screenLanding.classList.add("screen--active");
@@ -383,7 +407,62 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Klik na odpověď
+  // --- TEACHER PANEL LOGIKA ---
+
+  function openTeacherPanel() {
+    if (!teacherPanel || !teacherTopicList) return;
+
+    teacherTopicList.innerHTML = "";
+
+    TOPIC_CONFIG_8.topics.forEach(t => {
+      const row = document.createElement("label");
+      row.innerHTML = `
+        <input type="checkbox" data-id="${t.id}" ${t.enabled ? "checked" : ""}>
+        ${t.label}
+      `;
+      teacherTopicList.appendChild(row);
+    });
+
+    teacherPanel.classList.remove("hidden");
+  }
+
+  // Otevření panelu přes Ctrl+U
+  document.addEventListener("keydown", (e) => {
+    if (e.ctrlKey && e.key.toLowerCase() === "u") {
+      e.preventDefault();
+      openTeacherPanel();
+    }
+  });
+
+  if (teacherCloseBtn) {
+    teacherCloseBtn.addEventListener("click", () => {
+      teacherPanel.classList.add("hidden");
+    });
+  }
+
+  if (teacherSaveBtn) {
+    teacherSaveBtn.addEventListener("click", () => {
+      if (!teacherTopicList) return;
+
+      const checkboxes = teacherTopicList.querySelectorAll("input[type=checkbox]");
+
+      checkboxes.forEach(cb => {
+        const id = cb.dataset.id;
+        const topic = TOPIC_CONFIG_8.topics.find(t => t.id === id);
+        if (topic) {
+          topic.enabled = cb.checked;
+        }
+      });
+
+      // uložit do localStorage
+      localStorage.setItem("topics_8", JSON.stringify(TOPIC_CONFIG_8.topics));
+
+      teacherPanel.classList.add("hidden");
+      alert("Témata uložena. Pro použití nového nastavení obnov stránku.");
+    });
+  }
+
+  // --- Klik na odpověď ---
   answerButtons.forEach(btn => {
     btn.addEventListener("click", () => {
       const idx = Number(btn.dataset.answer);
@@ -391,7 +470,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Další otázka
+  // --- Další otázka ---
   if (nextBtnEl) {
     nextBtnEl.addEventListener("click", () => {
       if (gameOver) return;
@@ -407,50 +486,49 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // 50 : 50
+  // --- 50 : 50 ---
   if (lifeline5050Btn) {
     lifeline5050Btn.addEventListener("click", () => {
       use5050();
     });
   }
 
-  // start hry pro 8. třídu
-if (grade8Btn) {
-  grade8Btn.addEventListener("click", () => {
-    console.log("Klik na 8. třídu");
+  // --- start hry pro 8. třídu ---
+  if (grade8Btn) {
+    grade8Btn.addEventListener("click", () => {
+      console.log("Klik na 8. třídu");
 
-    highestSafeLevelReached = 0;
-    gameOver = false;
-    lifeline5050Used = false;
+      highestSafeLevelReached = 0;
+      gameOver = false;
+      lifeline5050Used = false;
 
-    if (lifeline5050Btn) {
-      lifeline5050Btn.disabled = false;
-      lifeline5050Btn.classList.remove("lifeline-btn--disabled");
-    }
+      if (lifeline5050Btn) {
+        lifeline5050Btn.disabled = false;
+        lifeline5050Btn.classList.remove("lifeline-btn--disabled");
+      }
 
-    // 🔹 načteme seznam povolených témat z config-topics-8.js
-    let activeTopics;
-    if (typeof getEnabledTopicsFor8 === "function") {
-      activeTopics = getEnabledTopicsFor8();
-    } else {
-      // nouzový fallback, kdyby se config nenačetl
-      activeTopics = ["prace", "kladky", "vykon", "ucinnost", "Ep", "Ek"];
-    }
+      // načteme seznam povolených témat z config-topics-8.js
+      let activeTopics;
+      if (typeof getEnabledTopicsFor8 === "function") {
+        activeTopics = getEnabledTopicsFor8();
+      } else {
+        // nouzový fallback, kdyby se config nenačetl
+        activeTopics = ["prace", "kladky", "vykon", "ucinnost", "Ep", "Ek"];
+      }
 
-    console.log("Aktivní témata pro 8. třídu:", activeTopics);
+      console.log("Aktivní témata pro 8. třídu:", activeTopics);
 
-    gameQuestions = generateGameQuestions(activeTopics);
-    if (!gameQuestions || gameQuestions.length === 0) {
-      alert("Nepodařilo se načíst otázky pro vybraná témata.");
-      return;
-    }
+      gameQuestions = generateGameQuestions(activeTopics);
+      if (!gameQuestions || gameQuestions.length === 0) {
+        alert("Nepodařilo se načíst otázky pro vybraná témata.");
+        return;
+      }
 
-    currentQuestionIndex = 0;
-    showCurrentQuestion();
-    showScreen("game");
-  });
-}
-
+      currentQuestionIndex = 0;
+      showCurrentQuestion();
+      showScreen("game");
+    });
+  }
 
   if (exitGameBtn) {
     exitGameBtn.addEventListener("click", () => {
@@ -460,3 +538,4 @@ if (grade8Btn) {
     });
   }
 });
+
