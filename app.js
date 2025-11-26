@@ -350,24 +350,6 @@ function use5050() {
 
 // --- DOM ready ---
 
-// --- DOM ready ---
-document.addEventListener("DOMContentLoaded", () => {
-  console.log("DOM ready");
-
-  const screenLanding = document.getElementById("screen-landing");
-  const screenGame = document.getElementById("screen-game");
-
-  const grade8Btn = document.querySelector('.grade-card[data-grade="8"]');
-  const exitGameBtn = document.getElementById("btn-exit-game");
-
-  statusMsgEl = document.getElementById("game-status-message");
-  nextBtnEl = document.getElementById("btn-next-question");
-  timerEl = document.getElementById("game-timer");
-  questionsLeftEl = document.getElementById("game-questions-left");
-  lifeline5050Btn = document.querySelector('.lifeline-btn[data-lifeline="5050"]');
-
-  const answerButtons = document.querySelectorAll(".answer-btn");
-
   // 🔹 TEACHER PANEL – DOM prvky
   const teacherPanel = document.getElementById("teacher-panel");
   const teacherTopicList = document.getElementById("teacher-topic-list");
@@ -376,13 +358,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const teacherOutputWrapper = document.getElementById("teacher-output-wrapper");
   const teacherOutput = document.getElementById("teacher-output");
 
-  // 🔹 Funkce: otevřít teacher panel (Ctrl+U)
   function openTeacherPanel() {
     if (!teacherPanel || !teacherTopicList) return;
 
     teacherTopicList.innerHTML = "";
-    teacherOutputWrapper.classList.add("hidden");
-    teacherOutput.value = "";
+    if (teacherOutputWrapper) {
+      teacherOutputWrapper.classList.add("hidden");
+    }
+    if (teacherOutput) {
+      teacherOutput.value = "";
+    }
 
     TOPIC_CONFIG_8.topics.forEach(t => {
       const row = document.createElement("label");
@@ -396,7 +381,7 @@ document.addEventListener("DOMContentLoaded", () => {
     teacherPanel.classList.remove("hidden");
   }
 
-  // Otevření panelu přes Ctrl+U
+  // otevření panelu – Ctrl+U
   document.addEventListener("keydown", (e) => {
     if (e.ctrlKey && e.key.toLowerCase() === "u") {
       e.preventDefault();
@@ -404,14 +389,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Zavřít panel
+  // zavřít panel
   if (teacherCloseBtn) {
     teacherCloseBtn.addEventListener("click", () => {
       teacherPanel.classList.add("hidden");
     });
   }
 
-  // Vygenerovat kód pro config-topics-8.js
+  // 🔹 Vygenerovat kód pro config-topics-8.js
   if (teacherGenerateBtn) {
     teacherGenerateBtn.addEventListener("click", () => {
       if (!teacherTopicList || !teacherOutput || !teacherOutputWrapper) return;
@@ -427,7 +412,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       });
 
-      // poskládáme kód, který se vloží do config-topics-8.js
+      // poskládáme kód pro config-topics-8.js
       const lines = [];
       lines.push('const TOPIC_CONFIG_8 = {');
       lines.push('  schoolYear: "2024/2025",');
@@ -451,6 +436,7 @@ document.addEventListener("DOMContentLoaded", () => {
       teacherOutputWrapper.classList.remove("hidden");
     });
   }
+
 
   // --- dál už necháš svůj původní kód: showScreen, answerButtons, nextBtn, 50:50, grade8Btn, exitGameBtn ---
   // ...
