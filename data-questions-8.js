@@ -178,78 +178,186 @@ const QUESTIONS_8 = [
   correctIndex: 0
 },
 
-  // -------------------------------------------------------
-  // KLADKY A KLADKOSTROJ
-  // -------------------------------------------------------
+// -------------------------------------------------------
+// KLADKY A KLADKOSTROJ
+// -------------------------------------------------------
 
-  {
-    id: "kladky-1",
-    topic: "kladky",
-    difficulty: 1,
-    question: "K čemu se používá kladka pevná?",
-    answers: [
-      "Ke změně směru síly, velikost síly se ideálně nemění",
-      "Ke zmenšení potřebné síly na polovinu",
-      "Ke zvýšení třecí síly",
-      "K měření rychlosti břemene"
-    ],
-    correctIndex: 0
-  },
-  {
-    id: "kladky-2",
-    topic: "kladky",
-    difficulty: 1,
-    question: "Jak se ideálně změní potřebná síla při použití jedné volné kladky?",
-    answers: [
-      "Síla je dvakrát menší",
-      "Síla je dvakrát větší",
-      "Síla se nezmění",
-      "Síla je čtyřikrát menší"
-    ],
-    correctIndex: 0
-  },
-  {
-    id: "kladky-3",
-    topic: "kladky",
-    difficulty: 2,
-    question: "Při použití ideální volné kladky zvedáme břemeno o hmotnosti 200 kg. Jak velkou tažnou sílu přibližně potřebujeme? (g =̇ 10 m/s²)",
-    answers: ["1 000 N", "2 000 N", "400 N", "100 N"],
-    correctIndex: 0
-  },
-  {
-    id: "kladky-4",
-    topic: "kladky",
-    difficulty: 2,
-    question: "Jak se změní dráha, kterou musíš potáhnout volný konec lana u volné kladky oproti dráze zdvihu břemene?",
-    answers: [
-      "Je dvakrát delší",
-      "Je dvakrát kratší",
-      "Je stejná",
-      "Je čtyřikrát delší"
-    ],
-    correctIndex: 0
-  },
-  {
-    id: "kladky-5",
-    topic: "kladky",
-    difficulty: 2,
-    question: "Z jakých kladek se skládá jednoduchý kladkostroj?",
-    answers: [
-      "Z jedné pevné a jedné volné kladky",
-      "Ze dvou pevných kladek",
-      "Ze dvou volných kladek",
-      "Z jedné kladky a ozubeného kola"
-    ],
-    correctIndex: 0
-  },
-  {
-    id: "kladky-6",
-    topic: "kladky",
-    difficulty: 3,
-    question: "V kladkostroji je ideální převod takový, že tažná síla je čtyřikrát menší než tíha břemene. Kolik nosných úseků lana nese břemeno?",
-    answers: ["4", "2", "3", "8"],
-    correctIndex: 0
-  },
+{
+  id: "kladky-1",
+  topic: "kladky",
+  difficulty: 1,
+  question: "K čemu se používá kladka pevná?",
+  answers: [
+    "Ke změně směru síly, velikost síly se ideálně nemění",
+    "Ke zmenšení potřebné síly na polovinu",
+    "Ke zvýšení třecí síly",
+    "K měření rychlosti břemene"
+  ],
+  correctIndex: 0
+},
+{
+  id: "kladky-2",
+  topic: "kladky",
+  difficulty: 1,
+  question: "Jak se ideálně změní potřebná síla při použití jedné volné kladky?",
+  answers: [
+    "Síla je dvakrát menší",
+    "Síla je dvakrát větší",
+    "Síla se nezmění",
+    "Síla je čtyřikrát menší"
+  ],
+  correctIndex: 0
+},
+{
+  id: "kladky-3",
+  topic: "kladky",
+  difficulty: 2,
+  question: "Při použití ideální volné kladky zvedáme břemeno o hmotnosti 200 kg. Jak velkou tažnou sílu přibližně potřebujeme? (g =̇ 10 m/s²)",
+  answers: ["1 000 N", "2 000 N", "400 N", "100 N"],
+  correctIndex: 0
+},
+{
+  id: "kladky-4",
+  topic: "kladky",
+  difficulty: 2,
+  question: "Jak se změní dráha, kterou musíš potáhnout volný konec lana u volné kladky oproti dráze zdvihu břemene?",
+  answers: [
+    "Je dvakrát delší",
+    "Je dvakrát kratší",
+    "Je stejná",
+    "Je čtyřikrát delší"
+  ],
+  correctIndex: 0
+},
+{
+  id: "kladky-5",
+  topic: "kladky",
+  difficulty: 2,
+  question: "Z jakých kladek se skládá jednoduchý kladkostroj?",
+  answers: [
+    "Z jedné pevné a jedné volné kladky",
+    "Ze dvou pevných kladek",
+    "Ze dvou volných kladek",
+    "Z jedné kladky a ozubeného kola"
+  ],
+  correctIndex: 0
+},
+{
+  id: "kladky-6",
+  topic: "kladky",
+  difficulty: 3,
+  question: "V kladkostroji je ideální převod takový, že tažná síla je čtyřikrát menší než tíha břemene. Kolik nosných úseků lana nese břemeno?",
+  answers: ["4", "2", "3", "8"],
+  correctIndex: 0
+},
+
+// ---------------------------
+// Nové otázky – obtížnost 1
+// ---------------------------
+
+{
+  id: "kladky-1-new-1",
+  topic: "kladky",
+  difficulty: 1,
+  question: "K čemu slouží volná kladka?",
+  answers: [
+    "Ke zmenšení potřebné síly, ale za cenu větší dráhy lana",
+    "Ke změně směru síly, velikost síly se nemění",
+    "Ke zvětšení tření",
+    "K měření rychlosti břemene"
+  ],
+  correctIndex: 0
+},
+{
+  id: "kladky-1-new-2",
+  topic: "kladky",
+  difficulty: 1,
+  question: "Které tvrzení o kladce pevné a volné je správné?",
+  answers: [
+    "Pevná kladka mění směr síly, volná kladka zmenšuje potřebnou sílu",
+    "Pevná i volná kladka vždy zmenšují potřebnou sílu",
+    "Volná kladka mění směr síly, pevná kladka zmenšuje sílu",
+    "Ani pevná ani volná kladka nepomáhá při zvedání břemen"
+  ],
+  correctIndex: 0
+},
+{
+  id: "kladky-1-new-3",
+  topic: "kladky",
+  difficulty: 1,
+  question: "Ve kterém z uvedených případů je nejvýhodnější použít kladku?",
+  answers: [
+    "Když chceme zvednout těžké břemeno do výšky",
+    "Když chceme jen měřit hmotnost tělesa",
+    "Když chceme těleso pouze zahřát",
+    "Když chceme snížit hmotnost tělesa"
+  ],
+  correctIndex: 0
+},
+
+// ---------------------------
+// Nové otázky – obtížnost 2
+// ---------------------------
+
+{
+  id: "kladky-2-new-1",
+  topic: "kladky",
+  difficulty: 2,
+  question: "Břemeno je zavěšeno na volné kladce tak, že jej nesou dva nosné úseky lana. Jak se změní potřebná tažná síla oproti tíze břemene (ideálně)?",
+  answers: [
+    "Tažná síla je přibližně poloviční",
+    "Tažná síla je přibližně dvojnásobná",
+    "Tažná síla je stejná jako tíha břemene",
+    "Tažná síla je čtyřikrát menší"
+  ],
+  correctIndex: 0
+},
+{
+  id: "kladky-2-new-2",
+  topic: "kladky",
+  difficulty: 2,
+  question: "Pomocí ideální volné kladky zvedáme břemeno o tíze 600 N. Jak velkou tažnou sílu přibližně potřebujeme?",
+  answers: ["300 N", "600 N", "150 N", "1 200 N"],
+  correctIndex: 0
+},
+{
+  id: "kladky-2-new-3",
+  topic: "kladky",
+  difficulty: 2,
+  question: "Při použití volné kladky se břemeno zvedne o 1 m. Jak dlouhou dráhu přibližně potáhneme volný konec lana (ideálně)?",
+  answers: ["2 m", "1 m", "0,5 m", "4 m"],
+  correctIndex: 0
+},
+
+// ---------------------------
+// Nové otázky – obtížnost 3
+// ---------------------------
+
+{
+  id: "kladky-3-new-1",
+  topic: "kladky",
+  difficulty: 3,
+  question: "Jednoduchý kladkostroj se skládá z jedné pevné a jedné volné kladky. Břemeno má tíhu 800 N. Jak velkou tažnou sílu přibližně potřebujeme při ideálním kladkostroji?",
+  answers: ["400 N", "800 N", "200 N", "100 N"],
+  correctIndex: 0
+},
+{
+  id: "kladky-3-new-2",
+  topic: "kladky",
+  difficulty: 3,
+  question: "V ideálním kladkostroji je tažná síla čtyřikrát menší než tíha břemene. Kolik nosných úseků lana nese břemeno?",
+  answers: ["4", "2", "3", "8"],
+  correctIndex: 0
+},
+{
+  id: "kladky-3-new-3",
+  topic: "kladky",
+  difficulty: 3,
+  question: "V ideálním kladkostroji břemeno nesou čtyři nosné úseky lana. O kolik se přibližně zvedne břemeno, pokud potáhneme volný konec lana o 2 m?",
+  answers: ["0,5 m", "1 m", "2 m", "4 m"],
+  correctIndex: 0
+},
+
 
   // -------------------------------------------------------
   // VÝKON
