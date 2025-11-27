@@ -1,34 +1,125 @@
+/* RESET + ZÁKLADNÍ NASTAVENÍ */
+
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 
+html,
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: radial-gradient(circle at top, #1e293b 0, #020617 50%, #000 100%);
-  color: #ffffff; /* bílé písmo */
-  min-height: 100vh;
+  padding: 0;
+  height: 100%;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  color: #111827;
+  background: radial-gradient(circle at top, #0f172a 0, #020617 55%);
 }
 
+body {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+}
+
+/* APP WRAPPER */
+
 .app {
-  min-height: 100vh;
+  max-width: 1200px;
+  width: 100%;
+  margin: 1.5rem;
+  background: linear-gradient(135deg, #020617, #020617 45%, #020617 100%);
+  border-radius: 24px;
+  box-shadow:
+    0 24px 60px rgba(15, 23, 42, 0.9),
+    0 0 0 1px rgba(148, 163, 184, 0.2);
+  overflow: hidden;
   display: flex;
   flex-direction: column;
+  color: #e5e7eb;
 }
+
+/* OBECNÉ TLAČÍTKA */
+
+button {
+  font-family: inherit;
+  border: none;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+/* PRIMÁRNÍ / SEKUNDÁRNÍ TLAČÍTKA */
+
+.primary-btn,
+.secondary-btn {
+  border-radius: 999px;
+  padding: 0.6rem 1.4rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.1s ease,
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.primary-btn {
+  background: linear-gradient(135deg, #facc15, #fde047);
+  color: #1f2937;
+  box-shadow:
+    0 12px 30px rgba(250, 204, 21, 0.45),
+    0 0 0 1px rgba(15, 23, 42, 0.4);
+}
+
+.primary-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow:
+    0 16px 40px rgba(250, 204, 21, 0.6),
+    0 0 0 1px rgba(15, 23, 42, 0.45);
+}
+
+.primary-btn:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow:
+    0 8px 20px rgba(250, 204, 21, 0.5),
+    0 0 0 1px rgba(15, 23, 42, 0.6);
+}
+
+.primary-btn--disabled,
+.primary-btn:disabled {
+  background: linear-gradient(135deg, #6b7280, #4b5563);
+  color: #e5e7eb;
+  box-shadow: none;
+  opacity: 0.7;
+}
+
+.secondary-btn {
+  background: transparent;
+  color: #e5e7eb;
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  backdrop-filter: blur(6px);
+}
+
+.secondary-btn:hover:not(:disabled) {
+  background: rgba(15, 23, 42, 0.85);
+}
+
+/* OBECNÉ ROZVRŽENÍ OBRAZOVEK */
 
 .screen {
   display: none;
-  padding: 1.5rem;
-  max-width: 1200px;
-  margin: 0 auto;
+  min-height: 100%;
 }
 
 .screen--active {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
 }
 
 .screen--hidden {
@@ -36,148 +127,191 @@ body {
 }
 
 /* ÚVODNÍ OBRAZOVKA */
+
+.screen--landing {
+  padding: 1.75rem 2rem 2rem 2rem;
+}
+
 .landing-header {
   text-align: center;
+  margin-bottom: 1.5rem;
 }
 
 .landing-header h1 {
-  margin: 0;
-  font-size: 2rem;
+  margin: 0 0 0.25rem 0;
+  font-size: 1.7rem;
+  letter-spacing: 0.03em;
+  color: #e5e7eb;
 }
 
 .landing-header p {
-  margin-top: 0.25rem;
-  color: #cbd5f5;
+  margin: 0;
+  color: #9ca3af;
 }
 
 .landing-main {
   text-align: center;
 }
 
-.landing-main h2 {
-  margin-bottom: 1rem;
-  font-weight: 500;
+.landing-disclaimer {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  opacity: 0.7;
 }
 
 .grade-grid {
+  margin-top: 1rem;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
-  max-width: 600px;
-  margin: 0 auto;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .grade-card {
-  background: rgba(15, 23, 42, 0.9);
-  border: 1px solid #1d4ed8;
-  border-radius: 1rem;
-  padding: 1rem 1.25rem;
+  background: radial-gradient(circle at top, #111827 0, #020617 55%);
+  border-radius: 18px;
+  padding: 1.25rem 1.25rem 1.4rem 1.25rem;
   text-align: left;
-  cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
-  color: #ffffff; /* bílé písmo na tlačítkách */
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  position: relative;
+  overflow: hidden;
 }
 
-.grade-card__title {
-  display: block;
-  font-size: 1.1rem;
+.grade-card::before {
+  content: "";
+  position: absolute;
+  inset: -60%;
+  background: radial-gradient(
+    circle at top,
+    rgba(250, 204, 21, 0.16),
+    transparent 55%
+  );
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.grade-card--active::before {
+  opacity: 1;
+}
+
+.grade-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.4rem;
 }
 
 .grade-card__badge {
-  display: block;
-  font-size: 0.85rem;
-  color: #9ca3af;
-  margin-top: 0.25rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.15rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(31, 41, 55, 0.9);
+  color: #e5e7eb;
+  font-size: 0.8rem;
+  border: 1px solid rgba(148, 163, 184, 0.7);
 }
 
 .grade-card__badge--active {
-  color: #22c55e;
+  background: rgba(250, 204, 21, 0.1);
+  color: #facc15;
+  border-color: rgba(250, 204, 21, 0.6);
 }
 
-.grade-card--active:hover {
-  transform: translateY(-3px);
-  border-color: #60a5fa;
-  box-shadow: 0 0 20px rgba(37, 99, 235, 0.6);
+.grade-card h2 {
+  margin: 0.35rem 0 0.35rem 0;
+  font-size: 1.1rem;
+  color: #e5e7eb;
+}
+
+.grade-card p {
+  margin: 0 0 0.9rem 0;
+  font-size: 0.9rem;
+  color: #9ca3af;
+}
+
+.grade-card .primary-btn {
+  width: 100%;
 }
 
 .grade-card--disabled {
-  border-color: #4b5563;
-  cursor: default;
   opacity: 0.6;
 }
 
+/* FOOTER ÚVODNÍ OBRAZOVKY */
+
 .landing-footer {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 1rem;
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #9ca3af;
 }
 
-.secondary-btn,
-.primary-btn {
-  border-radius: 999px;
-  padding: 0.5rem 1.2rem;
-  border: 1px solid transparent;
-  background: transparent;
-  color: #ffffff;
-  cursor: pointer;
-  font-size: 0.95rem;
+/* HERNÍ OBRAZOVKA */
+
+.screen--game {
+  padding: 1.5rem 2rem 2rem 2rem;
 }
 
-.secondary-btn {
-  border-color: #4b5563;
-}
-
-.secondary-btn:hover {
-  border-color: #9ca3af;
-}
-
-.primary-btn {
-  background: #2563eb;
-  border-color: #2563eb;
-}
-
-.primary-btn--disabled {
-  opacity: 0.5;
-  cursor: default;
-}
-
-/* Herní obrazovka */
+/* HLAVIČKA HRY */
 
 .game-header {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  align-items: center;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.1fr);
   gap: 1rem;
-  background: rgba(15, 23, 42, 0.9);
-  border-radius: 1rem;
-  padding: 0.75rem 1rem;
-  border: 1px solid #1d4ed8;
-  font-size: 0.95rem;
+  align-items: center;
+  margin-bottom: 1.5rem;
 }
 
 .game-header__left h1 {
-  margin: 0;
-  font-size: 1.25rem;
+  margin: 0 0 0.2rem 0;
+  font-size: 1.5rem;
 }
 
 .game-header__left p {
-  margin: 0.25rem 0 0;
-  color: #cbd5f5;
+  margin: 0;
+  color: #9ca3af;
   font-size: 0.9rem;
 }
 
-.game-header__center {
-  text-align: center;
-  font-weight: 500;
-}
-
 .game-header__right {
-  text-align: right;
-  font-size: 0.95rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  align-items: flex-end;
 }
 
-/* Rozložení tří sloupců */
+.game-timer {
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+}
+
+.game-timer__label {
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+.game-timer__value {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  color: #facc15;
+  font-size: 1.2rem;
+}
+
+.game-meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+.game-meta__item strong {
+  color: #e5e7eb;
+}
+
+/* LAYOUT HRY */
+
 .game-layout {
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr) minmax(0, 0.9fr);
@@ -185,182 +319,350 @@ body {
   align-items: flex-start;
 }
 
+/* pořadí panelů ve hře (desktop) */
+.game-sidebar--left {
+  order: 1;
+}
+
+.game-main {
+  order: 2;
+}
+
+.game-sidebar--right {
+  order: 3;
+}
+
 /* Sidebar (žebříček / nápovědy) */
+
 .game-sidebar {
-  background: rgba(15, 23, 42, 0.9);
-  border-radius: 1rem;
+  background: radial-gradient(circle at top, #020617 0, #020617 55%);
+  border-radius: 18px;
   padding: 1rem;
-  border: 1px solid #1f2937;
+  border: 1px solid rgba(148, 163, 184, 0.35);
 }
 
-.game-sidebar h2 {
-  margin-top: 0;
-  font-size: 1rem;
-  margin-bottom: 0.75rem;
+/* NÁPOVĚDY */
+
+.lifelines {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
 }
 
-/* Žebříček výher */
-.ladder {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  font-size: 0.9rem;
-}
-
-.ladder__item {
-  padding: 0.25rem 0.35rem;
-  border-radius: 0.4rem;
-  margin-bottom: 0.15rem;
+.lifeline-btn {
+  width: 100%;
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  color: #e5e7eb;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: left;
   display: flex;
   justify-content: space-between;
-  gap: 0.5rem;
+  align-items: center;
 }
 
-.ladder__item--current {
-  background: rgba(37, 99, 235, 0.3);
-  border: 1px solid #3b82f6;
+.lifeline-btn::after {
+  content: "★";
+  font-size: 0.7rem;
+  color: #facc15;
 }
 
-.ladder__item--safe {
-  color: #fde047;
+.lifeline-btn:hover:not(:disabled) {
+  background: rgba(15, 23, 42, 0.95);
 }
 
-/* Střed – otázka + odpovědi */
+.lifeline-btn--disabled,
+.lifeline-btn:disabled {
+  opacity: 0.45;
+  border-style: dotted;
+}
+
+/* INFO POD NÁPOVĚDAMI */
+
+.game-info {
+  border-top: 1px solid rgba(55, 65, 81, 0.7);
+  padding-top: 0.85rem;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+.game-info__row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+}
+
+.game-info__value--highlight {
+  color: #facc15;
+  font-weight: 600;
+}
+
+/* HLAVNÍ ČÁST – OTÁZKA + ODPOVĚDI */
+
 .game-main {
+  background: radial-gradient(circle at top, #020617 0, #020617 55%);
+  border-radius: 18px;
+  padding: 1.1rem 1.2rem 1.2rem 1.2rem;
+  border: 1px solid rgba(148, 163, 184, 0.35);
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-.question-box {
-  background: linear-gradient(135deg, rgba(37, 99, 235, 0.35), rgba(15, 23, 42, 0.95));
-  border-radius: 1rem;
-  border: 1px solid #1d4ed8;
-  padding: 1rem;
-  text-align: center;
-  font-size: 1rem;
-  min-height: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.question-card h2 {
+  margin: 0 0 0.8rem 0;
+  font-size: 1.2rem;
 }
+
+/* ODPOVĚDI */
 
 .answers-grid {
   display: grid;
-  gap: 0.75rem;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.6rem;
 }
 
 .answer-btn {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  background: radial-gradient(circle at top, #020617 0, #020617 65%);
+  color: #e5e7eb;
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.75rem 0.9rem;
-  border-radius: 999px;
-  background: rgba(15, 23, 42, 0.9);
-  border: 1px solid #1d4ed8;
-  color: #ffffff;
-  cursor: pointer;
   text-align: left;
-  transition: transform 0.1s ease, box-shadow 0.1s ease, border-color 0.1s ease, background 0.1s ease;
+  font-size: 0.95rem;
+  transition:
+    background-color 0.12s ease,
+    transform 0.05s ease,
+    box-shadow 0.15s ease,
+    border-color 0.12s ease,
+    opacity 0.15s ease;
 }
-.answer-btn.correct {
-  border-color: #22c55e;
-  box-shadow: 0 0 18px rgba(34, 197, 94, 0.6);
-  background: rgba(22, 101, 52, 0.4);
-}
-
-.answer-btn.incorrect {
-  border-color: #ef4444;
-  box-shadow: 0 0 18px rgba(239, 68, 68, 0.6);
-  background: rgba(127, 29, 29, 0.5);
-}
-
-.answer-btn.locked {
-  opacity: 0.8;
-  cursor: default;
-}
-
 
 .answer-btn__label {
-  font-weight: 600;
-  min-width: 1.5rem;
-  text-align: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.8rem;
+  flex-shrink: 0;
 }
 
 .answer-btn__text {
   flex: 1;
 }
 
-.answer-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 0 14px rgba(37, 99, 235, 0.6);
-  border-color: #60a5fa;
+.answer-btn:hover:not(:disabled) {
+  background: radial-gradient(circle at top, #020617 0, #020617 40%);
+  border-color: rgba(250, 204, 21, 0.7);
+  box-shadow:
+    0 0 0 1px rgba(250, 204, 21, 0.4),
+    0 10px 25px rgba(15, 23, 42, 0.9);
 }
 
-/* Pravý panel – nápovědy */
-.lifelines {
+/* STAVY ODPOVĚDÍ */
+
+.answer-btn.correct {
+  background: linear-gradient(135deg, #22c55e, #4ade80);
+  color: #022c22;
+  border-color: rgba(34, 197, 94, 0.85);
+  box-shadow:
+    0 0 0 1px rgba(22, 163, 74, 0.7),
+    0 10px 30px rgba(22, 163, 74, 0.65);
+}
+
+.answer-btn.incorrect {
+  background: linear-gradient(135deg, #ef4444, #f97373);
+  color: #7f1d1d;
+  border-color: rgba(248, 113, 113, 0.95);
+  box-shadow:
+    0 0 0 1px rgba(248, 113, 113, 0.7),
+    0 10px 30px rgba(127, 29, 29, 0.7);
+}
+
+.answer-btn.locked {
+  transform: none;
+}
+
+/* SPODNÍ ČÁST – STATUS + TLAČÍTKA */
+
+.game-footer {
+  border-top: 1px solid rgba(55, 65, 81, 0.7);
+  padding-top: 0.75rem;
+  margin-top: 0.4rem;
+}
+
+.game-status {
+  margin: 0 0 0.6rem 0;
+  font-size: 0.9rem;
+  color: #e5e7eb;
+}
+
+.game-footer__buttons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+/* ŽEBŘÍČEK VÝHER */
+
+.ladder-title {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.05rem;
+}
+
+.ladder {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.ladder__item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.15rem 0.4rem;
+  border-radius: 999px;
+  transition:
+    background-color 0.15s ease,
+    transform 0.1s ease;
+}
+
+.ladder__item--safe {
+  background: rgba(250, 204, 21, 0.12);
+  color: #facc15;
+}
+
+.ladder__item--current {
+  background: linear-gradient(135deg, #facc15, #fbbf24);
+  color: #111827;
+  transform: translateX(4px);
+}
+
+/* UČITELSKÝ PANEL */
+
+.teacher-panel {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(8px);
+  z-index: 100;
+}
+
+.teacher-panel.hidden {
+  display: none;
+}
+
+.teacher-panel__content {
+  background: #020617;
+  border-radius: 18px;
+  padding: 1.25rem 1.5rem 1.3rem 1.5rem;
+  width: min(900px, 100% - 2rem);
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  box-shadow:
+    0 20px 60px rgba(15, 23, 42, 0.9),
+    0 0 0 1px rgba(15, 23, 42, 0.5);
+}
+
+.teacher-panel__header h2 {
+  margin: 0 0 0.35rem 0;
+}
+
+.teacher-panel__header p {
+  margin: 0;
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
+
+.teacher-panel__body {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.2fr);
+  gap: 1.25rem;
+}
+
+.teacher-topic-list {
+  border-radius: 12px;
+  border: 1px solid rgba(55, 65, 81, 0.9);
+  padding: 0.75rem;
+  max-height: 260px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.9rem;
+}
+
+.teacher-topic-list label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.teacher-actions {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  margin-bottom: 0.75rem;
 }
 
-.lifeline-btn {
-  border-radius: 999px;
-  padding: 0.45rem 0.8rem;
-  border: 1px solid #334155;
-  background: rgba(15, 23, 42, 0.9);
-  color: #ffffff;
-  cursor: pointer;
-  font-size: 0.9rem;
-  text-align: center;
+.teacher-output-wrapper.hidden {
+  display: none;
 }
 
-.lifeline-btn:hover {
-  border-color: #60a5fa;
+.teacher-output {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid rgba(55, 65, 81, 0.9);
+  background: #020617;
+  color: #e5e7eb;
+  padding: 0.6rem 0.7rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+  font-size: 0.8rem;
 }
 
-.lifeline-btn--disabled {
-  opacity: 0.5;
-  cursor: default;
-}
-
-.game-info {
+.teacher-panel__footer {
   margin-top: 1rem;
-  font-size: 0.9rem;
-  border-top: 1px solid #1f2937;
-  padding-top: 0.75rem;
-}
-
-.game-info__row {
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 0.35rem;
+  justify-content: flex-end;
 }
 
-/* Spodní lišta hry */
-.game-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-  background: rgba(15, 23, 42, 0.9);
-  border-radius: 1rem;
-  padding: 0.6rem 0.8rem;
-  border: 1px solid #1f2937;
-  font-size: 0.9rem;
-}
+/* RESPONSIVE */
 
-#game-status-message {
-  flex: 1;
-  text-align: center;
-  color: #cbd5f5;
-}
-
-/* Responzivita */
 @media (max-width: 900px) {
   .game-layout {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* na menších displejích chceme nejdřív otázku a odpovědi */
+  .game-main {
+    order: 1;
+  }
+
+  .game-sidebar--left {
+    order: 2;
+  }
+
+  .game-sidebar--right {
+    order: 3;
   }
 
   .game-header {
@@ -369,126 +671,54 @@ body {
   }
 
   .game-header__right {
-    text-align: center;
+    align-items: center;
   }
 
-  .game-footer {
-    flex-direction: column;
-    align-items: stretch;
-  }
-}
-
-@media (max-width: 600px) {
-  .screen {
-    padding: 1rem;
+  .game-footer__buttons {
+    justify-content: center;
   }
 
-  .landing-header h1 {
-    font-size: 1.6rem;
+  .screen--landing,
+  .screen--game {
+    padding: 1.25rem;
+  }
+
+  .app {
+    margin: 0.75rem;
   }
 
   .grade-grid {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .answer-btn {
-    font-size: 0.9rem;
+  .teacher-panel__body {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
-.teacher-panel.hidden {
-  display: none;
+@media (max-width: 640px) {
+  .game-meta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .game-footer__buttons {
+    flex-direction: column;
+  }
+
+  .primary-btn,
+  .secondary-btn {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
-.teacher-panel {
+/* Skrytá oblast pro otevření učitelského panelu (telefon / tablet) */
+#teacher-hotzone {
   position: fixed;
   top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  backdrop-filter: blur(3px);
-  background: rgba(0,0,0,0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  z-index: 50;
 }
-
-.teacher-panel-content {
-  background: #1e1e1e;
-  padding: 25px;
-  border-radius: 12px;
-  width: 400px;
-  color: white;
-  box-shadow: 0 0 20px rgba(0,0,0,0.8);
-}
-
-.teacher-panel-content h2 {
-  margin-top: 0;
-}
-
-.teacher-panel-content label {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 6px 0;
-}
-
-.teacher-panel.hidden {
-  display: none;
-}
-
-.teacher-panel {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  backdrop-filter: blur(3px);
-  background: rgba(0,0,0,0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-}
-
-.teacher-panel-content {
-  background: #1e1e1e;
-  padding: 25px;
-  border-radius: 12px;
-  width: 480px;
-  max-width: 95vw;
-  color: white;
-  box-shadow: 0 0 20px rgba(0,0,0,0.8);
-}
-
-.teacher-panel-content h2 {
-  margin-top: 0;
-}
-
-.teacher-panel-content label {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 6px 0;
-}
-
-.teacher-panel-output textarea {
-  width: 100%;
-  min-height: 180px;
-  margin-top: 6px;
-  background: #0b1120;
-  color: #e5e7eb;
-  border-radius: 8px;
-  border: 1px solid #4b5563;
-  padding: 8px;
-  font-family: "Fira Code", monospace;
-  font-size: 0.8rem;
-  resize: vertical;
-}
-
-.teacher-panel-output.hidden {
-  display: none;
-}
-
-
