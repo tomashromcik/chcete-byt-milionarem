@@ -381,6 +381,75 @@ button:disabled {
   border-style: dotted;
 }
 
+/* --- Nápovědy – nové kruhové ikony --- */
+
+.lifelines {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.lifeline-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+/* společný vzhled pro ikonové lifeliny */
+.lifeline-btn--icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 2px solid #fdd45c;
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #fdd45c;
+  transition: background 0.2s ease, transform 0.1s ease, opacity 0.2s ease;
+}
+
+.lifeline-btn--icon:hover {
+  background: rgba(253, 212, 92, 0.14);
+  transform: translateY(-1px);
+}
+
+.lifeline-btn__icon {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.lifeline-btn__label {
+  font-size: 0.7rem;
+  margin-top: 0.25rem;
+  text-align: center;
+}
+
+/* použitá / zakázaná nápověda */
+.lifeline-btn--used,
+.lifeline-btn--disabled {
+  opacity: 0.35;
+  border-color: #60636f;
+  color: #888c99;
+  cursor: default;
+}
+
+/* menší varianta na mobilech – jen ikonky, bez textu */
+@media (max-width: 480px) {
+  .lifeline-btn--icon {
+    width: 56px;
+    height: 56px;
+  }
+
+  .lifeline-btn__label {
+    display: none;
+  }
+}
+
+
 /* INFO POD NÁPOVĚDAMI */
 
 .game-info {
