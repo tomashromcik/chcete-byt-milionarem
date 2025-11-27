@@ -5,28 +5,32 @@ console.log("app.js načten");
 // --- Konfigurace žebříčku a hry ---
 
 const LADDER_CONFIG = [
-  { level: 1,  prize: "100 Kč",       difficulty: 1 },
-  { level: 2,  prize: "200 Kč",       difficulty: 1 },
-  { level: 3,  prize: "300 Kč",       difficulty: 1 },
-  { level: 4,  prize: "500 Kč",       difficulty: 1 },
-  { level: 5,  prize: "1 000 Kč",     difficulty: 1 },
-  { level: 6,  prize: "2 000 Kč",     difficulty: 2 },
-  { level: 7,  prize: "4 000 Kč",     difficulty: 2 },
-  { level: 8,  prize: "8 000 Kč",     difficulty: 2 },
-  { level: 9,  prize: "16 000 Kč",    difficulty: 2 }, // jistá částka
-  { level: 10, prize: "32 000 Kč",    difficulty: 2 },
-  { level: 11, prize: "64 000 Kč",    difficulty: 3 },
-  { level: 12, prize: "125 000 Kč",   difficulty: 3 }, // jistá částka
-  { level: 13, prize: "250 000 Kč",   difficulty: 3 },
-  { level: 14, prize: "500 000 Kč",   difficulty: 3 },
-  { level: 15, prize: "1 000 000 Kč", difficulty: 3 }
+  { level: 1,  prize: "1 000 Kč",       difficulty: 1 },
+  { level: 2,  prize: "2 000 Kč",       difficulty: 1 },
+  { level: 3,  prize: "3 000 Kč",       difficulty: 1 },
+  { level: 4,  prize: "5 000 Kč",       difficulty: 1 },
+  { level: 5,  prize: "10 000 Kč",      difficulty: 1 },
+  { level: 6,  prize: "20 000 Kč",      difficulty: 2 },
+  { level: 7,  prize: "40 000 Kč",      difficulty: 2 },
+  { level: 8,  prize: "80 000 Kč",      difficulty: 2 },
+  { level: 9,  prize: "160 000 Kč",     difficulty: 2 },
+  { level: 10, prize: "320 000 Kč",     difficulty: 2 },
+  { level: 11, prize: "640 000 Kč",     difficulty: 3 },
+  { level: 12, prize: "1 250 000 Kč",   difficulty: 3 },
+  { level: 13, prize: "2 500 000 Kč",   difficulty: 3 },
+  { level: 14, prize: "5 000 000 Kč",   difficulty: 3 },
+  { level: 15, prize: "10 000 000 Kč",  difficulty: 3 }
 ];
 
 // úrovně, které jsou „jisté“ (viz HTML – žlutě zvýrazněné)
-const SAFE_LEVELS = [9, 12];
+const SAFE_LEVELS = [5, 10];
 
-// limit na 1 otázku (v sekundách)
-const QUESTION_TIME_LIMIT = 30;
+// časové limity podle obtížnosti (v sekundách)
+const QUESTION_TIME_LIMITS = {
+  1: 90,   // 1,5 minuty
+  2: 120,  // 2 minuty
+  3: 150   // 2,5 minuty
+};
 
 // --- Stav hry ---
 
@@ -37,8 +41,11 @@ let gameOver = false;
 let highestSafeLevelReached = 0;
 
 let timerInterval = null;
-let timeLeft = QUESTION_TIME_LIMIT;
+let timeLeft = 0;
 let lifeline5050Used = false;
+let lifelineCallUsed = false;
+let lifelineClassUsed = false;
+let lifelineSwapUsed = false;
 
 // DOM prvky (doplníme po DOMContentLoaded)
 let statusMsgEl;
@@ -61,7 +68,7 @@ function withShuffledAnswers(q) {
   const indexOrder = [0, 1, 2, 3];
   shuffle(indexOrder);
 
-  const newAnswers = indexOrder.map(i => q.answers[i]);
+  const newAnswers = indexOrder.map((i) => q.answers[i]);
   const newCorrectIndex = indexOrder.indexOf(q.correctIndex);
 
   return {
@@ -72,7 +79,7 @@ function withShuffledAnswers(q) {
 }
 
 function getPrizeForLevel(level) {
-  const cfg = LADDER_CONFIG.find(c => c.level === level);
+  const cfg = LADDER_CONFIG.find((c) => c.level === level);
   return cfg ? cfg.prize : "0 Kč";
 }
 
@@ -84,7 +91,7 @@ function generateGameQuestions(activeTopics) {
   }
 
   // filtr podle vybraných témat z config-topics-8.js
-  let pool = QUESTIONS_8.filter(q => activeTopics.includes(q.topic));
+  let pool = QUESTIONS_8.filter((q) => activeTopics.includes(q.topic));
 
   if (pool.length === 0) {
     console.warn("Žádné otázky pro vybraná témata:", activeTopics);
@@ -93,9 +100,9 @@ function generateGameQuestions(activeTopics) {
 
   // rozdělení podle obtížnosti
   const byDiff = {
-    1: pool.filter(q => q.difficulty === 1),
-    2: pool.filter(q => q.difficulty === 2),
-    3: pool.filter(q => q.difficulty === 3)
+    1: pool.filter((q) => q.difficulty === 1),
+    2: pool.filter((q) => q.difficulty === 2),
+    3: pool.filter((q) => q.difficulty === 3)
   };
 
   shuffle(byDiff[1]);
@@ -104,7 +111,7 @@ function generateGameQuestions(activeTopics) {
 
   const selected = [];
 
-  LADDER_CONFIG.forEach(cfg => {
+  LADDER_CONFIG.forEach((cfg) => {
     const list = byDiff[cfg.difficulty];
     if (!list || list.length === 0) {
       console.warn(
@@ -136,7 +143,7 @@ function generateGameQuestions(activeTopics) {
 // zvýrazní správný řádek v žebříčku
 function updateLadderHighlight(level) {
   const items = document.querySelectorAll(".ladder__item");
-  items.forEach(li => {
+  items.forEach((li) => {
     li.classList.remove("ladder__item--current");
     const liLevel = Number(li.dataset.level);
     if (liLevel === level) {
@@ -161,9 +168,11 @@ function stopTimer() {
   }
 }
 
-function startTimer() {
+function startTimerForQuestion(difficulty) {
   stopTimer();
-  timeLeft = QUESTION_TIME_LIMIT;
+
+  const base = QUESTION_TIME_LIMITS[difficulty] || QUESTION_TIME_LIMITS[1];
+  timeLeft = base;
   updateTimerDisplay();
 
   timerInterval = setInterval(() => {
@@ -208,8 +217,9 @@ function showCurrentQuestion() {
     btn.style.opacity = "";
   });
 
-  document.getElementById("game-question-progress").textContent =
-    `Otázka ${q.level} / 15`;
+  document.getElementById(
+    "game-question-progress"
+  ).textContent = `Otázka ${q.level} / 15`;
   document.getElementById("game-current-prize").textContent = q.prize;
 
   updateLadderHighlight(q.level);
@@ -228,7 +238,8 @@ function showCurrentQuestion() {
     nextBtnEl.classList.add("primary-btn--disabled");
   }
 
-  startTimer();
+  // časovač
+  startTimerForQuestion(q.difficulty);
 }
 
 // --- Vyhodnocení odpovědi ---
@@ -255,7 +266,11 @@ function handleAnswer(chosenIndexOrNull) {
       b.classList.add("correct");
     }
 
-    if (chosenIndex !== null && idx === chosenIndex && chosenIndex !== correctIndex) {
+    if (
+      chosenIndex !== null &&
+      idx === chosenIndex &&
+      chosenIndex !== correctIndex
+    ) {
       b.classList.add("incorrect");
     }
   });
@@ -317,7 +332,7 @@ function use5050() {
   shuffle(incorrectIndices);
   const toHide = incorrectIndices.slice(0, 2);
 
-  toHide.forEach(i => {
+  toHide.forEach((i) => {
     const btn = answerButtons[i];
     btn.disabled = true;
     btn.classList.add("locked");
@@ -333,6 +348,7 @@ function use5050() {
 
 // vrátí aktuálně používaná témata pro 8. ročník
 function getActiveTopicsFor8Runtime() {
+  // 1) zkus localStorage override
   const raw = localStorage.getItem("topics_8_override");
   if (raw) {
     try {
@@ -345,32 +361,13 @@ function getActiveTopicsFor8Runtime() {
     }
   }
 
+  // 2) fallback: config-topics-8.js
   if (typeof getEnabledTopicsFor8 === "function") {
     return getEnabledTopicsFor8();
   }
 
+  // 3) nouzový fallback
   return ["prace", "kladky", "vykon", "ucinnost", "Ep", "Ek"];
-}
-
-// vrátí témata pro zobrazení v UI (config + případný local override)
-function getTopicsForUI() {
-  const base = TOPIC_CONFIG_8.topics.map(t => ({ ...t }));
-
-  const raw = localStorage.getItem("topics_8_override");
-  if (!raw) return base;
-
-  try {
-    const ids = JSON.parse(raw);
-    if (!Array.isArray(ids)) return base;
-
-    return base.map(t => ({
-      ...t,
-      enabled: ids.includes(t.id)
-    }));
-  } catch (e) {
-    console.warn("Chyba při čtení topics_8_override:", e);
-    return base;
-  }
 }
 
 // --- DOM ready ---
@@ -388,7 +385,18 @@ document.addEventListener("DOMContentLoaded", () => {
   nextBtnEl = document.getElementById("btn-next-question");
   timerEl = document.getElementById("game-timer");
   questionsLeftEl = document.getElementById("game-questions-left");
-  lifeline5050Btn = document.querySelector('.lifeline-btn[data-lifeline="5050"]');
+  lifeline5050Btn = document.querySelector(
+    '.lifeline-btn[data-lifeline="5050"]'
+  );
+  const lifelineCallBtn = document.querySelector(
+    '.lifeline-btn[data-lifeline="call"]'
+  );
+  const lifelineClassBtn = document.querySelector(
+    '.lifeline-btn[data-lifeline="class-help"]'
+  );
+  const lifelineSwapBtn = document.querySelector(
+    '.lifeline-btn[data-lifeline="swap"]'
+  );
 
   const answerButtons = document.querySelectorAll(".answer-btn");
 
@@ -397,7 +405,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const teacherTopicList = document.getElementById("teacher-topic-list");
   const teacherGenerateBtn = document.getElementById("teacher-generate");
   const teacherCloseBtn = document.getElementById("teacher-close");
-  const teacherOutputWrapper = document.getElementById("teacher-output-wrapper");
+  const teacherOutputWrapper = document.getElementById(
+    "teacher-output-wrapper"
+  );
   const teacherOutput = document.getElementById("teacher-output");
   const teacherSaveLocalBtn = document.getElementById("teacher-save-local");
 
@@ -408,12 +418,12 @@ document.addEventListener("DOMContentLoaded", () => {
     if (teacherOutputWrapper) teacherOutputWrapper.classList.add("hidden");
     if (teacherOutput) teacherOutput.value = "";
 
-    const topicsForUI = getTopicsForUI();
-
-    topicsForUI.forEach(t => {
+    TOPIC_CONFIG_8.topics.forEach((t) => {
       const row = document.createElement("label");
       row.innerHTML = `
-        <input type="checkbox" data-id="${t.id}" ${t.enabled ? "checked" : ""}>
+        <input type="checkbox" data-id="${t.id}" ${
+        t.enabled ? "checked" : ""
+      }>
         ${t.label}
       `;
       teacherTopicList.appendChild(row);
@@ -422,18 +432,49 @@ document.addEventListener("DOMContentLoaded", () => {
     teacherPanel.classList.remove("hidden");
   }
 
-  // Ctrl+U → heslo → otevřít panel
+  function openTeacherPanelWithPassword() {
+    const pw = prompt("Zadejte heslo pro učitele:");
+    if (pw === "ZSBoh74719") {
+      openTeacherPanel();
+    } else if (pw !== null) {
+      alert("Nesprávné heslo.");
+    }
+  }
+
+  // klávesová zkratka pro učitele (Ctrl+U)
   document.addEventListener("keydown", (e) => {
     if (e.ctrlKey && e.key.toLowerCase() === "u") {
       e.preventDefault();
-      const pw = prompt("Zadejte heslo pro učitele:");
-      if (pw === "ZSBoh74719") {
-        openTeacherPanel();
-      } else if (pw !== null) {
-        alert("Nesprávné heslo.");
-      }
+      openTeacherPanelWithPassword();
     }
   });
+
+  // skrytá oblast v pravém horním rohu pro mobily/tablety
+  const teacherHotzone = document.getElementById("teacher-hotzone");
+  let teacherClickCount = 0;
+  let teacherClickTimer = null;
+
+  if (teacherHotzone) {
+    teacherHotzone.addEventListener("click", () => {
+      teacherClickCount++;
+
+      if (teacherClickCount === 1) {
+        teacherClickTimer = setTimeout(() => {
+          teacherClickCount = 0;
+          teacherClickTimer = null;
+        }, 5000);
+      }
+
+      if (teacherClickCount >= 5) {
+        teacherClickCount = 0;
+        if (teacherClickTimer) {
+          clearTimeout(teacherClickTimer);
+          teacherClickTimer = null;
+        }
+        openTeacherPanelWithPassword();
+      }
+    });
+  }
 
   if (teacherCloseBtn) {
     teacherCloseBtn.addEventListener("click", () => {
@@ -441,26 +482,25 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // uložit nastavení jen pro toto zařízení (localStorage)
+  // uložit do localStorage
   if (teacherSaveLocalBtn) {
     teacherSaveLocalBtn.addEventListener("click", () => {
       if (!teacherTopicList) return;
+      const checkboxes =
+        teacherTopicList.querySelectorAll("input[type=checkbox]");
+      const enabledIds = [];
 
-      const checkboxes = teacherTopicList.querySelectorAll("input[type=checkbox]");
-      const selectedIds = [];
-
-      checkboxes.forEach(cb => {
-        if (cb.checked) selectedIds.push(cb.dataset.id);
+      checkboxes.forEach((cb) => {
+        if (cb.checked) {
+          enabledIds.push(cb.dataset.id);
+        }
       });
 
-      localStorage.setItem("topics_8_override", JSON.stringify(selectedIds));
-
-      TOPIC_CONFIG_8.topics.forEach(t => {
-        t.enabled = selectedIds.includes(t.id);
-      });
-
-      alert("Témata byla uložena pro toto zařízení. Znovu spusť hru pro 8. třídu.");
-      teacherPanel.classList.add("hidden");
+      localStorage.setItem(
+        "topics_8_override",
+        JSON.stringify(enabledIds)
+      );
+      alert("Výběr témat byl uložen do tohoto zařízení.");
     });
   }
 
@@ -469,34 +509,38 @@ document.addEventListener("DOMContentLoaded", () => {
     teacherGenerateBtn.addEventListener("click", () => {
       if (!teacherTopicList || !teacherOutput || !teacherOutputWrapper) return;
 
-      const checkboxes = teacherTopicList.querySelectorAll("input[type=checkbox]");
+      const checkboxes =
+        teacherTopicList.querySelectorAll("input[type=checkbox]");
 
-      checkboxes.forEach(cb => {
+      checkboxes.forEach((cb) => {
         const id = cb.dataset.id;
-        const topic = TOPIC_CONFIG_8.topics.find(t => t.id === id);
+        const topic = TOPIC_CONFIG_8.topics.find((t) => t.id === id);
         if (topic) {
           topic.enabled = cb.checked;
         }
       });
 
       const lines = [];
-      lines.push('const TOPIC_CONFIG_8 = {');
+      lines.push("const TOPIC_CONFIG_8 = {");
       lines.push('  schoolYear: "2024/2025",');
-      lines.push('  topics: [');
+      lines.push("  topics: [");
 
       TOPIC_CONFIG_8.topics.forEach((t, index) => {
-        const comma = index === TOPIC_CONFIG_8.topics.length - 1 ? "" : ",";
-        lines.push(`    { id: "${t.id}", label: "${t.label}", enabled: ${t.enabled} }${comma}`);
+        const comma =
+          index === TOPIC_CONFIG_8.topics.length - 1 ? "" : ",";
+        lines.push(
+          `    { id: "${t.id}", label: "${t.label}", enabled: ${t.enabled} }${comma}`
+        );
       });
 
-      lines.push('  ]');
-      lines.push('};');
-      lines.push('');
-      lines.push('function getEnabledTopicsFor8() {');
-      lines.push('  return TOPIC_CONFIG_8.topics');
-      lines.push('    .filter(t => t.enabled)');
-      lines.push('    .map(t => t.id);');
-      lines.push('}');
+      lines.push("  ]");
+      lines.push("};");
+      lines.push("");
+      lines.push("function getEnabledTopicsFor8() {");
+      lines.push("  return TOPIC_CONFIG_8.topics");
+      lines.push("    .filter(t => t.enabled)");
+      lines.push("    .map(t => t.id);");
+      lines.push("}");
 
       teacherOutput.value = lines.join("\n");
       teacherOutputWrapper.classList.remove("hidden");
@@ -521,7 +565,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ---------- Klik na odpověď ----------
-  answerButtons.forEach(btn => {
+  answerButtons.forEach((btn) => {
     btn.addEventListener("click", () => {
       const idx = Number(btn.dataset.answer);
       handleAnswer(idx);
@@ -536,7 +580,8 @@ document.addEventListener("DOMContentLoaded", () => {
         currentQuestionIndex++;
         showCurrentQuestion();
       } else {
-        statusMsgEl.textContent = "Konec hry! To byla poslední otázka.";
+        statusMsgEl.textContent =
+          "Konec hry! To byla poslední otázka.";
         nextBtnEl.disabled = true;
         nextBtnEl.classList.add("primary-btn--disabled");
         gameOver = true;
@@ -547,7 +592,97 @@ document.addEventListener("DOMContentLoaded", () => {
   // ---------- 50 : 50 ----------
   if (lifeline5050Btn) {
     lifeline5050Btn.addEventListener("click", () => {
+      if (gameOver) return;
       use5050();
+    });
+  }
+
+  // ---------- Zavolej učiteli ----------
+  if (lifelineCallBtn) {
+    lifelineCallBtn.addEventListener("click", () => {
+      if (lifelineCallUsed || gameOver) return;
+      lifelineCallUsed = true;
+      lifelineCallBtn.disabled = true;
+      lifelineCallBtn.classList.add("lifeline-btn--disabled");
+
+      // zastavíme čas, otázka zůstává viditelná
+      stopTimer();
+      if (statusMsgEl) {
+        statusMsgEl.textContent =
+          "Nápověda – zavolej učiteli. Proberte možnosti, potom zvol odpověď.";
+      }
+    });
+  }
+
+  // ---------- Pomoc třídy ----------
+  if (lifelineClassBtn) {
+    lifelineClassBtn.addEventListener("click", () => {
+      if (lifelineClassUsed || gameOver) return;
+      lifelineClassUsed = true;
+      lifelineClassBtn.disabled = true;
+      lifelineClassBtn.classList.add("lifeline-btn--disabled");
+
+      // zastavíme čas, aby se třída mohla poradit
+      stopTimer();
+      if (statusMsgEl) {
+        statusMsgEl.textContent =
+          "Nápověda – pomoc třídy. Domluvte se, potom zvol odpověď.";
+      }
+    });
+  }
+
+  // ---------- Změnit otázku ----------
+  if (lifelineSwapBtn) {
+    lifelineSwapBtn.addEventListener("click", () => {
+      if (lifelineSwapUsed || gameOver) return;
+      if (!gameQuestions || !gameQuestions.length) return;
+
+      const current = gameQuestions[currentQuestionIndex];
+      if (!current) return;
+
+      // kandidáti: stejná obtížnost, jiná otázka
+      if (typeof QUESTIONS_8 === "undefined") return;
+      let sameDiff = QUESTIONS_8.filter(
+        (q) => q.difficulty === current.difficulty && q.id !== current.id
+      );
+
+      if (!sameDiff.length) {
+        alert("Není k dispozici jiná otázka stejné obtížnosti.");
+        return;
+      }
+
+      // pokusíme se vybrat otázku, která ještě v této hře není
+      let pool = sameDiff.filter(
+        (q) => !gameQuestions.some((gq) => gq.id === q.id)
+      );
+      if (!pool.length) {
+        pool = sameDiff;
+      }
+
+      const rawNew = pool[Math.floor(Math.random() * pool.length)];
+      let newQ = rawNew;
+      if (typeof withShuffledAnswers === "function") {
+        newQ = withShuffledAnswers(rawNew);
+      }
+
+      // zachováme level a prize aktuálního stupně
+      newQ = {
+        ...newQ,
+        level: current.level,
+        prize: current.prize
+      };
+
+      gameQuestions[currentQuestionIndex] = newQ;
+
+      lifelineSwapUsed = true;
+      lifelineSwapBtn.disabled = true;
+      lifelineSwapBtn.classList.add("lifeline-btn--disabled");
+
+      if (statusMsgEl) {
+        statusMsgEl.textContent = "Otázka byla vyměněna. Vyber odpověď.";
+      }
+
+      showCurrentQuestion();
     });
   }
 
@@ -558,11 +693,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
       highestSafeLevelReached = 0;
       gameOver = false;
+
+      // reset nápověd
       lifeline5050Used = false;
+      lifelineCallUsed = false;
+      lifelineClassUsed = false;
+      lifelineSwapUsed = false;
 
       if (lifeline5050Btn) {
         lifeline5050Btn.disabled = false;
         lifeline5050Btn.classList.remove("lifeline-btn--disabled");
+      }
+      if (typeof lifelineCallBtn !== "undefined" && lifelineCallBtn) {
+        lifelineCallBtn.disabled = false;
+        lifelineCallBtn.classList.remove("lifeline-btn--disabled");
+      }
+      if (
+        typeof lifelineClassBtn !== "undefined" &&
+        lifelineClassBtn
+      ) {
+        lifelineClassBtn.disabled = false;
+        lifelineClassBtn.classList.remove("lifeline-btn--disabled");
+      }
+      if (typeof lifelineSwapBtn !== "undefined" && lifelineSwapBtn) {
+        lifelineSwapBtn.disabled = false;
+        lifelineSwapBtn.classList.remove("lifeline-btn--disabled");
       }
 
       const activeTopics = getActiveTopicsFor8Runtime();
