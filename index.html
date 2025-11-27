@@ -101,30 +101,28 @@
           <!-- Levý panel: nápovědy -->
           <aside class="game-sidebar game-sidebar--left">
             <div class="lifelines">
-              <button
-                class="lifeline-btn"
-                data-lifeline="5050"
-                type="button"
-              >
-                50 : 50
-              </button>
-              <button class="lifeline-btn" data-lifeline="call" type="button">
-                Zavolej učiteli
-              </button>
-              <button
-                class="lifeline-btn"
-                data-lifeline="class-help"
-                type="button"
-              >
-                Pomoc třídy
-              </button>
-              <button
-                class="lifeline-btn"
-                data-lifeline="swap"
-                type="button"
-              >
-                Změnit otázku
-              </button>
+              <div class="lifelines">
+  <button class="lifeline-btn lifeline-btn--icon" data-lifeline="5050">
+    <span class="lifeline-btn__icon">1/2</span>
+    <span class="lifeline-btn__label">50 : 50</span>
+  </button>
+
+  <button class="lifeline-btn lifeline-btn--icon" data-lifeline="call">
+    <span class="lifeline-btn__icon">📞</span>
+    <span class="lifeline-btn__label">Zavolej učitele</span>
+  </button>
+
+  <button class="lifeline-btn lifeline-btn--icon" data-lifeline="class">
+    <span class="lifeline-btn__icon">👥</span>
+    <span class="lifeline-btn__label">Pomoc třídy</span>
+  </button>
+
+  <button class="lifeline-btn lifeline-btn--icon" data-lifeline="swap">
+    <span class="lifeline-btn__icon">↻</span>
+    <span class="lifeline-btn__label">Výměna otázky</span>
+  </button>
+</div>
+
             </div>
 
             <div class="game-info">
