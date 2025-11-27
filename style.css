@@ -17,6 +17,11 @@ body {
   background: radial-gradient(circle at top, #0f172a 0, #020617 55%);
 }
 
+html, body {
+  overflow-y: auto;
+}
+
+
 body {
   display: flex;
   align-items: stretch;
@@ -120,7 +125,10 @@ button:disabled {
 .screen--active {
   display: flex;
   flex-direction: column;
+  gap: 1.5rem;
+  min-height: 100vh;
 }
+
 
 .screen--hidden {
   display: none;
@@ -717,53 +725,60 @@ button:disabled {
 /* RESPONSIVE */
 
 @media (max-width: 900px) {
+  /* celý střední layout pod sebou */
   .game-layout {
     grid-template-columns: minmax(0, 1fr);
+    row-gap: 1rem;
   }
 
-  /* na menších displejích chceme nejdřív otázku a odpovědi */
+  /* pořadí bloků – nejdřív otázka, pak nápovědy, pak žebříček */
   .game-main {
     order: 1;
   }
 
-  .game-sidebar--left {
-    order: 2;
-  }
-
+  .game-sidebar--left,
   .game-sidebar--right {
     order: 3;
   }
 
+  /* nápovědy – do řádku pod otázku */
+  .lifelines {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .lifeline-btn {
+    flex: 1;
+    max-width: 80px;
+    padding: 0.5rem 0.4rem;
+  }
+
+  .lifeline-btn__icon {
+    margin: 0 auto 0.25rem;
+  }
+
+  .lifeline-btn__label {
+    font-size: 0.75rem;
+  }
+
+  /* header a footer na úzkém displeji */
   .game-header {
     grid-template-columns: minmax(0, 1fr);
     text-align: center;
   }
 
   .game-header__right {
-    align-items: center;
+    text-align: center;
   }
 
-  .game-footer__buttons {
-    justify-content: center;
-  }
-
-  .screen--landing,
-  .screen--game {
-    padding: 1.25rem;
-  }
-
-  .app {
-    margin: 0.75rem;
-  }
-
-  .grade-grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .teacher-panel__body {
-    grid-template-columns: minmax(0, 1fr);
+  .game-footer {
+    flex-direction: column;
+    align-items: stretch;
   }
 }
+
 
 @media (max-width: 640px) {
   .game-meta {
