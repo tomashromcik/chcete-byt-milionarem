@@ -1,4 +1,6 @@
-/* RESET + ZÁKLADNÍ NASTAVENÍ */
+/* -----------------------------
+   ZÁKLADNÍ RESET A NASTAVENÍ
+------------------------------ */
 
 *,
 *::before,
@@ -10,461 +12,514 @@ html,
 body {
   margin: 0;
   padding: 0;
-  height: 100%;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     sans-serif;
-  color: #111827;
-  background: radial-gradient(circle at top, #0f172a 0, #020617 55%);
+  color: #f9fafb;
+  background: radial-gradient(circle at top, #111827 0, #020617 60%);
+  min-height: 100%;
 }
-
-html, body {
-  overflow-y: auto;
-}
-
 
 body {
   display: flex;
-  align-items: stretch;
   justify-content: center;
+  align-items: stretch;
 }
-
-/* APP WRAPPER */
 
 .app {
-  max-width: 1200px;
   width: 100%;
-  margin: 1.5rem;
-  background: linear-gradient(135deg, #020617, #020617 45%, #020617 100%);
-  border-radius: 24px;
-  box-shadow:
-    0 24px 60px rgba(15, 23, 42, 0.9),
-    0 0 0 1px rgba(148, 163, 184, 0.2);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  color: #e5e7eb;
+  max-width: 1180px;
+  margin: 0 auto;
+  min-height: 100vh;
+  padding: 1.5rem 1rem 2.5rem;
 }
 
-/* OBECNÉ TLAČÍTKA */
+/* -----------------------------
+   TYPOGRAFIE
+------------------------------ */
 
-button {
-  font-family: inherit;
-  border: none;
-  cursor: pointer;
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-weight: 700;
+  letter-spacing: 0.02em;
 }
 
-button:disabled {
-  cursor: not-allowed;
+p {
+  margin: 0;
 }
 
-/* PRIMÁRNÍ / SEKUNDÁRNÍ TLAČÍTKA */
+/* -----------------------------
+   KARTY / OBECNÉ PRVKY
+------------------------------ */
+
+.card {
+  background: radial-gradient(circle at top left, #111827, #020617);
+  border-radius: 1.5rem;
+  padding: 1.75rem 1.75rem 1.5rem;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+}
+
+.card--muted {
+  background: radial-gradient(circle at top left, #020617, #020617);
+  opacity: 0.7;
+}
+
+/* -----------------------------
+   TLAČÍTKA
+------------------------------ */
 
 .primary-btn,
 .secondary-btn {
+  border: none;
   border-radius: 999px;
-  padding: 0.6rem 1.4rem;
-  font-weight: 600;
+  padding: 0.9rem 1.8rem;
   font-size: 0.95rem;
-  letter-spacing: 0.02em;
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease,
-    transform 0.1s ease,
-    box-shadow 0.2s ease,
-    opacity 0.2s ease;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease,
+    background 0.12s ease, color 0.12s ease, opacity 0.12s ease;
 }
 
 .primary-btn {
-  background: linear-gradient(135deg, #facc15, #fde047);
-  color: #1f2937;
-  box-shadow:
-    0 12px 30px rgba(250, 204, 21, 0.45),
-    0 0 0 1px rgba(15, 23, 42, 0.4);
+  background: linear-gradient(135deg, #facc15, #f97316);
+  color: #111827;
+  box-shadow: 0 18px 40px rgba(250, 204, 21, 0.5);
 }
 
-.primary-btn:hover:not(:disabled) {
+.primary-btn:hover {
   transform: translateY(-1px);
-  box-shadow:
-    0 16px 40px rgba(250, 204, 21, 0.6),
-    0 0 0 1px rgba(15, 23, 42, 0.45);
+  box-shadow: 0 22px 50px rgba(250, 204, 21, 0.65);
 }
 
-.primary-btn:active:not(:disabled) {
+.primary-btn:active {
   transform: translateY(0);
-  box-shadow:
-    0 8px 20px rgba(250, 204, 21, 0.5),
-    0 0 0 1px rgba(15, 23, 42, 0.6);
+  box-shadow: 0 12px 28px rgba(250, 204, 21, 0.55);
 }
 
 .primary-btn--disabled,
 .primary-btn:disabled {
-  background: linear-gradient(135deg, #6b7280, #4b5563);
-  color: #e5e7eb;
+  opacity: 0.4;
+  cursor: default;
   box-shadow: none;
-  opacity: 0.7;
+  transform: none;
 }
 
 .secondary-btn {
   background: transparent;
   color: #e5e7eb;
-  border: 1px solid rgba(148, 163, 184, 0.6);
-  backdrop-filter: blur(6px);
+  border: 1px solid rgba(156, 163, 175, 0.5);
 }
 
-.secondary-btn:hover:not(:disabled) {
-  background: rgba(15, 23, 42, 0.85);
+.secondary-btn:hover {
+  background: rgba(15, 23, 42, 0.9);
+  border-color: rgba(156, 163, 175, 0.8);
 }
 
-/* OBECNÉ ROZVRŽENÍ OBRAZOVEK */
-
-.screen {
-  display: none;
-  min-height: 100%;
+.secondary-btn:active {
+  transform: translateY(1px);
 }
 
-.screen--active {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  min-height: 100vh;
-}
+/* -----------------------------
+   TITULNÍ LIŠTA
+------------------------------ */
 
-
-.screen--hidden {
-  display: none;
-}
-
-/* ÚVODNÍ OBRAZOVKA */
-
-.screen--landing {
-  padding: 1.75rem 2rem 2rem 2rem;
-}
-
-.landing-header {
+.app-header {
+  margin-bottom: 1.75rem;
   text-align: center;
-  margin-bottom: 1.5rem;
 }
 
-.landing-header h1 {
-  margin: 0 0 0.25rem 0;
-  font-size: 1.7rem;
-  letter-spacing: 0.03em;
-  color: #e5e7eb;
+.app-header__title {
+  font-size: clamp(1.9rem, 4vw, 2.4rem);
+  margin-bottom: 0.3rem;
 }
 
-.landing-header p {
-  margin: 0;
+.app-header__subtitle {
+  font-size: 0.95rem;
   color: #9ca3af;
 }
 
-.landing-main {
-  text-align: center;
+/* -----------------------------
+   OBECNÉ OBRAZOVKY
+------------------------------ */
+
+.screen {
+  display: none;
 }
 
-.landing-disclaimer {
-  margin-top: 1rem;
-  font-size: 0.8rem;
-  opacity: 0.7;
+.screen--active {
+  display: block;
+}
+
+/* -----------------------------
+   ÚVODNÍ OBRAZOVKA – VÝBĚR ROČNÍKU
+------------------------------ */
+
+.screen-landing__title {
+  text-align: center;
+  font-size: 1.4rem;
+  margin-bottom: 1.8rem;
 }
 
 .grade-grid {
-  margin-top: 1rem;
   display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 840px) {
+  .grade-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 .grade-card {
-  background: radial-gradient(circle at top, #111827 0, #020617 55%);
-  border-radius: 18px;
-  padding: 1.25rem 1.25rem 1.4rem 1.25rem;
-  text-align: left;
-  border: 1px solid rgba(148, 163, 184, 0.35);
   position: relative;
-  overflow: hidden;
+  border-radius: 1.6rem;
+  padding: 1.4rem 1.5rem 1.3rem;
+  background: radial-gradient(circle at top left, #020617, #020617);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.85);
+  cursor: default;
+  transition: transform 0.15s ease, box-shadow 0.15s ease,
+    border-color 0.15s ease, background 0.15s ease;
 }
 
-.grade-card::before {
-  content: "";
-  position: absolute;
-  inset: -60%;
-  background: radial-gradient(
-    circle at top,
-    rgba(250, 204, 21, 0.16),
-    transparent 55%
-  );
-  opacity: 0;
-  transition: opacity 0.25s ease;
+.grade-card--active {
+  background: radial-gradient(circle at top, #facc15 0, #f97316 15%, #020617 55%);
+  border-color: rgba(250, 204, 21, 0.6);
+  cursor: pointer;
 }
 
-.grade-card--active::before {
-  opacity: 1;
-}
-
-.grade-card__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.4rem;
+.grade-card--active:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 24px 55px rgba(250, 204, 21, 0.45);
 }
 
 .grade-card__badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.15rem 0.75rem;
+  justify-content: center;
+  width: 3.2rem;
+  height: 3.2rem;
   border-radius: 999px;
-  background: rgba(31, 41, 55, 0.9);
+  background: rgba(15, 23, 42, 0.92);
+  border: 1px solid rgba(148, 163, 184, 0.3);
   color: #e5e7eb;
-  font-size: 0.8rem;
-  border: 1px solid rgba(148, 163, 184, 0.7);
-}
-
-.grade-card__badge--active {
-  background: rgba(250, 204, 21, 0.1);
-  color: #facc15;
-  border-color: rgba(250, 204, 21, 0.6);
-}
-
-.grade-card h2 {
-  margin: 0.35rem 0 0.35rem 0;
-  font-size: 1.1rem;
-  color: #e5e7eb;
-}
-
-.grade-card p {
-  margin: 0 0 0.9rem 0;
   font-size: 0.9rem;
-  color: #9ca3af;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
 }
 
-.grade-card .primary-btn {
-  width: 100%;
-}
-
-.grade-card--disabled {
-  opacity: 0.6;
-}
-
-/* FOOTER ÚVODNÍ OBRAZOVKY */
-
-.landing-footer {
-  margin-top: 1.5rem;
-  text-align: center;
-  font-size: 0.8rem;
-  color: #9ca3af;
-}
-
-/* HERNÍ OBRAZOVKA */
-
-.screen--game {
-  padding: 1.5rem 2rem 2rem 2rem;
-}
-
-/* HLAVIČKA HRY */
-
-.game-header {
-  display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.1fr);
-  gap: 1rem;
-  align-items: center;
-  margin-bottom: 1.5rem;
-}
-
-.game-header__left h1 {
-  margin: 0 0 0.2rem 0;
-  font-size: 1.5rem;
-}
-
-.game-header__left p {
-  margin: 0;
-  color: #9ca3af;
-  font-size: 0.9rem;
-}
-
-.game-header__right {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  align-items: flex-end;
-}
-
-.game-timer {
-  display: flex;
-  gap: 0.5rem;
-  align-items: baseline;
-}
-
-.game-timer__label {
-  font-size: 0.85rem;
-  color: #9ca3af;
-}
-
-.game-timer__value {
-  font-variant-numeric: tabular-nums;
-  font-weight: 700;
+.grade-card--active .grade-card__badge {
+  border-color: rgba(250, 204, 21, 0.9);
   color: #facc15;
+}
+
+.grade-card__title {
   font-size: 1.2rem;
+  margin-bottom: 0.35rem;
 }
 
-.game-meta {
-  display: flex;
-  gap: 1rem;
+.grade-card__subtitle {
+  font-size: 0.95rem;
+  color: #9ca3af;
+  margin-bottom: 0.75rem;
+}
+
+.grade-card__topics {
+  font-size: 0.9rem;
+  color: #9ca3af;
+  margin-bottom: 1rem;
+}
+
+.grade-card__button {
+  display: inline-flex;
+}
+
+/* Info text dole na landing screen */
+.landing-info {
+  margin-top: 1rem;
+  text-align: center;
   font-size: 0.85rem;
   color: #9ca3af;
 }
 
-.game-meta__item strong {
-  color: #e5e7eb;
-}
-
-/* LAYOUT HRY */
+/* -----------------------------
+   HERNÍ OBRAZOVKA
+------------------------------ */
 
 .game-layout {
   display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr) minmax(0, 0.9fr);
-  gap: 1rem;
-  align-items: flex-start;
+  grid-template-columns: 260px minmax(0, 1fr) 260px;
+  gap: 1.25rem;
 }
 
-/* pořadí panelů ve hře (desktop) */
-.game-sidebar--left {
-  order: 1;
+@media (max-width: 1024px) {
+  .game-layout {
+    grid-template-columns: 230px minmax(0, 1fr) 230px;
+  }
+}
+
+.game-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .game-main {
-  order: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-.game-sidebar--right {
-  order: 3;
+/* -----------------------------
+   KARTY VE HŘE
+------------------------------ */
+
+.game-card {
+  background: radial-gradient(circle at top left, #020617, #020617);
+  border-radius: 1.5rem;
+  padding: 1.4rem 1.5rem 1.25rem;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.9);
 }
 
-/* Sidebar (žebříček / nápovědy) */
+.game-card__header {
+  margin-bottom: 0.75rem;
+}
 
-.game-sidebar {
-  background: radial-gradient(circle at top, #020617 0, #020617 55%);
-  border-radius: 18px;
-  padding: 1rem;
+.game-card__title {
+  font-size: 1rem;
+  color: #9ca3af;
+}
+
+.game-card__value {
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+/* karta s otázkou */
+
+.game-card--question .game-card__title {
+  font-size: 1.35rem;
+  color: #e5e7eb;
+  margin-bottom: 0.75rem;
+}
+
+.game-card--question .game-card__body {
+  margin-top: 0.5rem;
+}
+
+/* -----------------------------
+   ODPVĚDI
+------------------------------ */
+
+.answers {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.answer-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 0.9rem;
+  border-radius: 999px;
   border: 1px solid rgba(148, 163, 184, 0.35);
+  background: radial-gradient(circle at top left, #020617, #020617);
+  color: #f9fafb;
+  cursor: pointer;
+  transition: background 0.12s ease, transform 0.12s ease,
+    box-shadow 0.12s ease, border-color 0.12s ease, opacity 0.12s ease;
 }
 
-/* NÁPOVĚDY */
+.answer-btn__label {
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.answer-btn__text {
+  flex: 1;
+  text-align: left;
+  font-size: 0.98rem;
+}
+
+/* stav po najetí a po výběru */
+
+.answer-btn:hover:not(:disabled) {
+  border-color: rgba(250, 204, 21, 0.6);
+  box-shadow: 0 12px 32px rgba(250, 204, 21, 0.28);
+  transform: translateY(-1px);
+}
+
+.answer-btn.correct {
+  background: radial-gradient(circle at top, #22c55e, #16a34a);
+  border-color: rgba(134, 239, 172, 0.9);
+  box-shadow: 0 16px 40px rgba(34, 197, 94, 0.65);
+}
+
+.answer-btn.incorrect {
+  background: radial-gradient(circle at top, #ef4444, #b91c1c);
+  border-color: rgba(252, 165, 165, 0.9);
+  box-shadow: 0 16px 40px rgba(248, 113, 113, 0.6);
+}
+
+.answer-btn.locked {
+  cursor: default;
+}
+
+/* -----------------------------
+   NÁPOVĚDY (lifelines)
+------------------------------ */
 
 .lifelines {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.lifelines__title {
+  font-size: 0.95rem;
+  color: #9ca3af;
+}
+
+.lifelines__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
 }
 
 .lifeline-btn {
   width: 100%;
-  padding: 0.4rem 0.75rem;
-  border-radius: 999px;
-  background: rgba(15, 23, 42, 0.9);
-  border: 1px solid rgba(148, 163, 184, 0.7);
-  color: #e5e7eb;
-  font-size: 0.85rem;
-  font-weight: 600;
-  text-align: left;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-}
-
-.lifeline-btn::after {
-  content: "★";
-  font-size: 0.7rem;
-  color: #facc15;
+  gap: 0.65rem;
+  padding: 0.6rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  background: radial-gradient(circle at top left, #020617, #020617);
+  cursor: pointer;
+  color: #e5e7eb;
+  transition: background 0.12s ease, border-color 0.12s ease,
+    transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
 }
 
 .lifeline-btn:hover:not(:disabled) {
-  background: rgba(15, 23, 42, 0.95);
+  border-color: rgba(250, 204, 21, 0.6);
+  box-shadow: 0 12px 32px rgba(250, 204, 21, 0.28);
+  transform: translateY(-1px);
 }
 
 .lifeline-btn--disabled,
 .lifeline-btn:disabled {
-  opacity: 0.45;
-  border-style: dotted;
+  opacity: 0.35;
+  cursor: default;
+  box-shadow: none;
+  transform: none;
 }
 
-/* --- Nápovědy – nové kruhové ikony --- */
-
-.lifelines {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.75rem;
-  margin-top: 0.75rem;
-}
-
-.lifeline-btn {
-  border: none;
-  background: transparent;
-  cursor: pointer;
-}
-
-/* společný vzhled pro ikonové lifeliny */
-.lifeline-btn--icon {
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
-  border: 2px solid #fdd45c;
-  background: rgba(255, 255, 255, 0.05);
-  display: flex;
-  flex-direction: column;
+.lifeline-btn__icon-wrap {
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: #fdd45c;
-  transition: background 0.2s ease, transform 0.1s ease, opacity 0.2s ease;
+  font-size: 0.9rem;
 }
 
-.lifeline-btn--icon:hover {
-  background: rgba(253, 212, 92, 0.14);
-  transform: translateY(-1px);
+.lifeline-btn__icon-main {
+  font-weight: 700;
 }
 
-.lifeline-btn__icon {
-  font-size: 1.4rem;
-  line-height: 1;
+.lifeline-btn__icon-sub {
+  font-size: 0.65rem;
+  color: #9ca3af;
 }
 
-.lifeline-btn__label {
-  font-size: 0.7rem;
-  margin-top: 0.25rem;
-  text-align: center;
+.lifeline-btn__text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
-/* použitá / zakázaná nápověda */
-.lifeline-btn--used,
-.lifeline-btn--disabled {
-  opacity: 0.35;
-  border-color: #60636f;
-  color: #888c99;
-  cursor: default;
+.lifeline-btn__title {
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 
-/* menší varianta na mobilech – jen ikonky, bez textu */
-@media (max-width: 480px) {
-  .lifeline-btn--icon {
-    width: 56px;
-    height: 56px;
-  }
-
-  .lifeline-btn__label {
-    display: none;
-  }
+.lifeline-btn__subtitle {
+  font-size: 0.8rem;
+  color: #9ca3af;
 }
 
+/* -----------------------------
+   ŽEBŘÍČEK VÝHER
+------------------------------ */
 
-/* INFO POD NÁPOVĚDAMI */
+.ladder-card__title {
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.ladder {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-radius: 1.25rem;
+  background: radial-gradient(circle at top, #020617, #020617);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  max-height: 420px;
+  overflow: hidden;
+}
+
+.ladder__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.35rem 0.85rem;
+  font-size: 0.9rem;
+  color: #e5e7eb;
+}
+
+.ladder__item:nth-child(odd) {
+  background: rgba(15, 23, 42, 0.7);
+}
+
+.ladder__item:nth-child(even) {
+  background: rgba(15, 23, 42, 0.9);
+}
+
+.ladder__item--safe {
+  color: #facc15;
+}
+
+.ladder__item--current {
+  background: linear-gradient(90deg, #facc15, #f97316);
+  color: #111827;
+}
+
+/* -----------------------------
+   GAME INFO / FOOTER
+------------------------------ */
 
 .game-info {
-  border-top: 1px solid rgba(55, 65, 81, 0.7);
-  padding-top: 0.85rem;
-  margin-top: 0.5rem;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   color: #9ca3af;
 }
 
@@ -474,335 +529,185 @@ button:disabled {
   margin-bottom: 0.25rem;
 }
 
-.game-info__value--highlight {
-  color: #facc15;
+.game-info__value {
   font-weight: 600;
-}
-
-/* HLAVNÍ ČÁST – OTÁZKA + ODPOVĚDI */
-
-.game-main {
-  background: radial-gradient(circle at top, #020617 0, #020617 55%);
-  border-radius: 18px;
-  padding: 1.1rem 1.2rem 1.2rem 1.2rem;
-  border: 1px solid rgba(148, 163, 184, 0.35);
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.question-card h2 {
-  margin: 0 0 0.8rem 0;
-  font-size: 1.2rem;
-}
-
-/* ODPOVĚDI */
-
-.answers-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 0.6rem;
-}
-
-.answer-btn {
-  width: 100%;
-  padding: 0.5rem 0.75rem;
-  border-radius: 999px;
-  border: 1px solid rgba(148, 163, 184, 0.7);
-  background: radial-gradient(circle at top, #020617 0, #020617 65%);
   color: #e5e7eb;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  text-align: left;
-  font-size: 0.95rem;
-  transition:
-    background-color 0.12s ease,
-    transform 0.05s ease,
-    box-shadow 0.15s ease,
-    border-color 0.12s ease,
-    opacity 0.15s ease;
 }
-
-.answer-btn__label {
-  width: 1.6rem;
-  height: 1.6rem;
-  border-radius: 999px;
-  background: rgba(15, 23, 42, 0.9);
-  border: 1px solid rgba(148, 163, 184, 0.7);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 0.8rem;
-  flex-shrink: 0;
-}
-
-.answer-btn__text {
-  flex: 1;
-}
-
-.answer-btn:hover:not(:disabled) {
-  background: radial-gradient(circle at top, #020617 0, #020617 40%);
-  border-color: rgba(250, 204, 21, 0.7);
-  box-shadow:
-    0 0 0 1px rgba(250, 204, 21, 0.4),
-    0 10px 25px rgba(15, 23, 42, 0.9);
-}
-
-/* STAVY ODPOVĚDÍ */
-
-.answer-btn.correct {
-  background: linear-gradient(135deg, #22c55e, #4ade80);
-  color: #022c22;
-  border-color: rgba(34, 197, 94, 0.85);
-  box-shadow:
-    0 0 0 1px rgba(22, 163, 74, 0.7),
-    0 10px 30px rgba(22, 163, 74, 0.65);
-}
-
-.answer-btn.incorrect {
-  background: linear-gradient(135deg, #ef4444, #f97373);
-  color: #7f1d1d;
-  border-color: rgba(248, 113, 113, 0.95);
-  box-shadow:
-    0 0 0 1px rgba(248, 113, 113, 0.7),
-    0 10px 30px rgba(127, 29, 29, 0.7);
-}
-
-.answer-btn.locked {
-  transform: none;
-}
-
-/* SPODNÍ ČÁST – STATUS + TLAČÍTKA */
 
 .game-footer {
-  border-top: 1px solid rgba(55, 65, 81, 0.7);
-  padding-top: 0.75rem;
-  margin-top: 0.4rem;
-}
-
-.game-status {
-  margin: 0 0 0.6rem 0;
-  font-size: 0.9rem;
-  color: #e5e7eb;
-}
-
-.game-footer__buttons {
-  display: flex;
-  gap: 0.5rem;
-  justify-content: flex-end;
-}
-
-/* ŽEBŘÍČEK VÝHER */
-
-.ladder-title {
-  margin: 0 0 0.5rem 0;
-  font-size: 1.05rem;
-}
-
-.ladder {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  font-size: 0.9rem;
-  line-height: 1.6;
-}
-
-.ladder__item {
+  margin-top: 0.85rem;
   display: flex;
   justify-content: space-between;
-  padding: 0.15rem 0.4rem;
-  border-radius: 999px;
-  transition:
-    background-color 0.15s ease,
-    transform 0.1s ease;
+  align-items: center;
+  gap: 0.75rem;
 }
 
-.ladder__item--safe {
-  background: rgba(250, 204, 21, 0.12);
-  color: #facc15;
+.game-footer__status {
+  font-size: 0.9rem;
+  color: #9ca3af;
 }
 
-.ladder__item--current {
-  background: linear-gradient(135deg, #facc15, #fbbf24);
-  color: #111827;
-  transform: translateX(4px);
+.game-footer__btn-group {
+  display: flex;
+  gap: 0.75rem;
 }
 
-/* UČITELSKÝ PANEL */
+/* -----------------------------
+   TEACHER PANEL
+------------------------------ */
 
-.teacher-panel {
+.teacher-panel-backdrop {
   position: fixed;
   inset: 0;
+  background: rgba(15, 23, 42, 0.8);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(15, 23, 42, 0.75);
-  backdrop-filter: blur(8px);
-  z-index: 100;
+  z-index: 40;
 }
 
-.teacher-panel.hidden {
-  display: none;
+.teacher-panel {
+  max-width: 520px;
+  width: 92%;
+  max-height: 90vh;
+  overflow: auto;
 }
 
-.teacher-panel__content {
-  background: #020617;
-  border-radius: 18px;
-  padding: 1.25rem 1.5rem 1.3rem 1.5rem;
-  width: min(900px, 100% - 2rem);
-  border: 1px solid rgba(148, 163, 184, 0.5);
-  box-shadow:
-    0 20px 60px rgba(15, 23, 42, 0.9),
-    0 0 0 1px rgba(15, 23, 42, 0.5);
+.teacher-panel__title {
+  font-size: 1.3rem;
+  margin-bottom: 0.4rem;
 }
 
-.teacher-panel__header h2 {
-  margin: 0 0 0.35rem 0;
-}
-
-.teacher-panel__header p {
-  margin: 0;
-  color: #9ca3af;
+.teacher-panel__subtitle {
   font-size: 0.9rem;
+  color: #9ca3af;
+  margin-bottom: 1rem;
 }
 
-.teacher-panel__body {
-  margin-top: 1rem;
-  display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.2fr);
-  gap: 1.25rem;
+.teacher-panel__section-title {
+  font-size: 0.95rem;
+  margin-bottom: 0.4rem;
 }
 
-.teacher-topic-list {
-  border-radius: 12px;
-  border: 1px solid rgba(55, 65, 81, 0.9);
-  padding: 0.75rem;
-  max-height: 260px;
-  overflow-y: auto;
+.teacher-panel__topics {
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
+  margin-bottom: 1rem;
+}
+
+.teacher-panel__topics label {
   font-size: 0.9rem;
 }
 
-.teacher-topic-list label {
+.teacher-panel__footer {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
 }
 
-.teacher-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 0.75rem;
-}
-
-.teacher-output-wrapper.hidden {
-  display: none;
-}
-
-.teacher-output {
+.teacher-panel__textarea {
   width: 100%;
-  border-radius: 12px;
-  border: 1px solid rgba(55, 65, 81, 0.9);
-  background: #020617;
-  color: #e5e7eb;
-  padding: 0.6rem 0.7rem;
+  min-height: 160px;
+  margin-top: 0.75rem;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     "Liberation Mono", "Courier New", monospace;
   font-size: 0.8rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  background: #020617;
+  color: #e5e7eb;
+  padding: 0.75rem;
 }
 
-.teacher-panel__footer {
-  margin-top: 1rem;
-  display: flex;
-  justify-content: flex-end;
+.hidden {
+  display: none !important;
 }
 
-/* RESPONSIVE */
-
-@media (max-width: 900px) {
-  /* celý střední layout pod sebou */
-  .game-layout {
-    grid-template-columns: minmax(0, 1fr);
-    row-gap: 1rem;
+/* ================================================
+   Mobilní layout – menší displeje
+   ================================================ */
+@media (max-width: 768px) {
+  .screen {
+    padding: 1.5rem 0.75rem 2.5rem;
   }
 
-  /* pořadí bloků – nejdřív otázka, pak nápovědy, pak žebříček */
+  .game-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
   .game-main {
     order: 1;
   }
 
-  .game-sidebar--left,
   .game-sidebar--right {
+    order: 2;
+  }
+
+  .game-sidebar--ladder {
     order: 3;
   }
 
-  /* nápovědy – do řádku pod otázku */
+  /* žebříček uděláme nižší a scrollovatelný */
+  .ladder-card {
+    max-height: 260px;
+    overflow-y: auto;
+  }
+
+  /* nápovědy do jedné řady */
   .lifelines {
+    margin-bottom: 0;
+  }
+
+  .lifelines__list {
+    display: flex;
     flex-direction: row;
     justify-content: space-between;
-    align-items: stretch;
     gap: 0.5rem;
   }
 
   .lifeline-btn {
-    flex: 1;
-    max-width: 80px;
-    padding: 0.5rem 0.4rem;
-  }
-
-  .lifeline-btn__icon {
-    margin: 0 auto 0.25rem;
-  }
-
-  .lifeline-btn__label {
+    flex: 1 1 0;
+    padding: 0.55rem 0.4rem;
     font-size: 0.75rem;
   }
 
-  /* header a footer na úzkém displeji */
-  .game-header {
-    grid-template-columns: minmax(0, 1fr);
-    text-align: center;
+  .lifeline-btn__title {
+    font-size: 0.8rem;
   }
 
-  .game-header__right {
-    text-align: center;
+  .lifeline-btn__subtitle {
+    font-size: 0.7rem;
+  }
+
+  /* trochu menší otázka a odpovědi, aby se vešly na výšku */
+  .game-card--question .game-card__title {
+    font-size: 1.25rem;
+  }
+
+  .answer-btn__text {
+    font-size: 0.95rem;
   }
 
   .game-footer {
     flex-direction: column;
     align-items: stretch;
-  }
-}
-
-
-@media (max-width: 640px) {
-  .game-meta {
-    flex-direction: column;
-    align-items: flex-start;
+    gap: 0.75rem;
   }
 
-  .game-footer__buttons {
-    flex-direction: column;
-  }
-
-  .primary-btn,
-  .secondary-btn {
+  .game-footer__btn-group {
     width: 100%;
-    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
   }
-}
 
-/* Skrytá oblast pro otevření učitelského panelu (telefon / tablet) */
-#teacher-hotzone {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 40px;
-  height: 40px;
-  z-index: 50;
+  .game-footer__btn-group .primary-btn,
+  .game-footer__btn-group .secondary-btn {
+    width: 100%;
+  }
 }
