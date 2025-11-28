@@ -24,44 +24,56 @@
 
         <main class="landing-main">
           <p>Vyber ročník a začni hru:</p>
+<section class="grade-section">
+  <p class="grade-section__title">Vyber ročník a začni hru:</p>
 
-          <div class="grade-grid">
-            <!-- 6. třída -->
-            <article class="grade-card grade-card--disabled" data-grade="6">
-              <div class="grade-card__header">
-                <span class="grade-card__badge">6. třída</span>
-              </div>
-              <h2>Ještě není k dispozici</h2>
-              <p>Tato verze se teprve připravuje.</p>
-              <button class="primary-btn primary-btn--disabled" disabled>
-                Připravuje se
-              </button>
-            </article>
+  <div class="grade-grid">
+    <!-- 6. třída – stále uzamčená -->
+    <article class="grade-card grade-card--disabled" data-grade="6">
+      <div class="grade-card__badge">6. třída</div>
+      <h2 class="grade-card__title">Ještě není k dispozici</h2>
+      <p class="grade-card__subtitle">
+        Tato verze se teprve připravuje.
+      </p>
+      <button class="grade-card__button" disabled>Připravuje se</button>
+    </article>
 
-            <!-- 7. třída -->
-            <article class="grade-card grade-card--disabled" data-grade="7">
-              <div class="grade-card__header">
-                <span class="grade-card__badge">7. třída</span>
-              </div>
-              <h2>Ještě není k dispozici</h2>
-              <p>Tato verze se teprve připravuje.</p>
-              <button class="primary-btn primary-btn--disabled" disabled>
-                Připravuje se
-              </button>
-            </article>
+    <!-- 7. třída – stále uzamčená -->
+    <article class="grade-card grade-card--disabled" data-grade="7">
+      <div class="grade-card__badge">7. třída</div>
+      <h2 class="grade-card__title">Ještě není k dispozici</h2>
+      <p class="grade-card__subtitle">
+        Tato verze se teprve připravuje.
+      </p>
+      <button class="grade-card__button" disabled>Připravuje se</button>
+    </article>
 
-            <!-- 8. třída -->
-            <article class="grade-card grade-card--active" data-grade="8">
-              <div class="grade-card__header">
-                <span class="grade-card__badge grade-card__badge--active"
-                  >8. třída</span
-                >
-              </div>
-              <h2>Aktuální hra pro 8. ročník</h2>
-              <p>Témata: práce, výkon, kladky, účinnost, energie.</p>
-              <button class="primary-btn">Začít hru</button>
-            </article>
-          </div>
+    <!-- 8. třída – aktuální hra -->
+    <article class="grade-card grade-card--active" data-grade="8">
+      <div class="grade-card__badge grade-card__badge--active">8. třída</div>
+      <h2 class="grade-card__title">Aktuální hra pro 8. ročník</h2>
+      <p class="grade-card__subtitle">
+        Témata: práce, výkon, kladky, účinnost, energie.
+      </p>
+      <button class="grade-card__button grade-card__button--primary">
+        Začít hru
+      </button>
+    </article>
+
+    <!-- 9. třída – nově OTEVŘENÁ, dočasně používá stejná data jako 8. -->
+    <article class="grade-card grade-card--active" data-grade="9">
+      <div class="grade-card__badge grade-card__badge--active">9. třída</div>
+      <h2 class="grade-card__title">Aktuální hra pro 9. ročník</h2>
+      <p class="grade-card__subtitle">
+        Zkušební verze – zatím používá stejné otázky jako 8. ročník.
+      </p>
+      <button class="grade-card__button grade-card__button--primary">
+        Začít hru
+      </button>
+    </article>
+  </div>
+</section>
+
 
           <p class="landing-disclaimer">
             Výhry v této hře jsou pouze fiktivní. Nikdo není zavázán k jejich
