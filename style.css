@@ -711,3 +711,54 @@ p {
     width: 100%;
   }
 }
+
+/* =========================================
+   RESPONSIVE – nápovědy jako 4 kulaté ikony
+   (mobil / menší šířky)
+   ========================================= */
+@media (max-width: 900px) {
+  .game-layout {
+    grid-template-columns: 1fr; /* žebříček se zarovná pod otázky */
+    row-gap: 1.5rem;
+  }
+
+  .game-sidebar--lifelines {
+    order: 2;
+  }
+
+  .game-main {
+    order: 1;
+  }
+
+  .game-sidebar--ladder {
+    order: 3;
+  }
+
+  /* nápovědy vedle sebe v jedné řadě */
+  .lifelines {
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .lifeline-btn {
+    width: 3.5rem;
+    height: 3.5rem;
+    padding: 0;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ikonka vyplní kruh */
+  .lifeline-btn__icon-wrap {
+    margin: 0;
+  }
+
+  /* text nápovědy na mobilu skryjeme – zůstanou jen ikony */
+  .lifeline-btn__label {
+    display: none;
+  }
+}
+
