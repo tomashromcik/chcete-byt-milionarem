@@ -379,6 +379,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const screenGame = document.getElementById("screen-game");
 
   const grade8Btn = document.querySelector('.grade-card[data-grade="8"]');
+  const grade9Btn = document.querySelector('.grade-card[data-grade="9"]');
   const exitGameBtn = document.getElementById("btn-exit-game");
 
   statusMsgEl = document.getElementById("game-status-message");
@@ -742,4 +743,34 @@ document.addEventListener("DOMContentLoaded", () => {
       showScreen("landing");
     });
   }
+
+  // ---------- start hry pro 9. třídu (zatím stejné otázky jako pro 8.) ----------
+if (grade9Btn) {
+  grade9Btn.addEventListener("click", () => {
+    console.log("Klik na 9. třídu (zatím sdílí otázky s 8. třídou)");
+
+    highestSafeLevelReached = 0;
+    gameOver = false;
+    lifeline5050Used = false;
+
+    if (lifeline5050Btn) {
+      lifeline5050Btn.disabled = false;
+      lifeline5050Btn.classList.remove("lifeline-btn--disabled");
+    }
+
+    const activeTopics = getActiveTopicsFor8Runtime();
+    console.log("Aktivní témata pro 9. třídu (shared):", activeTopics);
+
+    gameQuestions = generateGameQuestions(activeTopics);
+    if (!gameQuestions || gameQuestions.length === 0) {
+      alert("Nepodařilo se načíst otázky pro vybraná témata.");
+      return;
+    }
+
+    currentQuestionIndex = 0;
+    showCurrentQuestion();
+    showScreen("game");
+  });
+}
+
 });
