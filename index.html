@@ -12,67 +12,95 @@
     <div class="app">
       <div id="teacher-hotzone"></div>
 
-      <!-- ÚVODNÍ OBRAZOVKA -->
-      <section
-        id="screen-landing"
-        class="screen screen--active screen--landing"
-      >
-        <header class="landing-header">
-          <h1>Fyzika – Kdo chce být milionářem</h1>
-          <p>Procvičování pro 8. ročník ZŠ</p>
+     <section id="screen-landing" class="screen screen--active">
+  <div class="screen-inner">
+    <header class="landing-header">
+      <h1 class="app-title">Fyzika – Kdo chce být milionářem</h1>
+      <p class="app-subtitle">Procvičování pro 8. ročník ZŠ</p>
+    </header>
+
+    <p class="landing-intro">
+      Vyber ročník a začni hru:
+    </p>
+
+    <div class="grade-grid">
+      <!-- 6. třída – zatím nedostupná -->
+      <article class="grade-card grade-card--disabled">
+        <header class="grade-card__header">
+          <div class="grade-card__grade-badge">6. třída</div>
+          <h2 class="grade-card__title">Ještě není k dispozici</h2>
+          <p class="grade-card__subtitle">
+            Tato verze se teprve připravuje.
+          </p>
         </header>
+        <footer class="grade-card__footer">
+          <button class="grade-card__button" type="button" disabled>
+            Připravuje se
+          </button>
+        </footer>
+      </article>
 
-        <main class="landing-main">
-          <p>Vyber ročník a začni hru:</p>
-<section class="grade-section">
-  <p class="grade-section__title">Vyber ročník a začni hru:</p>
+      <!-- 7. třída – zatím nedostupná -->
+      <article class="grade-card grade-card--disabled">
+        <header class="grade-card__header">
+          <div class="grade-card__grade-badge">7. třída</div>
+          <h2 class="grade-card__title">Ještě není k dispozici</h2>
+          <p class="grade-card__subtitle">
+            Tato verze se teprve připravuje.
+          </p>
+        </header>
+        <footer class="grade-card__footer">
+          <button class="grade-card__button" type="button" disabled>
+            Připravuje se
+          </button>
+        </footer>
+      </article>
 
-  <div class="grade-grid">
-    <!-- 6. třída – stále uzamčená -->
-    <article class="grade-card grade-card--disabled" data-grade="6">
-      <div class="grade-card__badge">6. třída</div>
-      <h2 class="grade-card__title">Ještě není k dispozici</h2>
-      <p class="grade-card__subtitle">
-        Tato verze se teprve připravuje.
-      </p>
-      <button class="grade-card__button" disabled>Připravuje se</button>
-    </article>
+      <!-- 8. třída – aktuální hra -->
+      <article class="grade-card grade-card--current" data-grade="8">
+        <header class="grade-card__header">
+          <div class="grade-card__grade-badge grade-card__grade-badge--active">
+            8. třída
+          </div>
+          <h2 class="grade-card__title">Aktuální hra pro 8. ročník</h2>
+          <p class="grade-card__subtitle">
+            Témata: práce, výkon, kladky, účinnost, energie.
+          </p>
+        </header>
+        <footer class="grade-card__footer">
+          <!-- tlačítko vizuálně skryjeme v CSS, karta je klikací celá -->
+          <button class="grade-card__button" type="button">
+            Začít hru
+          </button>
+        </footer>
+      </article>
 
-    <!-- 7. třída – stále uzamčená -->
-    <article class="grade-card grade-card--disabled" data-grade="7">
-      <div class="grade-card__badge">7. třída</div>
-      <h2 class="grade-card__title">Ještě není k dispozici</h2>
-      <p class="grade-card__subtitle">
-        Tato verze se teprve připravuje.
-      </p>
-      <button class="grade-card__button" disabled>Připravuje se</button>
-    </article>
+      <!-- 9. třída – zatím používá stejné otázky jako 8. ročník -->
+      <article class="grade-card grade-card--current" data-grade="9">
+        <header class="grade-card__header">
+          <div class="grade-card__grade-badge grade-card__grade-badge--active">
+            9. třída
+          </div>
+          <h2 class="grade-card__title">Aktuální hra pro 9. ročník</h2>
+          <p class="grade-card__subtitle">
+            Zatím stejné otázky jako pro 8. ročník – databanku teprve připravujeme.
+          </p>
+        </header>
+        <footer class="grade-card__footer">
+          <button class="grade-card__button" type="button">
+            Začít hru
+          </button>
+        </footer>
+      </article>
+    </div>
 
-    <!-- 8. třída – aktuální hra -->
-    <article class="grade-card grade-card--active" data-grade="8">
-      <div class="grade-card__badge grade-card__badge--active">8. třída</div>
-      <h2 class="grade-card__title">Aktuální hra pro 8. ročník</h2>
-      <p class="grade-card__subtitle">
-        Témata: práce, výkon, kladky, účinnost, energie.
-      </p>
-      <button class="grade-card__button grade-card__button--primary">
-        Začít hru
-      </button>
-    </article>
-
-    <!-- 9. třída – nově OTEVŘENÁ, dočasně používá stejná data jako 8. -->
-    <article class="grade-card grade-card--active" data-grade="9">
-      <div class="grade-card__badge grade-card__badge--active">9. třída</div>
-      <h2 class="grade-card__title">Aktuální hra pro 9. ročník</h2>
-      <p class="grade-card__subtitle">
-        Zkušební verze – zatím používá stejné otázky jako 8. ročník.
-      </p>
-      <button class="grade-card__button grade-card__button--primary">
-        Začít hru
-      </button>
-    </article>
+    <p class="landing-disclaimer">
+      Výhry v této hře jsou pouze fiktivní. Nikdo není zavázán k jejich vyplacení.
+      Vytvořeno pro výuku fyziky na ZŠ.
+    </p>
   </div>
 </section>
+
 
 
           <p class="landing-disclaimer">
