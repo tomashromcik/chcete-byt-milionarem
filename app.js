@@ -2,37 +2,42 @@
 
 console.log("app.js načten");
 
-// --- Konfigurace žebříčku a hry ---
+// ------------------------------------------------------
+// KONFIGURACE ŽEBŘÍČKU A HRY
+// ------------------------------------------------------
 
+// 15 úrovní + obtížnosti + částky
 const LADDER_CONFIG = [
-  { level: 1,  prize: "1 000 Kč",       difficulty: 1 },
-  { level: 2,  prize: "2 000 Kč",       difficulty: 1 },
-  { level: 3,  prize: "3 000 Kč",       difficulty: 1 },
-  { level: 4,  prize: "5 000 Kč",       difficulty: 1 },
-  { level: 5,  prize: "10 000 Kč",      difficulty: 1 },
-  { level: 6,  prize: "20 000 Kč",      difficulty: 2 },
-  { level: 7,  prize: "40 000 Kč",      difficulty: 2 },
-  { level: 8,  prize: "80 000 Kč",      difficulty: 2 },
-  { level: 9,  prize: "160 000 Kč",     difficulty: 2 },
-  { level: 10, prize: "320 000 Kč",     difficulty: 2 },
-  { level: 11, prize: "640 000 Kč",     difficulty: 3 },
-  { level: 12, prize: "1 250 000 Kč",   difficulty: 3 },
-  { level: 13, prize: "2 500 000 Kč",   difficulty: 3 },
-  { level: 14, prize: "5 000 000 Kč",   difficulty: 3 },
-  { level: 15, prize: "10 000 000 Kč",  difficulty: 3 }
+  { level: 1, prize: "1 000 Kč", difficulty: 1 },
+  { level: 2, prize: "2 000 Kč", difficulty: 1 },
+  { level: 3, prize: "3 000 Kč", difficulty: 1 },
+  { level: 4, prize: "5 000 Kč", difficulty: 1 },
+  { level: 5, prize: "10 000 Kč", difficulty: 1 }, // jistá částka
+  { level: 6, prize: "20 000 Kč", difficulty: 2 },
+  { level: 7, prize: "40 000 Kč", difficulty: 2 },
+  { level: 8, prize: "80 000 Kč", difficulty: 2 },
+  { level: 9, prize: "160 000 Kč", difficulty: 2 },
+  { level: 10, prize: "320 000 Kč", difficulty: 2 }, // jistá částka
+  { level: 11, prize: "640 000 Kč", difficulty: 3 },
+  { level: 12, prize: "1 250 000 Kč", difficulty: 3 },
+  { level: 13, prize: "2 500 000 Kč", difficulty: 3 },
+  { level: 14, prize: "5 000 000 Kč", difficulty: 3 },
+  { level: 15, prize: "10 000 000 Kč", difficulty: 3 }
 ];
 
-// úrovně, které jsou „jisté“ (viz HTML – žlutě zvýrazněné)
+// jisté částky
 const SAFE_LEVELS = [5, 10];
 
-// časové limity podle obtížnosti (v sekundách)
-const QUESTION_TIME_LIMITS = {
-  1: 90,   // 1,5 minuty
-  2: 120,  // 2 minuty
-  3: 150   // 2,5 minuty
+// základní časy pro obtížnosti (s)
+const TIME_LIMIT_BY_DIFFICULTY = {
+  1: 90, // 1,5 minuty
+  2: 120, // 2 minuty
+  3: 150 // 2,5 minuty
 };
 
-// --- Stav hry ---
+// ------------------------------------------------------
+// STAV HRY
+// ------------------------------------------------------
 
 let gameQuestions = [];
 let currentQuestionIndex = 0;
@@ -43,18 +48,17 @@ let highestSafeLevelReached = 0;
 let timerInterval = null;
 let timeLeft = 0;
 let lifeline5050Used = false;
-let lifelineCallUsed = false;
-let lifelineClassUsed = false;
-let lifelineSwapUsed = false;
 
-// DOM prvky (doplníme po DOMContentLoaded)
+// DOM prvky – doplníme po DOMContentLoaded
 let statusMsgEl;
 let nextBtnEl;
 let timerEl;
 let questionsLeftEl;
 let lifeline5050Btn;
 
-// --- Pomocné funkce ---
+// ------------------------------------------------------
+// POMOCNÉ FUNKCE
+// ------------------------------------------------------
 
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -64,11 +68,12 @@ function shuffle(array) {
   return array;
 }
 
+// vrátí kopii otázky s náhodně promíchanými odpověďmi
 function withShuffledAnswers(q) {
   const indexOrder = [0, 1, 2, 3];
   shuffle(indexOrder);
 
-  const newAnswers = indexOrder.map((i) => q.answers[i]);
+  const newAnswers = indexOrder.map(i => q.answers[i]);
   const newCorrectIndex = indexOrder.indexOf(q.correctIndex);
 
   return {
@@ -79,30 +84,52 @@ function withShuffledAnswers(q) {
 }
 
 function getPrizeForLevel(level) {
-  const cfg = LADDER_CONFIG.find((c) => c.level === level);
+  const cfg = LADDER_CONFIG.find(c => c.level === level);
   return cfg ? cfg.prize : "0 Kč";
 }
 
-// vybere 15 otázek podle obtížnosti z LADDER_CONFIG
+// aktivní témata pro 8. ročník – runtime (localStorage → config → fallback)
+function getActiveTopicsFor8Runtime() {
+  // zkus localStorage
+  try {
+    const raw = localStorage.getItem("topics_8_override");
+    if (raw) {
+      const arr = JSON.parse(raw);
+      if (Array.isArray(arr) && arr.length > 0) {
+        return arr;
+      }
+    }
+  } catch (e) {
+    console.warn("Chyba při čtení topics_8_override:", e);
+  }
+
+  // zkus config-topics-8.js
+  if (typeof getEnabledTopicsFor8 === "function") {
+    return getEnabledTopicsFor8();
+  }
+
+  // nouzový fallback: všechna témata
+  return ["prace", "kladky", "vykon", "ucinnost", "Ep", "Ek"];
+}
+
+// vytvoří pole 15 otázek podle nastavení žebříčku a témat
 function generateGameQuestions(activeTopics) {
   if (typeof QUESTIONS_8 === "undefined" || !Array.isArray(QUESTIONS_8)) {
     console.error("QUESTIONS_8 není načteno – zkontroluj data-questions-8.js");
     return [];
   }
 
-  // filtr podle vybraných témat z config-topics-8.js
-  let pool = QUESTIONS_8.filter((q) => activeTopics.includes(q.topic));
+  let pool = QUESTIONS_8.filter(q => activeTopics.includes(q.topic));
 
-  if (pool.length === 0) {
+  if (!pool.length) {
     console.warn("Žádné otázky pro vybraná témata:", activeTopics);
     return [];
   }
 
-  // rozdělení podle obtížnosti
   const byDiff = {
-    1: pool.filter((q) => q.difficulty === 1),
-    2: pool.filter((q) => q.difficulty === 2),
-    3: pool.filter((q) => q.difficulty === 3)
+    1: pool.filter(q => q.difficulty === 1),
+    2: pool.filter(q => q.difficulty === 2),
+    3: pool.filter(q => q.difficulty === 3)
   };
 
   shuffle(byDiff[1]);
@@ -111,9 +138,9 @@ function generateGameQuestions(activeTopics) {
 
   const selected = [];
 
-  LADDER_CONFIG.forEach((cfg) => {
+  LADDER_CONFIG.forEach(cfg => {
     const list = byDiff[cfg.difficulty];
-    if (!list || list.length === 0) {
+    if (!list || !list.length) {
       console.warn(
         "Nedostatek otázek pro obtížnost",
         cfg.difficulty,
@@ -125,9 +152,7 @@ function generateGameQuestions(activeTopics) {
 
     let q = list.pop();
 
-    if (typeof withShuffledAnswers === "function") {
-      q = withShuffledAnswers(q);
-    }
+    q = withShuffledAnswers(q);
 
     selected.push({
       ...q,
@@ -140,10 +165,10 @@ function generateGameQuestions(activeTopics) {
   return selected;
 }
 
-// zvýrazní správný řádek v žebříčku
+// zvýrazní aktuální řádek v žebříčku
 function updateLadderHighlight(level) {
   const items = document.querySelectorAll(".ladder__item");
-  items.forEach((li) => {
+  items.forEach(li => {
     li.classList.remove("ladder__item--current");
     const liLevel = Number(li.dataset.level);
     if (liLevel === level) {
@@ -152,7 +177,9 @@ function updateLadderHighlight(level) {
   });
 }
 
-// --- Časovač ---
+// ------------------------------------------------------
+// ČASOVAČ
+// ------------------------------------------------------
 
 function updateTimerDisplay() {
   if (!timerEl) return;
@@ -168,29 +195,44 @@ function stopTimer() {
   }
 }
 
-function startTimerForQuestion(difficulty) {
-  stopTimer();
-
-  const base = QUESTION_TIME_LIMITS[difficulty] || QUESTION_TIME_LIMITS[1];
+// nastaví timeLeft podle obtížnosti aktuální otázky
+function setTimeForCurrentQuestion() {
+  const q = gameQuestions[currentQuestionIndex];
+  if (!q) {
+    timeLeft = 0;
+    return;
+  }
+  const base = TIME_LIMIT_BY_DIFFICULTY[q.difficulty] || 90;
   timeLeft = base;
+}
+
+function startTimer() {
+  stopTimer();
+  setTimeForCurrentQuestion();
   updateTimerDisplay();
 
   timerInterval = setInterval(() => {
     timeLeft--;
-    updateTimerDisplay();
 
-    if (timeLeft < 0) {
+    if (timeLeft <= 0) {
+      timeLeft = 0;
+      updateTimerDisplay();
       stopTimer();
       // čas vypršel → jako špatná odpověď
       handleAnswer(null);
+      return;
     }
+
+    updateTimerDisplay();
   }, 1000);
 }
 
-// --- Zobrazení otázky ---
+// ------------------------------------------------------
+// ZOBRAZENÍ OTÁZKY
+// ------------------------------------------------------
 
 function showCurrentQuestion() {
-  if (!gameQuestions || gameQuestions.length === 0) {
+  if (!gameQuestions || !gameQuestions.length) {
     console.error("Nemám žádné herní otázky.");
     return;
   }
@@ -204,7 +246,9 @@ function showCurrentQuestion() {
   questionLocked = false;
 
   const questionText = document.getElementById("question-text");
-  questionText.textContent = q.question;
+  if (questionText) {
+    questionText.textContent = q.question;
+  }
 
   const answerButtons = document.querySelectorAll(".answer-btn");
   answerButtons.forEach((btn, idx) => {
@@ -217,10 +261,15 @@ function showCurrentQuestion() {
     btn.style.opacity = "";
   });
 
-  document.getElementById(
-    "game-question-progress"
-  ).textContent = `Otázka ${q.level} / 15`;
-  document.getElementById("game-current-prize").textContent = q.prize;
+  const progressEl = document.getElementById("game-question-progress");
+  if (progressEl) {
+    progressEl.textContent = `Otázka ${q.level} / 15`;
+  }
+
+  const prizeEl = document.getElementById("game-current-prize");
+  if (prizeEl) {
+    prizeEl.textContent = q.prize;
+  }
 
   updateLadderHighlight(q.level);
 
@@ -238,11 +287,12 @@ function showCurrentQuestion() {
     nextBtnEl.classList.add("primary-btn--disabled");
   }
 
-  // časovač
-  startTimerForQuestion(q.difficulty);
+  startTimer();
 }
 
-// --- Vyhodnocení odpovědi ---
+// ------------------------------------------------------
+// VYHODNOCENÍ ODPOVĚDI
+// ------------------------------------------------------
 
 function handleAnswer(chosenIndexOrNull) {
   if (questionLocked || gameOver) return;
@@ -279,6 +329,7 @@ function handleAnswer(chosenIndexOrNull) {
 
   if (!statusMsgEl || !nextBtnEl) return;
 
+  // správná odpověď
   if (chosenIndex === correctIndex) {
     if (SAFE_LEVELS.includes(q.level) && q.level > highestSafeLevelReached) {
       highestSafeLevelReached = q.level;
@@ -298,8 +349,11 @@ function handleAnswer(chosenIndexOrNull) {
     return;
   }
 
+  // špatná odpověď nebo vypršel čas
   let baseMsg = chosenIndex === null ? "Vypršel čas." : "Špatně.";
-  statusMsgEl.textContent = `${baseMsg} Správná odpověď byla ${labels[correctIndex]}. `;
+  statusMsgEl.textContent = `${baseMsg} Správná odpověď byla ${
+    labels[correctIndex]
+  }. `;
 
   let guaranteedPrize = "0 Kč";
   if (highestSafeLevelReached > 0) {
@@ -313,7 +367,9 @@ function handleAnswer(chosenIndexOrNull) {
   gameOver = true;
 }
 
-// --- 50 : 50 ---
+// ------------------------------------------------------
+// NÁPOVĚDA 50 : 50
+// ------------------------------------------------------
 
 function use5050() {
   if (lifeline5050Used || questionLocked || gameOver) return;
@@ -332,11 +388,11 @@ function use5050() {
   shuffle(incorrectIndices);
   const toHide = incorrectIndices.slice(0, 2);
 
-  toHide.forEach((i) => {
+  toHide.forEach(i => {
     const btn = answerButtons[i];
     btn.disabled = true;
     btn.classList.add("locked");
-    btn.style.opacity = "0.4";
+    btn.style.opacity = "0.35";
   });
 
   lifeline5050Used = true;
@@ -346,31 +402,43 @@ function use5050() {
   }
 }
 
-// vrátí aktuálně používaná témata pro 8. ročník
-function getActiveTopicsFor8Runtime() {
-  // 1) zkus localStorage override
-  const raw = localStorage.getItem("topics_8_override");
-  if (raw) {
-    try {
-      const ids = JSON.parse(raw);
-      if (Array.isArray(ids) && ids.length > 0) {
-        return ids;
-      }
-    } catch (e) {
-      console.warn("Chyba při čtení topics_8_override:", e);
-    }
+// ------------------------------------------------------
+// UČITELSKÝ PANEL
+// ------------------------------------------------------
+
+let teacherAuthenticated = false;
+
+function openTeacherPanel() {
+  const panel = document.getElementById("teacher-panel");
+  const topicList = document.getElementById("teacher-topic-list");
+  const outputWrapper = document.getElementById("teacher-output-wrapper");
+  const output = document.getElementById("teacher-output");
+
+  if (!panel || !topicList) return;
+
+  topicList.innerHTML = "";
+  if (outputWrapper) outputWrapper.classList.add("hidden");
+  if (output) output.value = "";
+
+  if (typeof TOPIC_CONFIG_8 === "object" && Array.isArray(TOPIC_CONFIG_8.topics)) {
+    TOPIC_CONFIG_8.topics.forEach(t => {
+      const row = document.createElement("label");
+      row.innerHTML = `
+        <input type="checkbox" data-id="${t.id}" ${
+        t.enabled ? "checked" : ""
+      }>
+        ${t.label}
+      `;
+      topicList.appendChild(row);
+    });
   }
 
-  // 2) fallback: config-topics-8.js
-  if (typeof getEnabledTopicsFor8 === "function") {
-    return getEnabledTopicsFor8();
-  }
-
-  // 3) nouzový fallback
-  return ["prace", "kladky", "vykon", "ucinnost", "Ep", "Ek"];
+  panel.classList.remove("hidden");
 }
 
-// --- DOM ready ---
+// ------------------------------------------------------
+// DOMContentLoaded
+// ------------------------------------------------------
 
 document.addEventListener("DOMContentLoaded", () => {
   console.log("DOM ready");
@@ -378,8 +446,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const screenLanding = document.getElementById("screen-landing");
   const screenGame = document.getElementById("screen-game");
 
-  const grade8Btn = document.querySelector('.grade-card[data-grade="8"]');
-  const grade9Btn = document.querySelector('.grade-card[data-grade="9"]');
+  const grade8Card = document.querySelector('.grade-card[data-grade="8"]');
+  const grade9Card = document.querySelector('.grade-card[data-grade="9"]');
   const exitGameBtn = document.getElementById("btn-exit-game");
 
   statusMsgEl = document.getElementById("game-status-message");
@@ -389,97 +457,141 @@ document.addEventListener("DOMContentLoaded", () => {
   lifeline5050Btn = document.querySelector(
     '.lifeline-btn[data-lifeline="5050"]'
   );
-  const lifelineCallBtn = document.querySelector(
-    '.lifeline-btn[data-lifeline="call"]'
-  );
-  const lifelineClassBtn = document.querySelector(
-    '.lifeline-btn[data-lifeline="class-help"]'
-  );
-  const lifelineSwapBtn = document.querySelector(
-    '.lifeline-btn[data-lifeline="swap"]'
-  );
 
   const answerButtons = document.querySelectorAll(".answer-btn");
 
-  // ---------- TEACHER PANEL – DOM prvky ----------
+  // TEACHER PANEL – DOM prvky
   const teacherPanel = document.getElementById("teacher-panel");
   const teacherTopicList = document.getElementById("teacher-topic-list");
   const teacherGenerateBtn = document.getElementById("teacher-generate");
+  const teacherSaveLocalBtn = document.getElementById("teacher-save-local");
   const teacherCloseBtn = document.getElementById("teacher-close");
   const teacherOutputWrapper = document.getElementById(
     "teacher-output-wrapper"
   );
   const teacherOutput = document.getElementById("teacher-output");
-  const teacherSaveLocalBtn = document.getElementById("teacher-save-local");
 
-  function openTeacherPanel() {
-    if (!teacherPanel || !teacherTopicList) return;
+  function showScreen(screen) {
+    if (screen === "landing") {
+      screenLanding.classList.add("screen--active");
+      screenLanding.classList.remove("screen--hidden");
 
-    teacherTopicList.innerHTML = "";
-    if (teacherOutputWrapper) teacherOutputWrapper.classList.add("hidden");
-    if (teacherOutput) teacherOutput.value = "";
+      screenGame.classList.remove("screen--active");
+      screenGame.classList.add("screen--hidden");
+    } else if (screen === "game") {
+      screenGame.classList.add("screen--active");
+      screenGame.classList.remove("screen--hidden");
 
-    TOPIC_CONFIG_8.topics.forEach((t) => {
-      const row = document.createElement("label");
-      row.innerHTML = `
-        <input type="checkbox" data-id="${t.id}" ${
-        t.enabled ? "checked" : ""
-      }>
-        ${t.label}
-      `;
-      teacherTopicList.appendChild(row);
-    });
-
-    teacherPanel.classList.remove("hidden");
-  }
-
-  function openTeacherPanelWithPassword() {
-    const pw = prompt("Zadejte heslo pro učitele:");
-    if (pw === "ZSBoh74719") {
-      openTeacherPanel();
-    } else if (pw !== null) {
-      alert("Nesprávné heslo.");
+      screenLanding.classList.remove("screen--active");
+      screenLanding.classList.add("screen--hidden");
     }
   }
 
-  // klávesová zkratka pro učitele (Ctrl+U)
-  document.addEventListener("keydown", (e) => {
+  // klik na odpověď
+  answerButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const idx = Number(btn.dataset.answer);
+      handleAnswer(idx);
+    });
+  });
+
+  // další otázka
+  if (nextBtnEl) {
+    nextBtnEl.addEventListener("click", () => {
+      if (gameOver) return;
+      if (currentQuestionIndex < gameQuestions.length - 1) {
+        currentQuestionIndex++;
+        showCurrentQuestion();
+      } else {
+        statusMsgEl.textContent = "Konec hry! To byla poslední otázka.";
+        nextBtnEl.disabled = true;
+        nextBtnEl.classList.add("primary-btn--disabled");
+        gameOver = true;
+      }
+    });
+  }
+
+  // 50 : 50
+  if (lifeline5050Btn) {
+    lifeline5050Btn.addEventListener("click", () => {
+      if (gameOver) return;
+      use5050();
+    });
+  }
+
+  // start hry – pomocná funkce, sdílená pro 8. i 9. třídu
+  function startGameForGrade(grade) {
+    console.log("Start hry pro třídu:", grade);
+
+    highestSafeLevelReached = 0;
+    gameOver = false;
+    lifeline5050Used = false;
+
+    if (lifeline5050Btn) {
+      lifeline5050Btn.disabled = false;
+      lifeline5050Btn.classList.remove("lifeline-btn--disabled");
+    }
+
+    const activeTopics = getActiveTopicsFor8Runtime();
+    console.log("Aktivní témata:", activeTopics);
+
+    gameQuestions = generateGameQuestions(activeTopics);
+    if (!gameQuestions || !gameQuestions.length) {
+      alert("Nepodařilo se načíst otázky pro vybraná témata.");
+      return;
+    }
+
+    currentQuestionIndex = 0;
+    showCurrentQuestion();
+    showScreen("game");
+  }
+
+  // start hry pro 8. třídu – klik na celou kartu
+  if (grade8Card) {
+    grade8Card.addEventListener("click", () => {
+      if (grade8Card.classList.contains("grade-card--disabled")) return;
+      startGameForGrade(8);
+    });
+  }
+
+  // start hry pro 9. třídu – zatím stejné otázky jako pro 8.
+  if (grade9Card) {
+    grade9Card.addEventListener("click", () => {
+      if (grade9Card.classList.contains("grade-card--disabled")) return;
+      startGameForGrade(9);
+    });
+  }
+
+  // ukončit hru
+  if (exitGameBtn) {
+    exitGameBtn.addEventListener("click", () => {
+      stopTimer();
+      gameOver = true;
+      showScreen("landing");
+    });
+  }
+
+  // TEACHER PANEL – Ctrl+U + heslo
+  document.addEventListener("keydown", e => {
     if (e.ctrlKey && e.key.toLowerCase() === "u") {
       e.preventDefault();
-      openTeacherPanelWithPassword();
+
+      if (!teacherAuthenticated) {
+        const pwd = prompt("Zadej heslo učitele:");
+        if (pwd !== "ZSBoh74719") {
+          alert("Nesprávné heslo.");
+          return;
+        }
+        teacherAuthenticated = true;
+      }
+
+      openTeacherPanel();
     }
   });
 
-  // skrytá oblast v pravém horním rohu pro mobily/tablety
-  const teacherHotzone = document.getElementById("teacher-hotzone");
-  let teacherClickCount = 0;
-  let teacherClickTimer = null;
-
-  if (teacherHotzone) {
-    teacherHotzone.addEventListener("click", () => {
-      teacherClickCount++;
-
-      if (teacherClickCount === 1) {
-        teacherClickTimer = setTimeout(() => {
-          teacherClickCount = 0;
-          teacherClickTimer = null;
-        }, 5000);
-      }
-
-      if (teacherClickCount >= 5) {
-        teacherClickCount = 0;
-        if (teacherClickTimer) {
-          clearTimeout(teacherClickTimer);
-          teacherClickTimer = null;
-        }
-        openTeacherPanelWithPassword();
-      }
-    });
-  }
-
   if (teacherCloseBtn) {
     teacherCloseBtn.addEventListener("click", () => {
-      teacherPanel.classList.add("hidden");
+      if (teacherPanel) teacherPanel.classList.add("hidden");
     });
   }
 
@@ -487,21 +599,23 @@ document.addEventListener("DOMContentLoaded", () => {
   if (teacherSaveLocalBtn) {
     teacherSaveLocalBtn.addEventListener("click", () => {
       if (!teacherTopicList) return;
-      const checkboxes =
-        teacherTopicList.querySelectorAll("input[type=checkbox]");
+      const checkboxes = teacherTopicList.querySelectorAll(
+        "input[type=checkbox]"
+      );
       const enabledIds = [];
-
-      checkboxes.forEach((cb) => {
-        if (cb.checked) {
-          enabledIds.push(cb.dataset.id);
-        }
+      checkboxes.forEach(cb => {
+        if (cb.checked) enabledIds.push(cb.dataset.id);
       });
 
-      localStorage.setItem(
-        "topics_8_override",
-        JSON.stringify(enabledIds)
-      );
-      alert("Výběr témat byl uložen do tohoto zařízení.");
+      try {
+        localStorage.setItem("topics_8_override", JSON.stringify(enabledIds));
+        alert(
+          "Témata pro 8. ročník byla uložena pouze pro tuto třídu (localStorage)."
+        );
+      } catch (e) {
+        console.error("Chyba při ukládání do localStorage:", e);
+        alert("Nepodařilo se uložit nastavení do localStorage.");
+      }
     });
   }
 
@@ -510,12 +624,21 @@ document.addEventListener("DOMContentLoaded", () => {
     teacherGenerateBtn.addEventListener("click", () => {
       if (!teacherTopicList || !teacherOutput || !teacherOutputWrapper) return;
 
-      const checkboxes =
-        teacherTopicList.querySelectorAll("input[type=checkbox]");
+      const checkboxes = teacherTopicList.querySelectorAll(
+        "input[type=checkbox]"
+      );
 
-      checkboxes.forEach((cb) => {
+      if (
+        typeof TOPIC_CONFIG_8 !== "object" ||
+        !Array.isArray(TOPIC_CONFIG_8.topics)
+      ) {
+        alert("TOPIC_CONFIG_8 není správně načten.");
+        return;
+      }
+
+      checkboxes.forEach(cb => {
         const id = cb.dataset.id;
-        const topic = TOPIC_CONFIG_8.topics.find((t) => t.id === id);
+        const topic = TOPIC_CONFIG_8.topics.find(t => t.id === id);
         if (topic) {
           topic.enabled = cb.checked;
         }
@@ -527,8 +650,7 @@ document.addEventListener("DOMContentLoaded", () => {
       lines.push("  topics: [");
 
       TOPIC_CONFIG_8.topics.forEach((t, index) => {
-        const comma =
-          index === TOPIC_CONFIG_8.topics.length - 1 ? "" : ",";
+        const comma = index === TOPIC_CONFIG_8.topics.length - 1 ? "" : ",";
         lines.push(
           `    { id: "${t.id}", label: "${t.label}", enabled: ${t.enabled} }${comma}`
         );
@@ -547,230 +669,4 @@ document.addEventListener("DOMContentLoaded", () => {
       teacherOutputWrapper.classList.remove("hidden");
     });
   }
-
-  // ---------- přepínání obrazovek ----------
-  function showScreen(screen) {
-    if (screen === "landing") {
-      screenLanding.classList.add("screen--active");
-      screenLanding.classList.remove("screen--hidden");
-
-      screenGame.classList.remove("screen--active");
-      screenGame.classList.add("screen--hidden");
-    } else if (screen === "game") {
-      screenGame.classList.add("screen--active");
-      screenGame.classList.remove("screen--hidden");
-
-      screenLanding.classList.remove("screen--active");
-      screenLanding.classList.add("screen--hidden");
-    }
-  }
-
-  // ---------- Klik na odpověď ----------
-  answerButtons.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const idx = Number(btn.dataset.answer);
-      handleAnswer(idx);
-    });
-  });
-
-  // ---------- Další otázka ----------
-  if (nextBtnEl) {
-    nextBtnEl.addEventListener("click", () => {
-      if (gameOver) return;
-      if (currentQuestionIndex < gameQuestions.length - 1) {
-        currentQuestionIndex++;
-        showCurrentQuestion();
-      } else {
-        statusMsgEl.textContent =
-          "Konec hry! To byla poslední otázka.";
-        nextBtnEl.disabled = true;
-        nextBtnEl.classList.add("primary-btn--disabled");
-        gameOver = true;
-      }
-    });
-  }
-
-  // ---------- 50 : 50 ----------
-  if (lifeline5050Btn) {
-    lifeline5050Btn.addEventListener("click", () => {
-      if (gameOver) return;
-      use5050();
-    });
-  }
-
-  // ---------- Zavolej učiteli ----------
-  if (lifelineCallBtn) {
-    lifelineCallBtn.addEventListener("click", () => {
-      if (lifelineCallUsed || gameOver) return;
-      lifelineCallUsed = true;
-      lifelineCallBtn.disabled = true;
-      lifelineCallBtn.classList.add("lifeline-btn--disabled");
-
-      // zastavíme čas, otázka zůstává viditelná
-      stopTimer();
-      if (statusMsgEl) {
-        statusMsgEl.textContent =
-          "Nápověda – zavolej učiteli. Proberte možnosti, potom zvol odpověď.";
-      }
-    });
-  }
-
-  // ---------- Pomoc třídy ----------
-  if (lifelineClassBtn) {
-    lifelineClassBtn.addEventListener("click", () => {
-      if (lifelineClassUsed || gameOver) return;
-      lifelineClassUsed = true;
-      lifelineClassBtn.disabled = true;
-      lifelineClassBtn.classList.add("lifeline-btn--disabled");
-
-      // zastavíme čas, aby se třída mohla poradit
-      stopTimer();
-      if (statusMsgEl) {
-        statusMsgEl.textContent =
-          "Nápověda – pomoc třídy. Domluvte se, potom zvol odpověď.";
-      }
-    });
-  }
-
-  // ---------- Změnit otázku ----------
-  if (lifelineSwapBtn) {
-    lifelineSwapBtn.addEventListener("click", () => {
-      if (lifelineSwapUsed || gameOver) return;
-      if (!gameQuestions || !gameQuestions.length) return;
-
-      const current = gameQuestions[currentQuestionIndex];
-      if (!current) return;
-
-      // kandidáti: stejná obtížnost, jiná otázka
-      if (typeof QUESTIONS_8 === "undefined") return;
-      let sameDiff = QUESTIONS_8.filter(
-        (q) => q.difficulty === current.difficulty && q.id !== current.id
-      );
-
-      if (!sameDiff.length) {
-        alert("Není k dispozici jiná otázka stejné obtížnosti.");
-        return;
-      }
-
-      // pokusíme se vybrat otázku, která ještě v této hře není
-      let pool = sameDiff.filter(
-        (q) => !gameQuestions.some((gq) => gq.id === q.id)
-      );
-      if (!pool.length) {
-        pool = sameDiff;
-      }
-
-      const rawNew = pool[Math.floor(Math.random() * pool.length)];
-      let newQ = rawNew;
-      if (typeof withShuffledAnswers === "function") {
-        newQ = withShuffledAnswers(rawNew);
-      }
-
-      // zachováme level a prize aktuálního stupně
-      newQ = {
-        ...newQ,
-        level: current.level,
-        prize: current.prize
-      };
-
-      gameQuestions[currentQuestionIndex] = newQ;
-
-      lifelineSwapUsed = true;
-      lifelineSwapBtn.disabled = true;
-      lifelineSwapBtn.classList.add("lifeline-btn--disabled");
-
-      if (statusMsgEl) {
-        statusMsgEl.textContent = "Otázka byla vyměněna. Vyber odpověď.";
-      }
-
-      showCurrentQuestion();
-    });
-  }
-
-  // ---------- start hry pro 8. třídu ----------
-  if (grade8Btn) {
-    grade8Btn.addEventListener("click", () => {
-      console.log("Klik na 8. třídu");
-
-      highestSafeLevelReached = 0;
-      gameOver = false;
-
-      // reset nápověd
-      lifeline5050Used = false;
-      lifelineCallUsed = false;
-      lifelineClassUsed = false;
-      lifelineSwapUsed = false;
-
-      if (lifeline5050Btn) {
-        lifeline5050Btn.disabled = false;
-        lifeline5050Btn.classList.remove("lifeline-btn--disabled");
-      }
-      if (typeof lifelineCallBtn !== "undefined" && lifelineCallBtn) {
-        lifelineCallBtn.disabled = false;
-        lifelineCallBtn.classList.remove("lifeline-btn--disabled");
-      }
-      if (
-        typeof lifelineClassBtn !== "undefined" &&
-        lifelineClassBtn
-      ) {
-        lifelineClassBtn.disabled = false;
-        lifelineClassBtn.classList.remove("lifeline-btn--disabled");
-      }
-      if (typeof lifelineSwapBtn !== "undefined" && lifelineSwapBtn) {
-        lifelineSwapBtn.disabled = false;
-        lifelineSwapBtn.classList.remove("lifeline-btn--disabled");
-      }
-
-      const activeTopics = getActiveTopicsFor8Runtime();
-      console.log("Aktivní témata pro 8. třídu:", activeTopics);
-
-      gameQuestions = generateGameQuestions(activeTopics);
-      if (!gameQuestions || gameQuestions.length === 0) {
-        alert("Nepodařilo se načíst otázky pro vybraná témata.");
-        return;
-      }
-
-      currentQuestionIndex = 0;
-      showCurrentQuestion();
-      showScreen("game");
-    });
-  }
-
-  if (exitGameBtn) {
-    exitGameBtn.addEventListener("click", () => {
-      stopTimer();
-      gameOver = true;
-      showScreen("landing");
-    });
-  }
-
-  // ---------- start hry pro 9. třídu (zatím stejné otázky jako pro 8.) ----------
-if (grade9Btn) {
-  grade9Btn.addEventListener("click", () => {
-    console.log("Klik na 9. třídu (zatím sdílí otázky s 8. třídou)");
-
-    highestSafeLevelReached = 0;
-    gameOver = false;
-    lifeline5050Used = false;
-
-    if (lifeline5050Btn) {
-      lifeline5050Btn.disabled = false;
-      lifeline5050Btn.classList.remove("lifeline-btn--disabled");
-    }
-
-    const activeTopics = getActiveTopicsFor8Runtime();
-    console.log("Aktivní témata pro 9. třídu (shared):", activeTopics);
-
-    gameQuestions = generateGameQuestions(activeTopics);
-    if (!gameQuestions || gameQuestions.length === 0) {
-      alert("Nepodařilo se načíst otázky pro vybraná témata.");
-      return;
-    }
-
-    currentQuestionIndex = 0;
-    showCurrentQuestion();
-    showScreen("game");
-  });
-}
-
 });
