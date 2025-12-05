@@ -712,7 +712,9 @@ lifelineSwapBtn = document.querySelector(
         gameOver = true;
       }
     });
-  }
+ 
+  
+}
 
   // 50 : 50
   if (lifeline5050Btn) {
@@ -1016,5 +1018,4 @@ if (teacherGenerateBtn) {
   }
 });
 
-  
-});
+
