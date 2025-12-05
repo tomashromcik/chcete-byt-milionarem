@@ -637,10 +637,13 @@ document.addEventListener("DOMContentLoaded", () => {
   console.log("DOM ready");
 
   const year = new Date().getFullYear();
-  const el = document.querySelector(".copyright");
-  if (el) {
-    el.textContent = `© 2024–${year} Tomáš Hromčík · Všechna práva vyhrazena`;
-  }
+const text = `© 2024–${year} Tomáš Hromčík · Všechna práva vyhrazena`;
+
+// nastavíme text všem .copyright na stránce (landing i game)
+document.querySelectorAll(".copyright").forEach(el => {
+  el.textContent = text;
+});
+
 
   
   const screenLanding = document.getElementById("screen-landing");
