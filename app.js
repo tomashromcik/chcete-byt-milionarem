@@ -636,6 +636,13 @@ function openTeacherPanel() {
 document.addEventListener("DOMContentLoaded", () => {
   console.log("DOM ready");
 
+  const year = new Date().getFullYear();
+  const el = document.querySelector(".copyright");
+  if (el) {
+    el.textContent = `© 2024–${year} Tomáš Hromčík · Všechna práva vyhrazena`;
+  }
+
+  
   const screenLanding = document.getElementById("screen-landing");
   const screenGame = document.getElementById("screen-game");
 
@@ -1010,12 +1017,4 @@ if (teacherGenerateBtn) {
 }
 
 
-  document.addEventListener("DOMContentLoaded", () => {
-  const year = new Date().getFullYear();
-  const el = document.querySelector(".copyright");
-  if (el) {
-    el.textContent = `© 2024–${year} Tomáš Hromčík · Všechna práva vyhrazena`;
-  }
-});
-
-});
+ });
