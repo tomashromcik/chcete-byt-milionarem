@@ -593,6 +593,15 @@ body {
   display: none !important;
 }
 
+.copyright {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 0.8rem;
+  color: #aaa;
+  opacity: 0.8;
+}
+
+
 /* RESPONSIVE */
 
 @media (max-width: 900px) {
