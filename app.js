@@ -63,7 +63,7 @@ let lifelineCallBtn;
 let lifelineClassBtn;
 let lifelineSwapBtn;
 
-
+let teacherAuthenticated = false;
 
 // ------------------------------------------------------
 // POMOCNÉ FUNKCE
