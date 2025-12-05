@@ -664,31 +664,85 @@ if (lifelineSwapBtn) {
 
 
   // start hry – pomocná funkce, sdílená pro 8. i 9. třídu
-  function startGameForGrade(grade) {
-    console.log("Start hry pro třídu:", grade);
+ function startGameForGrade(grade) {
+  console.log("Start hry pro ročník", grade);
 
-    highestSafeLevelReached = 0;
-    gameOver = false;
-    lifeline5050Used = false;
+  // reset stavu hry
+  highestSafeLevelReached = 0;
+  gameOver = false;
+  questionLocked = false;
 
-    if (lifeline5050Btn) {
-      lifeline5050Btn.disabled = false;
-      lifeline5050Btn.classList.remove("lifeline-btn--disabled");
-    }
+  // reset nápověd
+  lifeline5050Used = false;
+  lifelineCallUsed = false;
+  lifelineClassUsed = false;
+  lifelineSwapUsed = false;
 
-    const activeTopics = getActiveTopicsFor8Runtime();
-    console.log("Aktivní témata:", activeTopics);
-
-    gameQuestions = generateGameQuestions(activeTopics);
-    if (!gameQuestions || !gameQuestions.length) {
-      alert("Nepodařilo se načíst otázky pro vybraná témata.");
-      return;
-    }
-
-    currentQuestionIndex = 0;
-    showCurrentQuestion();
-    showScreen("game");
+  // znovu povolíme všechny nápovědy
+  if (lifeline5050Btn) {
+    lifeline5050Btn.disabled = false;
+    lifeline5050Btn.classList.remove("lifeline-btn--disabled");
   }
+  if (lifelineCallBtn) {
+    lifelineCallBtn.disabled = false;
+    lifelineCallBtn.classList.remove("lifeline-btn--disabled");
+  }
+  if (lifelineClassBtn) {
+    lifelineClassBtn.disabled = false;
+    lifelineClassBtn.classList.remove("lifeline-btn--disabled");
+  }
+  if (lifelineSwapBtn) {
+    lifelineSwapBtn.disabled = false;
+    lifelineSwapBtn.classList.remove("lifeline-btn--disabled");
+  }
+
+  // vybereme aktivní témata podle ročníku
+  let activeTopics;
+
+  if (grade === 8) {
+    // tvoje stávající logika pro 8. třídu
+    if (typeof getActiveTopicsFor8Runtime === "function") {
+      activeTopics = getActiveTopicsFor8Runtime();
+    } else if (typeof getEnabledTopicsFor8 === "function") {
+      activeTopics = getEnabledTopicsFor8();
+    } else {
+      activeTopics = ["prace", "kladky", "vykon", "ucinnost", "Ep", "Ek"];
+    }
+  } else if (grade === 9) {
+    // zatím může klidně používat stejná témata jako 8.
+    if (typeof getActiveTopicsFor9Runtime === "function") {
+      activeTopics = getActiveTopicsFor9Runtime();
+    } else if (typeof getEnabledTopicsFor9 === "function") {
+      activeTopics = getEnabledTopicsFor9();
+    } else {
+      // dočasně stejně jako 8. ročník
+      if (typeof getActiveTopicsFor8Runtime === "function") {
+        activeTopics = getActiveTopicsFor8Runtime();
+      } else if (typeof getEnabledTopicsFor8 === "function") {
+        activeTopics = getEnabledTopicsFor8();
+      } else {
+        activeTopics = ["prace", "kladky", "vykon", "ucinnost", "Ep", "Ek"];
+      }
+    }
+  } else {
+    // nouzový fallback
+    activeTopics = ["prace", "kladky", "vykon", "ucinnost", "Ep", "Ek"];
+  }
+
+  console.log("Aktivní témata:", activeTopics);
+
+  // vygenerujeme otázky
+  gameQuestions = generateGameQuestions(activeTopics);
+  if (!gameQuestions || gameQuestions.length === 0) {
+    alert("Nepodařilo se načíst otázky pro vybraná témata.");
+    return;
+  }
+
+  currentQuestionIndex = 0;
+  showCurrentQuestion();
+  showScreen("game");
+}
+
 
   // start hry pro 8. třídu – klik na celou kartu
   if (grade8Card) {
