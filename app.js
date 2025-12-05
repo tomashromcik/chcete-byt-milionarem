@@ -121,6 +121,31 @@ function getActiveTopicsFor8Runtime() {
   return ["prace", "kladky", "vykon", "ucinnost", "Ep", "Ek"];
 }
 
+// aktivní témata pro 9. ročník – runtime (localStorage → config → fallback)
+function getActiveTopicsFor9Runtime() {
+  // 1) zkus localStorage
+  try {
+    const raw = localStorage.getItem("topics_9_override");
+    if (raw) {
+      const arr = JSON.parse(raw);
+      if (Array.isArray(arr) && arr.length > 0) {
+        return arr;
+      }
+    }
+  } catch (e) {
+    console.warn("Chyba při čtení topics_9_override:", e);
+  }
+
+  // 2) zkus config-topics-9.js
+  if (typeof getEnabledTopicsFor9 === "function") {
+    return getEnabledTopicsFor9();
+  }
+
+  // 3) nouzový fallback – všechna témata deváťáků
+  return ["magnetismus", "elektromagneticke_jevy", "stridavy_proud"];
+}
+
+
 // vytvoří pole 15 otázek podle nastavení žebříčku a témat
 function generateGameQuestions(activeTopics, grade) {
   // 1) vybereme správnou databanku podle ročníku
