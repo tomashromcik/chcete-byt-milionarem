@@ -593,25 +593,12 @@ function openTeacherPanel() {
 
     TOPIC_CONFIG_8.topics.forEach(t => {
       const row = document.createElement("label");
-     row.innerHTML = `
-  <input type="checkbox" data-id="${t.id}" data-grade="8" ${t.enabled ? "checked" : ""}>
-  ${t.label}
-`;
-
+      row.innerHTML = `
+        <input type="checkbox" data-id="${t.id}" data-grade="8" ${t.enabled ? "checked" : ""}>
+        ${t.label}
+      `;
       topicList.appendChild(row);
     });
-
-    // tlačítka pro 8
-    const btnSave8 = document.createElement("button");
-    btnSave8.id = "save-8";
-    btnSave8.textContent = "Uložit pro 8. třídu (localStorage)";
-
-    const btnGen8 = document.createElement("button");
-    btnGen8.id = "generate-8";
-    btnGen8.textContent = "Generovat config-topics-8.js";
-
-    topicList.appendChild(btnSave8);
-    topicList.appendChild(btnGen8);
   }
 
   // --- oddělovač ---
@@ -627,25 +614,15 @@ function openTeacherPanel() {
     TOPIC_CONFIG_9.topics.forEach(t => {
       const row = document.createElement("label");
       row.innerHTML = `
-  <input type="checkbox" data-id="${t.id}" data-grade="9" ${t.enabled ? "checked" : ""}>
-  ${t.label}
-`;
-
+        <input type="checkbox" data-id="${t.id}" data-grade="9" ${t.enabled ? "checked" : ""}>
+        ${t.label}
+      `;
       topicList.appendChild(row);
     });
-
-    // tlačítka pro 9
-    const btnSave9 = document.createElement("button");
-    btnSave9.id = "save-9";
-    btnSave9.textContent = "Uložit pro 9. třídu (localStorage)";
-
-    const btnGen9 = document.createElement("button");
-    btnGen9.id = "generate-9";
-    btnGen9.textContent = "Generovat config-topics-9.js";
-
-    topicList.appendChild(btnSave9);
-    topicList.appendChild(btnGen9);
   }
+
+  panel.classList.remove("hidden");
+}
 
   // zobraz panel
   panel.classList.remove("hidden");
