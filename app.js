@@ -572,8 +572,6 @@ function useSwapQuestion() {
 // UČITELSKÝ PANEL
 // ------------------------------------------------------
 
-let teacherAuthenticated = false;
-
 function openTeacherPanel() {
   const panel = document.getElementById("teacher-panel");
   const topicList = document.getElementById("teacher-topic-list");
@@ -582,25 +580,80 @@ function openTeacherPanel() {
 
   if (!panel || !topicList) return;
 
+  // vymazání starého obsahu
   topicList.innerHTML = "";
   if (outputWrapper) outputWrapper.classList.add("hidden");
   if (output) output.value = "";
 
+  // --- 8. třída ---
   if (typeof TOPIC_CONFIG_8 === "object" && Array.isArray(TOPIC_CONFIG_8.topics)) {
+    const h3_8 = document.createElement("h3");
+    h3_8.textContent = "Témata pro 8. třídu:";
+    topicList.appendChild(h3_8);
+
     TOPIC_CONFIG_8.topics.forEach(t => {
       const row = document.createElement("label");
-      row.innerHTML = `
-        <input type="checkbox" data-id="${t.id}" ${
-        t.enabled ? "checked" : ""
-      }>
-        ${t.label}
-      `;
+     row.innerHTML = `
+  <input type="checkbox" data-id="${t.id}" data-grade="8" ${t.enabled ? "checked" : ""}>
+  ${t.label}
+`;
+
       topicList.appendChild(row);
     });
+
+    // tlačítka pro 8
+    const btnSave8 = document.createElement("button");
+    btnSave8.id = "save-8";
+    btnSave8.textContent = "Uložit pro 8. třídu (localStorage)";
+
+    const btnGen8 = document.createElement("button");
+    btnGen8.id = "generate-8";
+    btnGen8.textContent = "Generovat config-topics-8.js";
+
+    topicList.appendChild(btnSave8);
+    topicList.appendChild(btnGen8);
   }
 
+  // --- oddělovač ---
+  const hr = document.createElement("hr");
+  topicList.appendChild(hr);
+
+  // --- 9. třída ---
+  if (typeof TOPIC_CONFIG_9 === "object" && Array.isArray(TOPIC_CONFIG_9.topics)) {
+    const h3_9 = document.createElement("h3");
+    h3_9.textContent = "Témata pro 9. třídu:";
+    topicList.appendChild(h3_9);
+
+    TOPIC_CONFIG_9.topics.forEach(t => {
+      const row = document.createElement("label");
+      row.innerHTML = `
+  <input type="checkbox" data-id="${t.id}" data-grade="9" ${t.enabled ? "checked" : ""}>
+  ${t.label}
+`;
+
+      topicList.appendChild(row);
+    });
+
+    // tlačítka pro 9
+    const btnSave9 = document.createElement("button");
+    btnSave9.id = "save-9";
+    btnSave9.textContent = "Uložit pro 9. třídu (localStorage)";
+
+    const btnGen9 = document.createElement("button");
+    btnGen9.id = "generate-9";
+    btnGen9.textContent = "Generovat config-topics-9.js";
+
+    topicList.appendChild(btnSave9);
+    topicList.appendChild(btnGen9);
+  }
+
+  // zobraz panel
   panel.classList.remove("hidden");
+
+  // aktivace handlerů
+  bindTeacherPanelHandlers();
 }
+
 
 // ------------------------------------------------------
 // DOMContentLoaded
@@ -844,78 +897,141 @@ if (lifelineSwapBtn) {
     });
   }
 
-  // uložit do localStorage
-  if (teacherSaveLocalBtn) {
-    teacherSaveLocalBtn.addEventListener("click", () => {
-      if (!teacherTopicList) return;
-      const checkboxes = teacherTopicList.querySelectorAll(
-        "input[type=checkbox]"
-      );
-      const enabledIds = [];
-      checkboxes.forEach(cb => {
-        if (cb.checked) enabledIds.push(cb.dataset.id);
-      });
+// uložit do localStorage pro 8. i 9. třídu
+if (teacherSaveLocalBtn) {
+  teacherSaveLocalBtn.addEventListener("click", () => {
+    if (!teacherTopicList) return;
 
-      try {
-        localStorage.setItem("topics_8_override", JSON.stringify(enabledIds));
-        alert(
-          "Témata pro 8. ročník byla uložena pouze pro tuto třídu (localStorage)."
-        );
-      } catch (e) {
-        console.error("Chyba při ukládání do localStorage:", e);
-        alert("Nepodařilo se uložit nastavení do localStorage.");
-      }
-    });
-  }
+    const checkboxes = teacherTopicList.querySelectorAll(
+      "input[type=checkbox]"
+    );
 
-  // vygenerovat kód pro config-topics-8.js
-  if (teacherGenerateBtn) {
-    teacherGenerateBtn.addEventListener("click", () => {
-      if (!teacherTopicList || !teacherOutput || !teacherOutputWrapper) return;
+    const enabledIds8 = [];
+    const enabledIds9 = [];
 
-      const checkboxes = teacherTopicList.querySelectorAll(
-        "input[type=checkbox]"
-      );
-
-      if (
-        typeof TOPIC_CONFIG_8 !== "object" ||
-        !Array.isArray(TOPIC_CONFIG_8.topics)
-      ) {
-        alert("TOPIC_CONFIG_8 není správně načten.");
-        return;
-      }
-
-      checkboxes.forEach(cb => {
-        const id = cb.dataset.id;
-        const topic = TOPIC_CONFIG_8.topics.find(t => t.id === id);
-        if (topic) {
-          topic.enabled = cb.checked;
+    checkboxes.forEach(cb => {
+      const grade = cb.dataset.grade || "8"; // pokud náhodou není, bereme jako 8
+      if (cb.checked) {
+        if (grade === "9") {
+          enabledIds9.push(cb.dataset.id);
+        } else {
+          enabledIds8.push(cb.dataset.id);
         }
-      });
-
-      const lines = [];
-      lines.push("const TOPIC_CONFIG_8 = {");
-      lines.push('  schoolYear: "2024/2025",');
-      lines.push("  topics: [");
-
-      TOPIC_CONFIG_8.topics.forEach((t, index) => {
-        const comma = index === TOPIC_CONFIG_8.topics.length - 1 ? "" : ",";
-        lines.push(
-          `    { id: "${t.id}", label: "${t.label}", enabled: ${t.enabled} }${comma}`
-        );
-      });
-
-      lines.push("  ]");
-      lines.push("};");
-      lines.push("");
-      lines.push("function getEnabledTopicsFor8() {");
-      lines.push("  return TOPIC_CONFIG_8.topics");
-      lines.push("    .filter(t => t.enabled)");
-      lines.push("    .map(t => t.id);");
-      lines.push("}");
-
-      teacherOutput.value = lines.join("\n");
-      teacherOutputWrapper.classList.remove("hidden");
+      }
     });
-  }
+
+    try {
+      // uložíme zvlášť pro 8 a 9
+      localStorage.setItem("topics_8_override", JSON.stringify(enabledIds8));
+      localStorage.setItem("topics_9_override", JSON.stringify(enabledIds9));
+
+      alert(
+        "Témata pro 8. a 9. ročník byla uložena pouze pro tuto třídu (localStorage)."
+      );
+    } catch (e) {
+      console.error("Chyba při ukládání do localStorage:", e);
+      alert("Nepodařilo se uložit nastavení do localStorage.");
+    }
+  });
+}
+
+// vygenerovat kód pro config-topics-8.js a config-topics-9.js
+if (teacherGenerateBtn) {
+  teacherGenerateBtn.addEventListener("click", () => {
+    if (!teacherTopicList || !teacherOutput || !teacherOutputWrapper) return;
+
+    const checkboxes = teacherTopicList.querySelectorAll(
+      "input[type=checkbox]"
+    );
+
+    // nejdřív zkontrolujeme, že configy existují
+    if (
+      typeof TOPIC_CONFIG_8 !== "object" ||
+      !Array.isArray(TOPIC_CONFIG_8.topics)
+    ) {
+      alert("TOPIC_CONFIG_8 není správně načten.");
+      return;
+    }
+
+    if (
+      typeof TOPIC_CONFIG_9 !== "object" ||
+      !Array.isArray(TOPIC_CONFIG_9.topics)
+    ) {
+      alert("TOPIC_CONFIG_9 není správně načten.");
+      return;
+    }
+
+    // přepíšeme enabled podle checkboxů
+    checkboxes.forEach(cb => {
+      const id = cb.dataset.id;
+      const grade = cb.dataset.grade || "8";
+
+      if (grade === "9") {
+        const topic9 = TOPIC_CONFIG_9.topics.find(t => t.id === id);
+        if (topic9) {
+          topic9.enabled = cb.checked;
+        }
+      } else {
+        const topic8 = TOPIC_CONFIG_8.topics.find(t => t.id === id);
+        if (topic8) {
+          topic8.enabled = cb.checked;
+        }
+      }
+    });
+
+    const lines = [];
+
+    // ---------- config pro 8. třídu ----------
+    lines.push("const TOPIC_CONFIG_8 = {");
+    lines.push('  schoolYear: "2024/2025",');
+    lines.push("  topics: [");
+
+    TOPIC_CONFIG_8.topics.forEach((t, index) => {
+      const comma = index === TOPIC_CONFIG_8.topics.length - 1 ? "" : ",";
+      lines.push(
+        `    { id: "${t.id}", label: "${t.label}", enabled: ${t.enabled} }${comma}`
+      );
+    });
+
+    lines.push("  ]");
+    lines.push("};");
+    lines.push("");
+    lines.push("function getEnabledTopicsFor8() {");
+    lines.push("  return TOPIC_CONFIG_8.topics");
+    lines.push("    .filter(t => t.enabled)");
+    lines.push("    .map(t => t.id);");
+    lines.push("}");
+    lines.push("");
+    lines.push("// ========================================");
+    lines.push("// KONFIGURACE TÉMAT PRO 9. ROČNÍK");
+    lines.push("// ========================================");
+    lines.push("");
+
+    // ---------- config pro 9. třídu ----------
+    lines.push("const TOPIC_CONFIG_9 = {");
+    lines.push('  schoolYear: "2024/2025",');
+    lines.push("  topics: [");
+
+    TOPIC_CONFIG_9.topics.forEach((t, index) => {
+      const comma = index === TOPIC_CONFIG_9.topics.length - 1 ? "" : ",";
+      lines.push(
+        `    { id: "${t.id}", label: "${t.label}", enabled: ${t.enabled} }${comma}`
+      );
+    });
+
+    lines.push("  ]");
+    lines.push("};");
+    lines.push("");
+    lines.push("function getEnabledTopicsFor9() {");
+    lines.push("  return TOPIC_CONFIG_9.topics");
+    lines.push("    .filter(t => t.enabled)");
+    lines.push("    .map(t => t.id);");
+    lines.push("}");
+
+    teacherOutput.value = lines.join("\n");
+    teacherOutputWrapper.classList.remove("hidden");
+  });
+}
+
+  
 });
