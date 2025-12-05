@@ -710,7 +710,7 @@ if (lifelineSwapBtn) {
   }
 
   // vybereme aktivní témata podle ročníku
-  let activeTopics;
+    let activeTopics;
 
   if (grade === 8) {
     // tvoje stávající logika pro 8. třídu
@@ -722,30 +722,24 @@ if (lifelineSwapBtn) {
       activeTopics = ["prace", "kladky", "vykon", "ucinnost", "Ep", "Ek"];
     }
   } else if (grade === 9) {
-    // zatím může klidně používat stejná témata jako 8.
+    // NOVÁ LOGIKA PRO 9. TŘÍDU – používá nová témata
     if (typeof getActiveTopicsFor9Runtime === "function") {
       activeTopics = getActiveTopicsFor9Runtime();
     } else if (typeof getEnabledTopicsFor9 === "function") {
       activeTopics = getEnabledTopicsFor9();
     } else {
-      // dočasně stejně jako 8. ročník
-      if (typeof getActiveTopicsFor8Runtime === "function") {
-        activeTopics = getActiveTopicsFor8Runtime();
-      } else if (typeof getEnabledTopicsFor8 === "function") {
-        activeTopics = getEnabledTopicsFor8();
-      } else {
-        activeTopics = ["prace", "kladky", "vykon", "ucinnost", "Ep", "Ek"];
-      }
+      // fallback témata pro 9. ročník
+      activeTopics = ["magnetismus", "elektromagneticke_jevy", "stridavy_proud"];
     }
   } else {
-    // nouzový fallback
+    // nouzový fallback – kdyby se něco pokazilo
     activeTopics = ["prace", "kladky", "vykon", "ucinnost", "Ep", "Ek"];
   }
 
   console.log("Aktivní témata:", activeTopics);
 
   // vygenerujeme otázky
-  gameQuestions = generateGameQuestions(activeTopics);
+  gameQuestions = generateGameQuestions(activeTopics, grade);
   if (!gameQuestions || gameQuestions.length === 0) {
     alert("Nepodařilo se načíst otázky pro vybraná témata.");
     return;
@@ -755,6 +749,7 @@ if (lifelineSwapBtn) {
   showCurrentQuestion();
   showScreen("game");
 }
+
 
 
   // start hry pro 8. třídu – klik na celou kartu
