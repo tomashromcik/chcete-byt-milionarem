@@ -59,6 +59,11 @@ let nextBtnEl;
 let timerEl;
 let questionsLeftEl;
 let lifeline5050Btn;
+let lifelineCallBtn;
+let lifelineClassBtn;
+let lifelineSwapBtn;
+
+
 
 // ------------------------------------------------------
 // POMOCNÉ FUNKCE
@@ -455,46 +460,53 @@ function useClassHelp() {
 // ------------------------------------------------------
 
 function useSwapQuestion() {
+  // jednou za hru, pouze na "živé" otázce
   if (lifelineSwapUsed || questionLocked || gameOver) return;
 
   const currentQ = gameQuestions[currentQuestionIndex];
   if (!currentQ) return;
 
-  // chceme náhradní otázku stejné obtížnosti,
-  // ale jiného id, témata můžou být libovolná
-  if (typeof QUESTIONS_8 === "undefined") {
-    console.warn("QUESTIONS_8 není načteno – nelze vyměnit otázku.");
-    return;
-  }
+  // najdeme jiné otázky stejné obtížnosti v rámci už vygenerované hry
+  const candidates = gameQuestions
+    .map((q, idx) => ({ q, idx }))
+    .filter(
+      (item) =>
+        item.idx !== currentQuestionIndex &&
+        item.q.difficulty === currentQ.difficulty
+    );
 
-  const usedIds = gameQuestions.map(q => q.id);
-
-  const sameDiffPool = QUESTIONS_8.filter(q =>
-    q.difficulty === currentQ.difficulty && !usedIds.includes(q.id)
-  );
-
-  if (sameDiffPool.length === 0) {
+  if (candidates.length === 0) {
     if (statusMsgEl) {
       statusMsgEl.textContent =
-        "Není k dispozici náhradní otázka stejné obtížnosti.";
+        "Není k dispozici jiná otázka stejné obtížnosti.";
     }
     return;
   }
 
-  // náhodná otázka z poolu
-  const randomIndex = Math.floor(Math.random() * sameDiffPool.length);
-  let newQ = sameDiffPool[randomIndex];
-
-  // promíchat odpovědi (pokud používáš shuffle)
-  if (typeof withShuffledAnswers === "function") {
-    newQ = withShuffledAnswers(newQ);
-  }
+  // vybereme náhodnou jinou otázku stejné obtížnosti
+  const randomItem =
+    candidates[Math.floor(Math.random() * candidates.length)];
+  const swapIndex = randomItem.idx;
+  const swapQ = randomItem.q;
 
   // zachováme level a prize (stupeň a částku)
+  const currentLevel = currentQ.level;
+  const currentPrize = currentQ.prize;
+  const swapLevel = swapQ.level;
+  const swapPrize = swapQ.prize;
+
+  // prohodíme obsah otázek, ale
+  // level + prize necháme na svých pozicích
   gameQuestions[currentQuestionIndex] = {
-    ...newQ,
-    level: currentQ.level,
-    prize: currentQ.prize
+    ...swapQ,
+    level: currentLevel,
+    prize: currentPrize
+  };
+
+  gameQuestions[swapIndex] = {
+    ...currentQ,
+    level: swapLevel,
+    prize: swapPrize
   };
 
   lifelineSwapUsed = true;
@@ -503,13 +515,14 @@ function useSwapQuestion() {
     lifelineSwapBtn.classList.add("lifeline-btn--disabled");
   }
 
-  // zobraz novou otázku (časovač se zresetuje uvnitř showCurrentQuestion -> startTimer)
+  // znovu vykreslit aktuální otázku (časovač se resetuje uvnitř showCurrentQuestion)
   showCurrentQuestion();
 
   if (statusMsgEl) {
     statusMsgEl.textContent = "Otázka byla vyměněna. Vyberte odpověď…";
   }
 }
+
 
 
 // ------------------------------------------------------
@@ -567,13 +580,13 @@ document.addEventListener("DOMContentLoaded", () => {
   lifeline5050Btn = document.querySelector(
     '.lifeline-btn[data-lifeline="5050"]'
   );
-  const lifelineCallBtn = document.querySelector(
+lifelineCallBtn = document.querySelector(
   '.lifeline-btn[data-lifeline="call"]'
 );
-const lifelineClassBtn = document.querySelector(
+lifelineClassBtn = document.querySelector(
   '.lifeline-btn[data-lifeline="class-help"]'
 );
-const lifelineSwapBtn = document.querySelector(
+lifelineSwapBtn = document.querySelector(
   '.lifeline-btn[data-lifeline="swap"]'
 );
 
