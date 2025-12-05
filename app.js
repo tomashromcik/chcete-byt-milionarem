@@ -122,19 +122,34 @@ function getActiveTopicsFor8Runtime() {
 }
 
 // vytvoří pole 15 otázek podle nastavení žebříčku a témat
-function generateGameQuestions(activeTopics) {
-  if (typeof QUESTIONS_8 === "undefined" || !Array.isArray(QUESTIONS_8)) {
-    console.error("QUESTIONS_8 není načteno – zkontroluj data-questions-8.js");
-    return [];
+function generateGameQuestions(activeTopics, grade) {
+  // 1) vybereme správnou databanku podle ročníku
+  let sourceQuestions;
+
+  if (grade === 9) {
+    if (typeof QUESTIONS_9 === "undefined" || !Array.isArray(QUESTIONS_9)) {
+      console.error("QUESTIONS_9 není načteno – zkontroluj data-questions-9.js");
+      return [];
+    }
+    sourceQuestions = QUESTIONS_9;
+  } else {
+    // defaultně 8. ročník (nebo když by grade byl jiný)
+    if (typeof QUESTIONS_8 === "undefined" || !Array.isArray(QUESTIONS_8)) {
+      console.error("QUESTIONS_8 není načteno – zkontroluj data-questions-8.js");
+      return [];
+    }
+    sourceQuestions = QUESTIONS_8;
   }
 
-  let pool = QUESTIONS_8.filter(q => activeTopics.includes(q.topic));
+  // 2) filtr podle témat
+  let pool = sourceQuestions.filter(q => activeTopics.includes(q.topic));
 
   if (!pool.length) {
-    console.warn("Žádné otázky pro vybraná témata:", activeTopics);
+    console.warn("Žádné otázky pro vybraná témata:", activeTopics, "pro ročník", grade);
     return [];
   }
 
+  // 3) rozdělení podle obtížnosti (zůstává tvoje logika)
   const byDiff = {
     1: pool.filter(q => q.difficulty === 1),
     2: pool.filter(q => q.difficulty === 2),
@@ -154,7 +169,9 @@ function generateGameQuestions(activeTopics) {
         "Nedostatek otázek pro obtížnost",
         cfg.difficulty,
         "v tématech",
-        activeTopics
+        activeTopics,
+        "pro ročník",
+        grade
       );
       return;
     }
@@ -173,6 +190,7 @@ function generateGameQuestions(activeTopics) {
   console.log("Vygenerované otázky:", selected);
   return selected;
 }
+
 
 // zvýrazní aktuální řádek v žebříčku
 function updateLadderHighlight(level) {
