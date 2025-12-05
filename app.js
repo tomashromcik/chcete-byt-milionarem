@@ -48,6 +48,10 @@ let highestSafeLevelReached = 0;
 let timerInterval = null;
 let timeLeft = 0;
 let lifeline5050Used = false;
+let lifelineCallUsed = false;
+let lifelineClassUsed = false;
+let lifelineSwapUsed = false;
+
 
 // DOM prvky – doplníme po DOMContentLoaded
 let statusMsgEl;
