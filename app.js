@@ -622,14 +622,11 @@ function openTeacherPanel() {
   }
 
   panel.classList.remove("hidden");
-}
-
-  // zobraz panel
-  panel.classList.remove("hidden");
-
-  // aktivace handlerů
   bindTeacherPanelHandlers();
 }
+
+
+
 
 
 // ------------------------------------------------------
