@@ -1007,5 +1007,14 @@ if (teacherGenerateBtn) {
   });
 }
 
+
+  document.addEventListener("DOMContentLoaded", () => {
+  const year = new Date().getFullYear();
+  const el = document.querySelector(".copyright");
+  if (el) {
+    el.textContent = `© 2024–${year} Tomáš Hromčík · Všechna práva vyhrazena`;
+  }
+});
+
   
 });
