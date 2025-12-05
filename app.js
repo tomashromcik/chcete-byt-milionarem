@@ -407,6 +407,112 @@ function use5050() {
 }
 
 // ------------------------------------------------------
+// NÁPOVĚDA zavolej učitele
+// ------------------------------------------------------
+
+function useCallTeacher() {
+  if (lifelineCallUsed || gameOver) return;
+
+  // zastavit čas
+  stopTimer();
+  lifelineCallUsed = true;
+
+  if (lifelineCallBtn) {
+    lifelineCallBtn.disabled = true;
+    lifelineCallBtn.classList.add("lifeline-btn--disabled");
+  }
+
+  if (statusMsgEl) {
+    statusMsgEl.textContent =
+      "Nápověda: zavolej učitele. Čas je zastaven – po konzultaci vyber odpověď.";
+  }
+}
+
+// ------------------------------------------------------
+// NÁPOVĚDA pomoc třídy
+// ------------------------------------------------------
+
+function useClassHelp() {
+  if (lifelineClassUsed || gameOver) return;
+
+  // zastavit čas
+  stopTimer();
+  lifelineClassUsed = true;
+
+  if (lifelineClassBtn) {
+    lifelineClassBtn.disabled = true;
+    lifelineClassBtn.classList.add("lifeline-btn--disabled");
+  }
+
+  if (statusMsgEl) {
+    statusMsgEl.textContent =
+      "Nápověda: pomoc třídy. Čas je zastaven – žáci můžou hlasovat, pak vyber odpověď.";
+  }
+}
+
+// ------------------------------------------------------
+// NÁPOVĚDA výměna otázky
+// ------------------------------------------------------
+
+function useSwapQuestion() {
+  if (lifelineSwapUsed || questionLocked || gameOver) return;
+
+  const currentQ = gameQuestions[currentQuestionIndex];
+  if (!currentQ) return;
+
+  // chceme náhradní otázku stejné obtížnosti,
+  // ale jiného id, témata můžou být libovolná
+  if (typeof QUESTIONS_8 === "undefined") {
+    console.warn("QUESTIONS_8 není načteno – nelze vyměnit otázku.");
+    return;
+  }
+
+  const usedIds = gameQuestions.map(q => q.id);
+
+  const sameDiffPool = QUESTIONS_8.filter(q =>
+    q.difficulty === currentQ.difficulty && !usedIds.includes(q.id)
+  );
+
+  if (sameDiffPool.length === 0) {
+    if (statusMsgEl) {
+      statusMsgEl.textContent =
+        "Není k dispozici náhradní otázka stejné obtížnosti.";
+    }
+    return;
+  }
+
+  // náhodná otázka z poolu
+  const randomIndex = Math.floor(Math.random() * sameDiffPool.length);
+  let newQ = sameDiffPool[randomIndex];
+
+  // promíchat odpovědi (pokud používáš shuffle)
+  if (typeof withShuffledAnswers === "function") {
+    newQ = withShuffledAnswers(newQ);
+  }
+
+  // zachováme level a prize (stupeň a částku)
+  gameQuestions[currentQuestionIndex] = {
+    ...newQ,
+    level: currentQ.level,
+    prize: currentQ.prize
+  };
+
+  lifelineSwapUsed = true;
+  if (lifelineSwapBtn) {
+    lifelineSwapBtn.disabled = true;
+    lifelineSwapBtn.classList.add("lifeline-btn--disabled");
+  }
+
+  // zobraz novou otázku (časovač se zresetuje uvnitř showCurrentQuestion -> startTimer)
+  showCurrentQuestion();
+
+  if (statusMsgEl) {
+    statusMsgEl.textContent = "Otázka byla vyměněna. Vyberte odpověď…";
+  }
+}
+
+
+// ------------------------------------------------------
 // UČITELSKÝ PANEL
 // ------------------------------------------------------
 
@@ -461,6 +567,16 @@ document.addEventListener("DOMContentLoaded", () => {
   lifeline5050Btn = document.querySelector(
     '.lifeline-btn[data-lifeline="5050"]'
   );
+  const lifelineCallBtn = document.querySelector(
+  '.lifeline-btn[data-lifeline="call"]'
+);
+const lifelineClassBtn = document.querySelector(
+  '.lifeline-btn[data-lifeline="class-help"]'
+);
+const lifelineSwapBtn = document.querySelector(
+  '.lifeline-btn[data-lifeline="swap"]'
+);
+
 
   const answerButtons = document.querySelectorAll(".answer-btn");
 
@@ -522,6 +638,30 @@ document.addEventListener("DOMContentLoaded", () => {
       use5050();
     });
   }
+  // zavolej učitele
+  if (lifelineCallBtn) {
+  lifelineCallBtn.addEventListener("click", () => {
+    if (gameOver) return;
+    useCallTeacher();
+  });
+}
+
+// pomoc třídy
+  if (lifelineClassBtn) {
+  lifelineClassBtn.addEventListener("click", () => {
+    if (gameOver) return;
+    useClassHelp();
+  });
+}
+
+  // výměna otázky
+if (lifelineSwapBtn) {
+  lifelineSwapBtn.addEventListener("click", () => {
+    if (gameOver) return;
+    useSwapQuestion();
+  });
+}
+
 
   // start hry – pomocná funkce, sdílená pro 8. i 9. třídu
   function startGameForGrade(grade) {
