@@ -621,4 +621,222 @@ const QUESTIONS_9 = [
     ],
     correctIndex: 0
   }
+
+
+  // -------------------------------------------------------
+  // STŘÍDAVÝ PROUD, FREKVENCE, TRANSFORMÁTOR
+  // -------------------------------------------------------
+
+  // =========================
+  // OBTÍŽNOST 1 – LEHKÁ
+  // =========================
+
+  {
+    id: "ac-1",
+    topic: "ac",
+    difficulty: 1,
+    question: "Co je střídavý elektrický proud?",
+    answers: [
+      "Proud, který mění směr i velikost",
+      "Proud, který teče stále jedním směrem",
+      "Proud, který neteče",
+      "Proud vznikající pouze v baterii"
+    ],
+    correctIndex: 0
+  },
+  {
+    id: "ac-2",
+    topic: "ac",
+    difficulty: 1,
+    question: "Jaký má střídavý proud v elektrické síti časový průběh?",
+    answers: [
+      "Sinusový",
+      "Přímkový",
+      "Skokový",
+      "Náhodný"
+    ],
+    correctIndex: 0
+  },
+  {
+    id: "freq-1",
+    topic: "frekvence",
+    difficulty: 1,
+    question: "Co vyjadřuje frekvence střídavého proudu?",
+    answers: [
+      "Počet kmitů za 1 sekundu",
+      "Velikost napětí",
+      "Délku vodiče",
+      "Elektrický odpor"
+    ],
+    correctIndex: 0
+  },
+  {
+    id: "perioda-1",
+    topic: "perioda",
+    difficulty: 1,
+    question: "Co označuje perioda střídavého proudu (T)?",
+    answers: [
+      "Čas jednoho úplného kmitu",
+      "Počet kmitů za sekundu",
+      "Největší hodnotu proudu",
+      "Efektivní hodnotu napětí"
+    ],
+    correctIndex: 0
+  },
+  {
+    id: "trafo-1",
+    topic: "transformator",
+    difficulty: 1,
+    question: "K čemu slouží transformátor?",
+    answers: [
+      "Ke změně velikosti střídavého napětí",
+      "K výrobě stejnosměrného proudu",
+      "Ke zvýšení elektrického odporu",
+      "K ukládání elektrické energie"
+    ],
+    correctIndex: 0
+  },
+
+  // =========================
+  // OBTÍŽNOST 2 – STŘEDNÍ
+  // =========================
+
+  {
+    id: "freq-2",
+    topic: "frekvence",
+    difficulty: 2,
+    question: "Střídavý proud má periodu T = 0,02 s. Jaká je jeho frekvence?",
+    answers: [
+      "50 Hz",
+      "20 Hz",
+      "0,02 Hz",
+      "2 Hz"
+    ],
+    correctIndex: 0
+  },
+  {
+    id: "perioda-2",
+    topic: "perioda",
+    difficulty: 2,
+    question: "Střídavý proud má frekvenci f = 10 Hz. Jaká je jeho perioda?",
+    answers: [
+      "0,1 s",
+      "10 s",
+      "1 s",
+      "0,01 s"
+    ],
+    correctIndex: 0
+  },
+  {
+    id: "ac-3",
+    topic: "ac",
+    difficulty: 2,
+    question: "Která hodnota proudu se běžně uvádí u střídavého proudu v elektrické síti?",
+    answers: [
+      "Efektivní hodnota",
+      "Maximální hodnota",
+      "Okamžitá hodnota",
+      "Minimální hodnota"
+    ],
+    correctIndex: 0
+  },
+  {
+    id: "trafo-2",
+    topic: "transformator",
+    difficulty: 2,
+    question: "Primární cívka transformátoru má 100 závitů, sekundární 200 závitů. Jaký je transformační poměr p = N₂ / N₁?",
+    answers: [
+      "2",
+      "0,5",
+      "100",
+      "200"
+    ],
+    correctIndex: 0
+  },
+  {
+    id: "trafo-3",
+    topic: "transformator",
+    difficulty: 2,
+    question: "Transformátor má primární napětí 230 V a transformační poměr p = 2. Jaké je sekundární napětí?",
+    answers: [
+      "460 V",
+      "115 V",
+      "230 V",
+      "920 V"
+    ],
+    correctIndex: 0
+  },
+
+  // =========================
+  // OBTÍŽNOST 3 – NÁROČNĚJŠÍ FORMULACE
+  // =========================
+
+  {
+    id: "trafo-4",
+    topic: "transformator",
+    difficulty: 3,
+    question: "Transformátor je připojen ke spotřebitelské síti 230 V. Na výstupu má napětí 23 V. Jaký je transformační poměr p = U₂ / U₁?",
+    answers: [
+      "0,1",
+      "10",
+      "23",
+      "0,01"
+    ],
+    correctIndex: 0
+  },
+  {
+    id: "trafo-5",
+    topic: "transformator",
+    difficulty: 3,
+    question: "Primární cívka transformátoru má 500 závitů. Transformátor snižuje napětí z 230 V na 115 V. Kolik závitů má sekundární cívka?",
+    answers: [
+      "250",
+      "115",
+      "1 000",
+      "500"
+    ],
+    correctIndex: 0
+  },
+  {
+    id: "trafo-6",
+    topic: "transformator",
+    difficulty: 3,
+    question: "Transformátor má transformační poměr p = 4. Jak se změní výstupní napětí?",
+    answers: [
+      "Napětí se čtyřikrát zvětší",
+      "Napětí se čtyřikrát zmenší",
+      "Napětí se nezmění",
+      "Napětí se zdvojnásobí"
+    ],
+    correctIndex: 0
+  },
+  {
+    id: "freq-3",
+    topic: "frekvence",
+    difficulty: 3,
+    question: "Jaká je frekvence střídavého proudu ve spotřebitelské síti v ČR?",
+    answers: [
+      "50 Hz",
+      "60 Hz",
+      "10 Hz",
+      "100 Hz"
+    ],
+    correctIndex: 0
+  },
+  {
+    id: "perioda-3",
+    topic: "perioda",
+    difficulty: 3,
+    question: "Střídavý proud ve spotřebitelské síti má frekvenci 50 Hz. Jaká je jeho perioda?",
+    answers: [
+      "0,02 s",
+      "0,5 s",
+      "2 s",
+      "50 s"
+    ],
+    correctIndex: 0
+  }
+
 ];
+
+
